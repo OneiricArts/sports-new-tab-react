@@ -1,0 +1,3 @@
+[submodule "src/SportsDataAccessors"]
+	path = src/SportsDataAccessors
+	url = https://github.com/OneiricArts/SportsDataAccessors.git
