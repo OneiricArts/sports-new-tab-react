@@ -11,8 +11,10 @@
   "dependencies": {
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
+    "@types/reactstrap": "^5.0.20",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "reactstrap": "^5.0.0-beta.3"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^3.2.3",
