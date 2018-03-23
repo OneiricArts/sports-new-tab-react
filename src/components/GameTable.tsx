@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Table } from 'reactstrap';
 
 const removeGame = () => {
   console.log('test');
@@ -6,25 +7,25 @@ const removeGame = () => {
 
 const GameRow = ({ game, handlers }: any) => (
   <tr>
+    {console.log(game)}
     {/* clock */}
-    <td>{game.extrainfo.d} {game.t}</td>
-
+    <td>{game.clock}</td>
     {/* away team name */}
-    <td className={game.visitor_winning ? 'winning_team' : ''}>
-      {game.extrainfo.vnn}
+    <td className={game.awayTeamWinning ? 'winning_team' : ''}>
+      {game.awayTeam}
     </td>
 
     {/* home team name */}
-    <td className={game.home_winning ? 'winning_team' : ''}>
-      { game.home_pos &&
+    <td className={game.homeTeamWinning ? 'winning_team' : ''}>
+      { game.awayTeam &&
         <span> 🏈  &nbsp;</span>
       }
-      {game.extrainfo.hnn}
+      {game.homeTeam}
     </td>
 
     {/* scores */}
-    <td>{game.away.score.T}</td>
-    <td>{game.home.score.T}</td>
+    <td>{game.awayTeamScore}</td>
+    <td>{game.homeTeamScore}</td>
 
     {/* remove game */}
     <td onClick={handlers.removeGame}> X </td>
@@ -32,7 +33,7 @@ const GameRow = ({ game, handlers }: any) => (
 );
 
 const GameTable = ({games, handlers}: any) => (
-  <table>
+  <Table>
     <thead>
       <tr>
         <th>time</th>
@@ -44,9 +45,9 @@ const GameTable = ({games, handlers}: any) => (
       </tr>
     </thead>
     <tbody>
-    {games.map((game: any) => <GameRow game={game} handlers={handlers}/>)}
+    {games.map((game: any, index: number) => <GameRow key={index} game={game.cnt} handlers={handlers}/>)}
   </tbody>
-  </table>
+  </Table>
 );
 
 export default GameTable;
