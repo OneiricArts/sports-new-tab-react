@@ -5,6 +5,10 @@
   ],
   "rules": {
     // override tslint-react rules here
-    "interface-name": [true, "never-prefix"]
+    "interface-name": [true, "never-prefix"],
+    "arrow-parens": [false, "ban-single-arg-parens"],
+    "no-console": [false, "log", "error"],
+    "quotemark": [true, "single"],
+    "jsx-no-multiline-js": [false]
   }
 }
