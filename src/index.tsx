@@ -1,9 +1,9 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
-import { Hello } from "./components/Hello";
+import { NFL } from './components/NFL';
 
 ReactDOM.render(
-  <Hello compiler="TypeScript" framework="React" />,
-  document.getElementById("example"),
+  <NFL games={[]}/>,
+  document.getElementById('example'),
 );
