@@ -1,12 +1,15 @@
 import * as React from 'react';
 
-import {NFLData} from '../SportsDataAccessors/NFLHelper';
-import {NBADataType} from '../SportsDataAccessors/types';
+import {fetchNFLDataAsync} from '../SportsDataAccessors/NFLHelper';
+import { Game } from '../SportsDataAccessors/types';
 import GameTable from './GameTable';
 
-export interface NFLProps { games: object[]; }
+export interface NFLProps { games: Game[]; }
+export interface NFLState {
+  games: Game[];
+}
 
-export class NFL extends React.Component<NFLProps, any> {
+export class NFL extends React.Component<NFLProps, NFLState> {
   constructor(props: NFLProps) {
     super();
     this.state = {
@@ -15,7 +18,7 @@ export class NFL extends React.Component<NFLProps, any> {
   }
 
   public componentDidMount() {
-    NFLData.getNFLData().then(data => this.setState({ games: data }));
+    fetchNFLDataAsync().then(data => this.setState({ games: data.games }));
   }
 
   public removeGame = (event: React.MouseEvent<HTMLElement>) => {
@@ -30,7 +33,7 @@ export class NFL extends React.Component<NFLProps, any> {
 
       return (
         <div>
-          <h1>Week {this.state.games.w}!</h1>
+          {/* <h1>Week {this.state.games.w}!</h1> */}
           <GameTable games={this.state.games} handlers={handlers}/>
           {/* {this.state.games.gms.map((game: any) => {return <p>game</p>)} */}
           asdfs
