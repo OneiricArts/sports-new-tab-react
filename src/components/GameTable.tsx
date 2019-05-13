@@ -7,7 +7,7 @@ interface GameRowI {
   removeGame: (id: number) => void;
 }
 
-class GameRow extends React.Component<GameRowI, undefined> {
+class GameRow extends React.Component<GameRowI, {}> {
   public render() {
     const { game, removeGame } = this.props;
     return (

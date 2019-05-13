@@ -9,9 +9,9 @@ export interface NFLState {
   schedule: Schedule;
 }
 
-export class NFL extends React.Component<undefined, NFLState> {
+export class NFL extends React.Component<{}, NFLState> {
   constructor() {
-    super();
+    super({});
     this.state = {
       on: false,
       schedule: {
