@@ -2,43 +2,29 @@ import * as React from 'react';
 import { Button, Table } from 'reactstrap';
 import { Game } from '../SportsDataAccessors/types';
 
-interface GameRowI {
-  game: Game;
-  removeGame: (id: number) => void;
-}
+const GameRow = ({ game, removeGame }: { game: Game, removeGame: (id: number) => void }) => {
+  const handleClick = () => removeGame(game.id);
 
-class GameRow extends React.Component<GameRowI, {}> {
-  public render() {
-    const { game, removeGame } = this.props;
-    return (
-      <tr>
-        <td>{game.status}</td>
+  return (
+    <tr>
+      <td>{game.status}</td>
 
-        <td className={game.awayTeamWinning ? 'winning_team' : ''}>
-          {game.awayTeam}
-        </td>
+      <td className={game.awayTeamWinning ? 'winning_team' : ''}>
+        {game.awayTeam}
+      </td>
 
-        <td className={game.homeTeamWinning ? 'winning_team' : ''}>
-          {game.homeTeam}
-        </td>
+      <td className={game.homeTeamWinning ? 'winning_team' : ''}>
+        {game.homeTeam}
+      </td>
 
-        <td>{game.awayTeamScore}</td>
-        <td>{game.homeTeamScore}</td>
+      <td>{game.awayTeamScore}</td>
+      <td>{game.homeTeamScore}</td>
 
-        <td>
-          {/* Way #4: Property Initializers (good, ESnext)
-            Dont use arrow function inside onClick?
-          */}
-          <Button outline={true} color="secondary" size="sm" onClick={() => removeGame(game.id)}>&#9587;</Button>
-        </td>
-      </tr>
-    );
-  }
-
-  // https://daveceddia.com/avoid-bind-when-passing-props/
-  // private handleClick = () => {
-  //   this.props.removeGame(this.props.game.id);
-  // }
+      <td>
+        <Button outline={true} color="secondary" size="sm" onClick={handleClick}>&#9587;</Button>
+      </td>
+    </tr>
+  );
 }
 
 const TableHeader = () => (

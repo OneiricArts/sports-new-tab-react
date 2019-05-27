@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import { NFL } from './components/NFL';
+import NFL from './components/NFL';
 
-const App: React.FC = () => {
+function App() {
   return (
     <div className="App">
       <NFL />
