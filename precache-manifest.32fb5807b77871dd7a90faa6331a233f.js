@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f359194e2ea8dadadc3852d93be9ea2a",
+    "revision": "8a0b91a745424e4fee0c1314b7d55813",
     "url": "/sports-new-tab-react/index.html"
   },
   {
