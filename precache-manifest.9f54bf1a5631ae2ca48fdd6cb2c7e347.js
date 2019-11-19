@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ae11308c5ee17b6e08faf51b7fb01769",
+    "revision": "532a12828729fc6f3c6d58c68113ef66",
     "url": "/sports-new-tab-react/index.html"
   },
   {
-    "revision": "65c8335ea86c025cdc87",
+    "revision": "c11539a5ab4d19fff489",
     "url": "/sports-new-tab-react/static/css/2.22a7d4ef.chunk.css"
   },
   {
-    "revision": "02aa1e67e62494e86139",
+    "revision": "0deab62cceece698e5d3",
     "url": "/sports-new-tab-react/static/css/main.54af80c8.chunk.css"
   },
   {
-    "revision": "65c8335ea86c025cdc87",
-    "url": "/sports-new-tab-react/static/js/2.e690fb16.chunk.js"
+    "revision": "c11539a5ab4d19fff489",
+    "url": "/sports-new-tab-react/static/js/2.eb705135.chunk.js"
   },
   {
-    "revision": "02aa1e67e62494e86139",
-    "url": "/sports-new-tab-react/static/js/main.0a4fe83c.chunk.js"
+    "revision": "0deab62cceece698e5d3",
+    "url": "/sports-new-tab-react/static/js/main.070d8b35.chunk.js"
   },
   {
     "revision": "a21c6bf87ad9c2826b13",
