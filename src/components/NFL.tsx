@@ -26,7 +26,6 @@ export default function NFL() {
   }
 
   console.log('rendering...');
-  if (!schedule.games) return(<p>Error...</p>)
   return (
     <Card
       title={
