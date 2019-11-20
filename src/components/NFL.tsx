@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Progress } from 'reactstrap';
+import { Button, Progress, Spinner } from 'reactstrap';
 import { Card } from '../simpleui';
 import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
 import { Schedule } from '../SportsDataAccessors/types';
@@ -40,6 +40,11 @@ export default function NFL() {
     }
   }
 
+  const resetSchedule = () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    upDateSchedule();
+  }
+
   useEffect(() => {
     upDateSchedule();
   }, []);
@@ -63,6 +68,16 @@ export default function NFL() {
         <span>
           <span className="font-weight-bold">NFL</span>
           <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">{schedule.displayDate}</span>
+          <Button
+            outline
+            size="sm"
+            className="float-right"
+            onClick={resetSchedule}
+            disabled={isLoading}
+            style={{width:'50px'}}
+          >
+            {isLoading ? <Spinner size="sm" color="primary" type="grow" /> : 'Reset'}
+          </Button>
         </span>
       }
     >
