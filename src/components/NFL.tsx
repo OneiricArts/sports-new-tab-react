@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Progress } from 'reactstrap';
 import { Card } from '../simpleui';
 import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
 import { Schedule } from '../SportsDataAccessors/types';
@@ -10,11 +11,18 @@ export default function NFL() {
     games: [],
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const upDateSchedule = async () => {
+    setIsLoading(true);
+
     try {
       const schedule = await fetchNFLDataAsync(undefined);
       setSchedule(schedule);
-    } catch {}
+      setIsLoading(false);
+    } catch {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -42,6 +50,8 @@ export default function NFL() {
         </span>
       }
     >
+      {isLoading && <Progress animated style={{height: '5px'}} color="info" value={100} />}
+
       <GameTable games={schedule.games} removeGame={removeGame} />
     </Card>
   );
