@@ -4,10 +4,10 @@ export interface Game {
   status: string;
   awayTeam: string;
   homeTeam: string;
-  awayTeamWinning: boolean;
-  homeTeamWinning: boolean;
-  awayTeamScore: number;
-  homeTeamScore: number;
+  awayTeamWinning?: boolean;
+  homeTeamWinning?: boolean;
+  awayTeamScore?: number;
+  homeTeamScore?: number;
 
   hidden: boolean;
 }
