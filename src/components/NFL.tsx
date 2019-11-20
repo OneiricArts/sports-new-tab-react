@@ -10,8 +10,15 @@ export default function NFL() {
     games: [],
   });
 
+  const upDateSchedule = async () => {
+    try {
+      const schedule = await fetchNFLDataAsync(undefined);
+      setSchedule(schedule);
+    } catch {}
+  }
+
   useEffect(() => {
-    fetchNFLDataAsync().then(schedule => setSchedule(schedule));
+    upDateSchedule();
   }, []);
 
   const removeGame = (id: number) => {
