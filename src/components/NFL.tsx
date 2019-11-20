@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Button, Progress, Spinner } from 'reactstrap';
 import { Card } from '../simpleui';
 import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
@@ -26,14 +27,17 @@ export default function NFL() {
     }
     //...//
 
-    if (cachedSchedule) setSchedule(cachedSchedule);
-
-    setIsLoading(true);
+    ReactDOM.unstable_batchedUpdates(() => {
+      if (cachedSchedule) setSchedule(cachedSchedule);
+      setIsLoading(true);
+    });
 
     try {
       const schedule = await fetchNFLDataAsync(cachedSchedule);
-      setSchedule(schedule);
-      setIsLoading(false);
+      ReactDOM.unstable_batchedUpdates(() => {
+        setSchedule(schedule);
+        setIsLoading(false);
+      });
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
     } catch {
       setIsLoading(false);
