@@ -6,6 +6,8 @@ import { Schedule } from '../SportsDataAccessors/types';
 import GameTable from './GameTable';
 
 export default function NFL() {
+  const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
+
   const [schedule, setSchedule] = useState<Schedule>({
     displayDate: '',
     games: [],
@@ -14,12 +16,25 @@ export default function NFL() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const upDateSchedule = async () => {
+    let cachedSchedule: Schedule | undefined;
+
+    // TODO only look at cache when needed
+    console.log('using cache')
+    const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (cachedScheduleString) {
+      cachedSchedule = JSON.parse(cachedScheduleString);
+    }
+    //...//
+
+    if (cachedSchedule) setSchedule(cachedSchedule);
+
     setIsLoading(true);
 
     try {
-      const schedule = await fetchNFLDataAsync(undefined);
+      const schedule = await fetchNFLDataAsync(cachedSchedule);
       setSchedule(schedule);
       setIsLoading(false);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
     } catch {
       setIsLoading(false);
     }
@@ -38,6 +53,7 @@ export default function NFL() {
     });
 
     setSchedule({ displayDate: schedule.displayDate, games: newGames });
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
   }
 
   console.log('rendering...');
