@@ -1,0 +1,52 @@
+html {
+  font-size: 14px;
+}
+
+.winning_team {
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 0px;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.container-fluid {
+  /* push down navbar*/
+  padding-top: 20px;
+  /* so plus button isn't stuck at bottom */
+  padding-bottom: 20px;
+}
+
+@media (min-width: 20em) {
+  .card-columns {
+      column-count: 1;
+  }
+}
+
+@media (min-width: 40em) {
+  .card-columns {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 48em) {
+  .card-columns {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 70em) {
+  .card-columns {
+    column-count: 3;
+  }
+}
+
+@media (min-width: 95em) {
+  .card-columns {
+    column-count: 4;
+  }
+}

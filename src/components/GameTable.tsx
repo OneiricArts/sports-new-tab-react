@@ -41,12 +41,14 @@ const TableHeader = () => (
 );
 
 const GameTable = ({ games, removeGame }: { games: Game[], removeGame: (id: number) => void }) => (
-  <Table>
+  <Table responsive size="sm">
     <TableHeader />
     <tbody>
-      {games
-        .filter(game => !game.hidden)
-        .map((game, index) => <GameRow key={index} game={game} removeGame={removeGame} />)}
+      {
+        games
+          .filter(game => !game.hidden)
+          .map((game, index) => <GameRow key={index} game={game} removeGame={removeGame} />)
+      }
     </tbody>
   </Table>
 );
