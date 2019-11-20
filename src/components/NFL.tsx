@@ -1,4 +1,5 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Card } from '../simpleui';
 import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
 import { Schedule } from '../SportsDataAccessors/types';
 import GameTable from './GameTable';
@@ -27,10 +28,15 @@ export default function NFL() {
   console.log('rendering...');
   if (!schedule.games) return(<p>Error...</p>)
   return (
-    <Fragment>
-      <h1>NFL</h1>
-      <h3>Week {schedule.displayDate}</h3>
+    <Card
+      title={
+        <span>
+          <span className="font-weight-bold">NFL</span>
+          <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">{schedule.displayDate}</span>
+        </span>
+      }
+    >
       <GameTable games={schedule.games} removeGame={removeGame} />
-    </Fragment>
+    </Card>
   );
 }
