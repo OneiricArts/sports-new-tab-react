@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Progress, Spinner } from 'reactstrap';
+import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
 import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
 import { Schedule } from '../SportsDataAccessors/types';
@@ -48,6 +49,8 @@ export default function NFL() {
   useEffect(() => {
     upDateSchedule();
   }, []);
+
+  useVisibilityHandlers(upDateSchedule);
 
   const removeGame = (id: number) => {
     const newGames = schedule.games.map(game => {
