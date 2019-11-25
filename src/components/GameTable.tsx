@@ -9,11 +9,11 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
     <tr>
       <td>{game.status}</td>
 
-      <td className={game.awayTeamWinning ? 'winning_team' : ''}>
+      <td className={`${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
         {game.awayTeam}
       </td>
 
-      <td className={game.homeTeamWinning ? 'winning_team' : ''}>
+      <td className={`${game.homeTeamWinning && 'winning_team'} ${game.homeTeamHasPosession ? 'has_posession' : ''}`}>
         {game.homeTeam}
       </td>
 
