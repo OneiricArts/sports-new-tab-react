@@ -11,10 +11,12 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
 
       <td className={`${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
         {game.awayTeam}
+        {game.awayTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
       <td className={`${game.homeTeamWinning && 'winning_team'} ${game.homeTeamHasPosession ? 'has_posession' : ''}`}>
         {game.homeTeam}
+        {game.homeTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
       <td>{game.awayTeamScore}</td>
