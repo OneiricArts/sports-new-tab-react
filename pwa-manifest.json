@@ -8,7 +8,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/sports-new-tab-react?utm_source=a2hs",
+  "start_url": "/?utm_source=a2hs",
   "display": "browser",
   "theme_color": "#000000",
   "background_color": "#ffffff"
