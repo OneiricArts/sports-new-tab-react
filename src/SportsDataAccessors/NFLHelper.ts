@@ -1,7 +1,7 @@
-import { Schedule } from './types';
+import { NFLSchedule } from './types';
 
 function convertToTypes(unTypedData: any) {
-  const schedule:Schedule = {
+  const schedule:NFLSchedule = {
     displayDate: `Week ${unTypedData.w}`,
     games: []
   };
@@ -36,9 +36,6 @@ function convertToTypes(unTypedData: any) {
       homeTeam = g.home.abbr;
     }
 
-    if (g.visitor_pos) { awayTeam = `${awayTeam} 🏈` } // TODO remove
-    if (g.home_pos) { homeTeam = `${homeTeam} 🏈` } // TODO remove
-
     schedule.games.push(
       {
         id: g.eid,
@@ -49,6 +46,8 @@ function convertToTypes(unTypedData: any) {
         homeTeamWinning: g.home_winning,
         awayTeamScore: g.away.score.T,
         homeTeamScore: g.home.score.T,
+        awayTeamHasPosession: g.visitor_pos,
+        homeTeamHasPosession: g.home_pos,
         hidden: false
       }
     );
@@ -58,7 +57,7 @@ function convertToTypes(unTypedData: any) {
   return schedule;
 }
 
-function carryOverHiddenGames(schedule: Schedule, cachedSchedule: Schedule) {
+function carryOverHiddenGames(schedule: NFLSchedule, cachedSchedule: NFLSchedule) {
   if (schedule.displayDate !== cachedSchedule.displayDate) return schedule;
 
   schedule.games.map((g, i) => {
@@ -81,7 +80,7 @@ function sleep(ms:number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function fetchNFLDataAsync(cachedSchedule: Schedule|undefined): Promise<Schedule> {
+export async function fetchNFLDataAsync(cachedSchedule: NFLSchedule|undefined): Promise<NFLSchedule> {
   const url = 'https://us-central1-sports-new-tab.cloudfunctions.net/nfl-data';
   const unTypedData = await (await fetch(url)).json();
   const typedData = convertToTypes(unTypedData);

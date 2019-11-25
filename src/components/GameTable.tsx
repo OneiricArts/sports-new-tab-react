@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, Table } from 'reactstrap';
-import { Game } from '../SportsDataAccessors/types';
+import { NFLGame } from '../SportsDataAccessors/types';
 
-const GameRow = ({ game, removeGame }: { game: Game, removeGame: (id: number) => void }) => {
+const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number) => void }) => {
   const handleClick = () => removeGame(game.id);
 
   return (
@@ -40,7 +40,7 @@ const TableHeader = () => (
   </thead>
 );
 
-const GameTable = ({ games, removeGame }: { games: Game[], removeGame: (id: number) => void }) => (
+const GameTable = ({ games, removeGame }: { games: NFLGame[], removeGame: (id: number) => void }) => (
   <Table responsive size="sm">
     <TableHeader />
     <tbody>

@@ -18,6 +18,13 @@ export interface Schedule {
   games: Game[];
 }
 
-// export interface NFLGame extends Game {
-//   teamHasPossession?: (team: string) => boolean;
-// }
+export interface NFLGame extends Game {
+  // teamHasPossession?: (team: string) => boolean;
+  awayTeamHasPosession?: boolean;
+  homeTeamHasPosession?: boolean;
+}
+
+export interface NFLSchedule {
+  displayDate: string;
+  games: NFLGame[];
+}
