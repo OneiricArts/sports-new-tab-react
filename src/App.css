@@ -21,6 +21,13 @@ html {
   padding-bottom: 20px;
 }
 
+@media (max-width: 575px) {
+  .has_posession {
+    text-decoration: underline #d3d3d3;
+    text-decoration-style: wavy;
+  }
+}
+
 @media (min-width: 20em) {
   .card-columns {
       column-count: 1;

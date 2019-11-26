@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { Button, Table } from 'reactstrap';
-import { Game } from '../SportsDataAccessors/types';
+import { NFLGame } from '../SportsDataAccessors/types';
 
-const GameRow = ({ game, removeGame }: { game: Game, removeGame: (id: number) => void }) => {
+const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number) => void }) => {
   const handleClick = () => removeGame(game.id);
 
   return (
     <tr>
       <td>{game.status}</td>
 
-      <td className={game.awayTeamWinning ? 'winning_team' : ''}>
+      <td className={`${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
         {game.awayTeam}
+        {game.awayTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
-      <td className={game.homeTeamWinning ? 'winning_team' : ''}>
+      <td className={`${game.homeTeamWinning && 'winning_team'} ${game.homeTeamHasPosession ? 'has_posession' : ''}`}>
         {game.homeTeam}
+        {game.homeTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
       <td>{game.awayTeamScore}</td>
@@ -40,7 +42,7 @@ const TableHeader = () => (
   </thead>
 );
 
-const GameTable = ({ games, removeGame }: { games: Game[], removeGame: (id: number) => void }) => (
+const GameTable = ({ games, removeGame }: { games: NFLGame[], removeGame: (id: number) => void }) => (
   <Table responsive size="sm">
     <TableHeader />
     <tbody>
