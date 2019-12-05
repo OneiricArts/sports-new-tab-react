@@ -22,6 +22,19 @@ function convertToTypes(unTypedData: any) {
       }
     }
 
+    // console.log(status)
+    if (status.match(/\d:\d{2}/) !== null) {
+      console.log(status);
+      const [h, m] = status.split(' ')[1].split(':');
+      console.log(h, m)
+      const serverTime = new Date();
+
+      serverTime.setUTCHours(12 + parseInt(h));
+      serverTime.setUTCMinutes(12 + parseInt(m));
+
+      console.log(serverTime.toLocaleTimeString());
+    }
+
     let awayTeam: string;
     if (g.extrainfo) {
       awayTeam = g.extrainfo.gameSchedule.visitorNickname;
