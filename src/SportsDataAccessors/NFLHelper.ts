@@ -81,7 +81,7 @@ function sleep(ms:number) {
 }
 
 export async function fetchNFLDataAsync(cachedSchedule: NFLSchedule|undefined): Promise<NFLSchedule> {
-  const url = 'https://us-central1-sports-new-tab.cloudfunctions.net/nfl-data';
+  const url = 'https://sports-new-tab-page.appspot.com/nfl';
   const unTypedData = await (await fetch(url)).json();
   const typedData = convertToTypes(unTypedData);
 
