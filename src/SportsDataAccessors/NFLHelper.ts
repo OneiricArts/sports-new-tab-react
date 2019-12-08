@@ -7,20 +7,17 @@ function convertToTypes(unTypedData: any) {
   };
 
   unTypedData.gms.map((g:any) => {
-    let status: string;
-    if (g.qtr) {
-      if (g.playing) {
-        status = `${g.qtr}Q, ${g.clock}`;
+    let statusToDisplay = '';
+    try {
+      if (g.organizedInfo.status.type === 'DATETIME') {
+        const date = new Date(g.organizedInfo.status.value);
+
+        const options = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
+        statusToDisplay = date.toLocaleString("en-US", options).replace(/AM|PM/, '').trim();
       } else {
-        status = g.qtr;
+        statusToDisplay = g.organizedInfo.status.value;
       }
-    } else {
-      if (g.extrainfo) {
-        status = `${g.extrainfo.gameSchedule.gameDate} ${g.t}`;
-      } else {
-        status = g.t;
-      }
-    }
+    } finally {}
 
     let awayTeam: string;
     if (g.extrainfo) {
@@ -39,7 +36,7 @@ function convertToTypes(unTypedData: any) {
     schedule.games.push(
       {
         id: g.eid,
-        status: status,
+        status: statusToDisplay,
         awayTeam: awayTeam,
         homeTeam: homeTeam,
         awayTeamWinning: g.visitor_winning,
