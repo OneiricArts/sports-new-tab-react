@@ -6,7 +6,7 @@ function convertToTypes(unTypedData: any) {
     games: []
   };
 
-  unTypedData.gms.map((g:any) => {
+  unTypedData.gms.forEach((g:any) => {
     const {
       id,
       status,
@@ -39,8 +39,6 @@ function convertToTypes(unTypedData: any) {
         hidden: false
       }
     );
-
-    return g;
   });
   return schedule;
 }
