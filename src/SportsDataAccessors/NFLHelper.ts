@@ -7,44 +7,35 @@ function convertToTypes(unTypedData: any) {
   };
 
   unTypedData.gms.map((g:any) => {
+    const {
+      id,
+      status,
+      awayTeam,             homeTeam,
+      awayTeamHasPosession, homeTeamHasPosession,
+      awayTeamWinning,      homeTeamWinning,
+      awayTeamScore,        homeTeamScore
+    } = g.organizedInfo;
+
     let statusToDisplay = '';
     try {
-      if (g.organizedInfo.status.type === 'DATETIME') {
+      if (status.type === 'DATETIME') {
         const date = new Date(g.organizedInfo.status.value);
 
         const options = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
         statusToDisplay = date.toLocaleString("en-US", options).replace(/AM|PM/, '').trim();
       } else {
-        statusToDisplay = g.organizedInfo.status.value;
+        statusToDisplay = status.value;
       }
     } finally {}
 
-    let awayTeam: string;
-    if (g.extrainfo) {
-      awayTeam = g.extrainfo.gameSchedule.visitorNickname;
-    } else {
-      awayTeam = g.away.abbr;
-    }
-
-    let homeTeam: string;
-    if (g.extrainfo) {
-      homeTeam = g.extrainfo.gameSchedule.homeNickname;
-    } else {
-      homeTeam = g.home.abbr;
-    }
-
     schedule.games.push(
       {
-        id: g.eid,
+        id,
         status: statusToDisplay,
-        awayTeam: awayTeam,
-        homeTeam: homeTeam,
-        awayTeamWinning: g.visitor_winning,
-        homeTeamWinning: g.home_winning,
-        awayTeamScore: g.away.score.T,
-        homeTeamScore: g.home.score.T,
-        awayTeamHasPosession: g.visitor_pos,
-        homeTeamHasPosession: g.home_pos,
+        awayTeam,             homeTeam,
+        awayTeamWinning,      homeTeamWinning,
+        awayTeamScore,        homeTeamScore,
+        awayTeamHasPosession, homeTeamHasPosession,
         hidden: false
       }
     );
