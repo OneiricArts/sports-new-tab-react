@@ -19,10 +19,10 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
         {game.homeTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
-      <td>{game.awayTeamScore}</td>
-      <td>{game.homeTeamScore}</td>
+      <td className="text-right">{game.awayTeamScore}</td>
+      <td className="text-right">{game.homeTeamScore}</td>
 
-      <td>
+      <td className="text-right">
         <Button outline={true} color="secondary" size="sm" onClick={handleClick}>&#9587;</Button>
       </td>
     </tr>
@@ -35,9 +35,9 @@ const TableHeader = () => (
       <th/>{/* status */}
       <th>away</th>
       <th>@home</th>
-      <th>a</th>
-      <th>h</th>
-      <th/>{/* X */}
+      <th className="text-right">a</th>
+      <th className="text-right">h</th>
+      <th className="text-right"/>{/* X */}
     </tr>
   </thead>
 );
