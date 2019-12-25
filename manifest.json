@@ -6,7 +6,6 @@
 		"newtab": "index.html"
   },
 	"permissions": [
-		"storage",
-		"https://sports-new-tab-page.appspot.com/nfl"
+		"storage"
 	]
 }
