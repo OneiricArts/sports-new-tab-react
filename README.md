@@ -1,4 +1,4 @@
-![](https://github.com/raj-al-ghul/sports-new-tab-react/workflows/Node%20CI/badge.svg)
+![](https://github.com/oneiricarts/sports-new-tab-react/workflows/Node%20CI/badge.svg)
 
 # sports-new-tab-react
 
