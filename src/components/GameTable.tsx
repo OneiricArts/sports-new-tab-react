@@ -7,22 +7,22 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
 
   return (
     <tr>
-      <td>{game.status}</td>
+      <td className="align-middle">{game.status}</td>
 
-      <td className={`${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
+      <td className={`align-middle ${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
         {game.awayTeam}
         {game.awayTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
-      <td className={`${game.homeTeamWinning && 'winning_team'} ${game.homeTeamHasPosession ? 'has_posession' : ''}`}>
+      <td className={`align-middle ${game.homeTeamWinning && 'winning_team'} ${game.homeTeamHasPosession ? 'has_posession' : ''}`}>
         {game.homeTeam}
         {game.homeTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
       </td>
 
-      <td className="text-right">{game.awayTeamScore}</td>
-      <td className="text-right">{game.homeTeamScore}</td>
+      <td className="align-middle text-right">{game.awayTeamScore}</td>
+      <td className="align-middle text-right">{game.homeTeamScore}</td>
 
-      <td className="text-right">
+      <td className="align-middle text-right">
         <Button outline={true} color="secondary" size="sm" onClick={handleClick}>&#9587;</Button>
       </td>
     </tr>
