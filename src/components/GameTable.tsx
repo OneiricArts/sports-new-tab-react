@@ -6,7 +6,7 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
   const handleClick = () => removeGame(game.id);
 
   return (
-    <tr>
+    <tr style={{touchAction: 'manipulation'}}>
       <td className="align-middle">{game.status}</td>
 
       <td className={`align-middle ${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
@@ -30,20 +30,20 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
 }
 
 const TableHeader = () => (
-  <thead>
-    <tr>
-      <th/>{/* status */}
-      <th>away</th>
-      <th>@home</th>
-      <th className="text-right">a</th>
-      <th className="text-right">h</th>
-      <th className="text-right"/>{/* X */}
+  <thead style={{touchAction: 'manipulation'}}>
+    <tr style={{touchAction: 'manipulation'}}>
+      <th style={{touchAction: 'manipulation'}}/>{/* status */}
+      <th style={{touchAction: 'manipulation'}}>away</th>
+      <th style={{touchAction: 'manipulation'}}>@home</th>
+      <th style={{touchAction: 'manipulation'}} className="text-right">a</th>
+      <th style={{touchAction: 'manipulation'}} className="text-right">h</th>
+      <th style={{touchAction: 'manipulation'}} className="text-right"/>{/* X */}
     </tr>
   </thead>
 );
 
 const GameTable = ({ games, removeGame }: { games: NFLGame[], removeGame: (id: number) => void }) => (
-  <Table responsive size="sm">
+  <Table style={{touchAction: 'manipulation'}} responsive size="sm">
     <TableHeader />
     <tbody>
       {
