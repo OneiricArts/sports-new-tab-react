@@ -62,7 +62,7 @@ function carryOverHiddenGames(schedule: NFLSchedule, cachedSchedule: NFLSchedule
   return schedule;
 }
 
-function sleep(ms:number) {
+function sleep(ms:number) { // eslint-disable-line @typescript-eslint/no-unused-vars
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
