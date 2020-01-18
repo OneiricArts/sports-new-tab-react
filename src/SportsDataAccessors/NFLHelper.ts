@@ -2,7 +2,7 @@ import { NFLSchedule } from './types';
 
 function convertToTypes(unTypedData: any) {
   const schedule:NFLSchedule = {
-    displayDate: `Week ${unTypedData.w}`,
+    displayDate: unTypedData.w,
     games: []
   };
 
@@ -62,7 +62,7 @@ function carryOverHiddenGames(schedule: NFLSchedule, cachedSchedule: NFLSchedule
   return schedule;
 }
 
-function sleep(ms:number) {
+function sleep(ms:number) { // eslint-disable-line @typescript-eslint/no-unused-vars
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
