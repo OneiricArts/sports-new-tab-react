@@ -2,7 +2,7 @@ import { NFLSchedule } from './types';
 
 function convertToTypes(unTypedData: any) {
   const schedule:NFLSchedule = {
-    displayDate: `Week ${unTypedData.w}`,
+    displayDate: unTypedData.w,
     games: []
   };
 
