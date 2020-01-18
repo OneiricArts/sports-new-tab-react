@@ -14,12 +14,12 @@ function convertToTypes(unTypedData: any) {
       awayTeamHasPosession, homeTeamHasPosession,
       awayTeamWinning,      homeTeamWinning,
       awayTeamScore,        homeTeamScore
-    } = g.organizedInfo;
+    } = g;
 
     let statusToDisplay = '';
     try {
       if (status.type === 'DATETIME') {
-        const date = new Date(g.organizedInfo.status.value);
+        const date = new Date(status.value);
 
         const options = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
         statusToDisplay = date.toLocaleString("en-US", options).replace(/AM|PM/, '').trim();
