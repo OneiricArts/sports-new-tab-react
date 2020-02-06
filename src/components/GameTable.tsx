@@ -2,6 +2,11 @@ import * as React from 'react';
 import { Button, Table } from 'reactstrap';
 import { NFLGame } from '../SportsDataAccessors/types';
 
+const FootballEmoji = () =>
+  <span role="img" aria-label="has posession" className="d-none d-md-inline d-lg-inline">
+    &nbsp;🏈
+  </span>;
+
 const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number) => void }) => {
   const handleClick = () => removeGame(game.id);
 
@@ -11,12 +16,12 @@ const GameRow = ({ game, removeGame }: { game: NFLGame, removeGame: (id: number)
 
       <td className={`align-middle ${game.awayTeamWinning ? 'winning_team' : ''} ${game.awayTeamHasPosession ? 'has_posession' : ''}`}>
         {game.awayTeam}
-        {game.awayTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
+        {true && <FootballEmoji />}
       </td>
 
       <td className={`align-middle ${game.homeTeamWinning && 'winning_team'} ${game.homeTeamHasPosession ? 'has_posession' : ''}`}>
         {game.homeTeam}
-        {game.homeTeamHasPosession && <span className="d-none d-md-inline d-lg-inline"> 🏈</span>}
+        {game.homeTeamHasPosession && <FootballEmoji />}
       </td>
 
       <td className="align-middle text-right">{game.awayTeamScore}</td>
