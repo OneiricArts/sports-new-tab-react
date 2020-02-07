@@ -1,23 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // TODO -- write test with multiple components using independenly
-export default function useVisibilityHandlers(onVisibleCallback: () => void) {
-  useEffect(() => {
-    let pageVisible = true;
+export default function useVisibilityHandlers(): [number, boolean] {
+  const [onVisibleCtr, setOnVisibleCtr] = useState(0);
+  const [pageVisible, setPageVisible] = useState(true);
 
+  useEffect(() => {
     const inFocus = () => {
-      if (!pageVisible) { onVisibleCallback(); }
-      pageVisible = true;
+      setPageVisible(true);
+      setOnVisibleCtr(o => o + 1);
     }
 
-    const outFocus = () => pageVisible = false;
+    const outFocus = () => setPageVisible(false);
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        pageVisible = false;
+        setPageVisible(false);
       } else {
-        if (!pageVisible) { onVisibleCallback(); }
-        pageVisible = true;
+        setPageVisible(true);
+        setOnVisibleCtr(o => o + 1);
       }
     }
 
@@ -25,10 +26,12 @@ export default function useVisibilityHandlers(onVisibleCallback: () => void) {
     window.addEventListener('blur', outFocus);
     document.addEventListener('visibilitychange', handleVisibilityChange, false);
 
-    return () =>{
+    return () => {
       window.removeEventListener('focus', inFocus);
       window.removeEventListener('blur', outFocus);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [onVisibleCallback]);
+  }, []);
+
+  return [onVisibleCtr, pageVisible];
 }
