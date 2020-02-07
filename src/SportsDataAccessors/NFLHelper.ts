@@ -1,12 +1,12 @@
 import { NFLSchedule } from './types';
 
 function convertToTypes(unTypedData: any) {
-  const schedule:NFLSchedule = {
+  const schedule: NFLSchedule = {
     displayDate: unTypedData.w,
     games: []
   };
 
-  unTypedData.gms.forEach((g:any) => {
+  unTypedData.gms.forEach((g: any) => {
     const {
       id,
       status,
@@ -26,7 +26,7 @@ function convertToTypes(unTypedData: any) {
       } else {
         statusToDisplay = status.value;
       }
-    } finally {}
+    } finally { }
 
     schedule.games.push(
       {
@@ -43,36 +43,19 @@ function convertToTypes(unTypedData: any) {
   return schedule;
 }
 
-function carryOverHiddenGames(schedule: NFLSchedule, cachedSchedule: NFLSchedule) {
-  if (schedule.displayDate !== cachedSchedule.displayDate) return schedule;
-
-  schedule.games.map((g, i) => {
-    // if (g.id !== cachedSchedule.games[i].id)
-    // g.hidden = cachedSchedule.games[i].hidden;
-
-    // shouldn't this be of type Game | undefined
-    const cachedGame = cachedSchedule.games.filter(cg => cg.id === g.id)[0];
-    if (cachedGame) g.hidden = cachedGame.hidden;
-
-    // need a better way to do this
-
-    return g;
-  });
-
-  return schedule;
-}
-
-function sleep(ms:number) { // eslint-disable-line @typescript-eslint/no-unused-vars
+// use: await sleep();
+function sleep(ms: number) { // eslint-disable-line @typescript-eslint/no-unused-vars
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function fetchNFLDataAsync(cachedSchedule: NFLSchedule|undefined): Promise<NFLSchedule> {
+export async function fetchNFLDataAsync(cachedSchedule: NFLSchedule | undefined): Promise<NFLSchedule> {
+  // await sleep(1000);
+  // const url = 'http://localhost:8080/nfl'; // TODO have env flag to develop with local service
   const url = 'https://sports-new-tab-page.appspot.com/nfl';
   const unTypedData = await (await fetch(url)).json();
   const typedData = convertToTypes(unTypedData);
 
   if (!cachedSchedule) return typedData;
 
-  const typedDataWithHiddens = carryOverHiddenGames(typedData, cachedSchedule);
-  return typedDataWithHiddens;
+  return typedData;
 }

@@ -1,71 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
 import { Button, Progress, Spinner } from 'reactstrap';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
-import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
-import { Schedule } from '../SportsDataAccessors/types';
 import GameTable from './GameTable';
+import useFetchSchedule from '../hooks/useFetchSchedule';
+import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
+import useUserPreferences, { UserDataI } from '../hooks/useUserPreferences';
+
+interface NflUserDataI extends UserDataI { };
+const userPreferencesDefault: NflUserDataI = { removedGames: { date: '', games: {} } };
 
 export default function NFL() {
   const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
+  const USER_DATA_LOCAL_STORAGE_KEY = 'nfl-user-data';
 
-  const [schedule, setSchedule] = useState<Schedule>({
-    displayDate: '',
-    games: [],
-  });
+  const [userData, removeGame, resetUserRemovedGames] = useUserPreferences<NflUserDataI>(
+    USER_DATA_LOCAL_STORAGE_KEY,
+    userPreferencesDefault
+  );
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [resetCounter, setResetCounter] = useState<number>(0);
 
-  const upDateSchedule = async () => {
-    let cachedSchedule: Schedule | undefined;
+  const [onVisibleCtr] = useVisibilityHandlers();
 
-    // TODO only look at cache when needed
-    console.log('using cache')
-    const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (cachedScheduleString) {
-      cachedSchedule = JSON.parse(cachedScheduleString);
-    }
-    //...//
-
-    ReactDOM.unstable_batchedUpdates(() => {
-      if (cachedSchedule) setSchedule(cachedSchedule);
-      setIsLoading(true);
-    });
-
-    try {
-      const schedule = await fetchNFLDataAsync(cachedSchedule);
-      ReactDOM.unstable_batchedUpdates(() => {
-        setSchedule(schedule);
-        setIsLoading(false);
-      });
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
-    } catch {
-      setIsLoading(false);
-    }
-  }
+  const [schedule, isLoading, resetScheduleCache] = useFetchSchedule(
+    LOCAL_STORAGE_KEY,
+    fetchNFLDataAsync,
+    resetCounter + onVisibleCtr
+  );
 
   const resetSchedule = () => {
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-    upDateSchedule();
+    console.log('>>> reseting');
+    resetScheduleCache();
+    resetUserRemovedGames();
+    setResetCounter(resetCounter + 1);
   }
 
-  useEffect(() => {
-    upDateSchedule();
-  }, []);
+  const removeGameClick = (id: number) => removeGame(id, schedule);
 
-  useVisibilityHandlers(upDateSchedule);
-
-  const removeGame = (id: number) => {
-    const newGames = schedule.games.map(game => {
-      if (game.id === id) {
-        game.hidden = true;
-      }
-      return game;
+  /// TODO Change && why is ...games?.[game.id] not suppored in current cra??
+  schedule.games.forEach(game => game.hidden = false);
+  if (schedule.displayDate === userData.removedGames.date) {
+    schedule.games.forEach(game => {
+      if (userData.removedGames.games && userData.removedGames.games[game.id]) game.hidden = true;
     });
-
-    setSchedule({ displayDate: schedule.displayDate, games: newGames });
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
   }
 
   console.log('rendering...');
@@ -81,16 +59,16 @@ export default function NFL() {
             className="float-right"
             onClick={resetSchedule}
             disabled={isLoading}
-            style={{width:'50px'}}
+            style={{ width: '50px' }}
           >
             {isLoading ? <Spinner size="sm" color="primary" type="grow" /> : 'Reset'}
           </Button>
         </span>
       }
     >
-      {isLoading && <Progress animated style={{height: '5px'}} color="info" value={100} />}
+      {isLoading && <Progress animated style={{ height: '5px' }} color="info" value={100} />}
 
-      <GameTable games={schedule.games} removeGame={removeGame} />
+      <GameTable games={schedule.games} removeGame={removeGameClick} />
     </Card>
   );
 }
