@@ -1,5 +1,10 @@
 html {
   font-size: 14px;
+  /* touch-action: manipulation; */
+}
+
+* {
+  touch-action: manipulation;
 }
 
 .winning_team {
