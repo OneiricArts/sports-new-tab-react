@@ -12,7 +12,7 @@ export default function NFL() {
 
   const [schedule, setSchedule] = useState<Schedule>({
     displayDate: '',
-    games: [],
+    games: []
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export default function NFL() {
     let cachedSchedule: Schedule | undefined;
 
     // TODO only look at cache when needed
-    console.log('using cache')
+    console.log('using cache');
     const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (cachedScheduleString) {
       cachedSchedule = JSON.parse(cachedScheduleString);
@@ -43,12 +43,12 @@ export default function NFL() {
     } catch {
       setIsLoading(false);
     }
-  }
+  };
 
   const resetSchedule = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     upDateSchedule();
-  }
+  };
 
   useEffect(() => {
     upDateSchedule();
@@ -66,7 +66,7 @@ export default function NFL() {
 
     setSchedule({ displayDate: schedule.displayDate, games: newGames });
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
-  }
+  };
 
   console.log('rendering...');
   return (
@@ -74,21 +74,29 @@ export default function NFL() {
       title={
         <span>
           <span className="font-weight-bold">NFL</span>
-          <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">{schedule.displayDate}</span>
+          <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
+            {schedule.displayDate}
+          </span>
           <Button
             outline
             size="sm"
             className="float-right"
             onClick={resetSchedule}
             disabled={isLoading}
-            style={{width:'50px'}}
+            style={{ width: '50px' }}
           >
-            {isLoading ? <Spinner size="sm" color="primary" type="grow" /> : 'Reset'}
+            {isLoading ? (
+              <Spinner size="sm" color="primary" type="grow" />
+            ) : (
+              'Reset'
+            )}
           </Button>
         </span>
       }
     >
-      {isLoading && <Progress animated style={{height: '5px'}} color="info" value={100} />}
+      {isLoading && (
+        <Progress animated style={{ height: '5px' }} color="info" value={100} />
+      )}
 
       <GameTable games={schedule.games} removeGame={removeGame} />
     </Card>

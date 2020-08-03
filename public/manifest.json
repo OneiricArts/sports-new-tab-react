@@ -1,11 +1,9 @@
 {
-	"manifest_version": 2,
-	"name": "Sports New Tab Page React",
-	"version": "0.1.0",
-	"chrome_url_overrides": {
-		"newtab": "index.html"
+  "manifest_version": 2,
+  "name": "Sports New Tab Page React",
+  "version": "0.1.0",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
   },
-	"permissions": [
-		"storage"
-	]
+  "permissions": ["storage"]
 }

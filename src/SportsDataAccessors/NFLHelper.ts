@@ -1,19 +1,23 @@
 import { NFLSchedule } from './types';
 
 function convertToTypes(unTypedData: any) {
-  const schedule:NFLSchedule = {
+  const schedule: NFLSchedule = {
     displayDate: unTypedData.w,
     games: []
   };
 
-  unTypedData.gms.forEach((g:any) => {
+  unTypedData.gms.forEach((g: any) => {
     const {
       id,
       status,
-      awayTeam,             homeTeam,
-      awayTeamHasPosession, homeTeamHasPosession,
-      awayTeamWinning,      homeTeamWinning,
-      awayTeamScore,        homeTeamScore
+      awayTeam,
+      homeTeam,
+      awayTeamHasPosession,
+      homeTeamHasPosession,
+      awayTeamWinning,
+      homeTeamWinning,
+      awayTeamScore,
+      homeTeamScore
     } = g;
 
     let statusToDisplay = '';
@@ -21,29 +25,42 @@ function convertToTypes(unTypedData: any) {
       if (status.type === 'DATETIME') {
         const date = new Date(status.value);
 
-        const options = { weekday: 'short', hour: '2-digit', minute: '2-digit' };
-        statusToDisplay = date.toLocaleString("en-US", options).replace(/AM|PM/, '').trim();
+        const options = {
+          weekday: 'short',
+          hour: '2-digit',
+          minute: '2-digit'
+        };
+        statusToDisplay = date
+          .toLocaleString('en-US', options)
+          .replace(/AM|PM/, '')
+          .trim();
       } else {
         statusToDisplay = status.value;
       }
-    } finally {}
+    } finally {
+    }
 
-    schedule.games.push(
-      {
-        id,
-        status: statusToDisplay,
-        awayTeam,             homeTeam,
-        awayTeamWinning,      homeTeamWinning,
-        awayTeamScore,        homeTeamScore,
-        awayTeamHasPosession, homeTeamHasPosession,
-        hidden: false
-      }
-    );
+    schedule.games.push({
+      id,
+      status: statusToDisplay,
+      awayTeam,
+      homeTeam,
+      awayTeamWinning,
+      homeTeamWinning,
+      awayTeamScore,
+      homeTeamScore,
+      awayTeamHasPosession,
+      homeTeamHasPosession,
+      hidden: false
+    });
   });
   return schedule;
 }
 
-function carryOverHiddenGames(schedule: NFLSchedule, cachedSchedule: NFLSchedule) {
+function carryOverHiddenGames(
+  schedule: NFLSchedule,
+  cachedSchedule: NFLSchedule
+) {
   if (schedule.displayDate !== cachedSchedule.displayDate) return schedule;
 
   schedule.games.map((g, i) => {
@@ -62,11 +79,14 @@ function carryOverHiddenGames(schedule: NFLSchedule, cachedSchedule: NFLSchedule
   return schedule;
 }
 
-function sleep(ms:number) { // eslint-disable-line @typescript-eslint/no-unused-vars
+function sleep(ms: number) {
+  // eslint-disable-line @typescript-eslint/no-unused-vars
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function fetchNFLDataAsync(cachedSchedule: NFLSchedule|undefined): Promise<NFLSchedule> {
+export async function fetchNFLDataAsync(
+  cachedSchedule: NFLSchedule | undefined
+): Promise<NFLSchedule> {
   const url = 'https://sports-new-tab-page.appspot.com/nfl';
   const unTypedData = await (await fetch(url)).json();
   const typedData = convertToTypes(unTypedData);

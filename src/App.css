@@ -30,7 +30,7 @@ html {
 
 @media (min-width: 20em) {
   .card-columns {
-      column-count: 1;
+    column-count: 1;
   }
 }
 
