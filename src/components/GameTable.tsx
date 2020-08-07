@@ -19,7 +19,7 @@ const GameRow = ({
   game: NFLGame;
   removeGame: (id: number) => void;
 }) => {
-  const handleClick = () => removeGame(game.id);
+  const handleClick = () => removeGame(game.id as number);
 
   return (
     <tr>
