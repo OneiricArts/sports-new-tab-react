@@ -2,6 +2,32 @@ html {
   font-size: 14px;
 }
 
+html, body {
+  height: 100%;
+}
+
+.background-js-container {
+  /* background-color: white; */
+  background-color: #000;
+  opacity: .8;
+  background: rgba(0, 0, 0, 0.8);
+  color: whitesmoke;
+
+  display: flex;
+  padding: 5px;
+  padding-left: 10px;
+}
+
+/* <Stick Footer> */
+#root {
+  flex: 1 0 auto;
+}
+
+.sticky-footer {
+  flex-shrink: none;
+}
+/* </Stick Footer> */
+
 .winning_team {
   font-weight: bold;
 }

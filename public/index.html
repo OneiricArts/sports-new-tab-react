@@ -21,9 +21,29 @@
     -->
     <title>Sports New Tab</title>
   </head>
-  <body>
+  <body class="d-flex flex-column">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <div
+      class="background-js-container"
+      id="sticky-footer"
+      style="align-items: center"
+    >
+      <a id="background-js-photo">Photo</a>
+      &nbsp;by&nbsp;
+      <a id="background-js-photographer"></a>
+      &nbsp;on&nbsp;
+      <a id="background-js-unsplash">Unsplash</a>
+
+      <div
+        id="background-js-filters"
+        style="margin-left: auto; display: inline-flex; gap: 5px; align-items: center;"
+      >
+      </div>
+    </div>
+
+    <script src="%PUBLIC_URL%/background.js"></script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
