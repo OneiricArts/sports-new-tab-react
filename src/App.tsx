@@ -7,6 +7,8 @@ function App() {
   return (
     <div className="App">
       <div className="container-fluid">
+        <Message />
+
         <div className="card-columns">
           <NBA />
         </div>
