@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
-import NFL from './components/NFL';
+import NBA from './components/NBA';
 
 function App() {
   return (
     <div className="App">
       <div className="container-fluid">
         <div className="card-columns">
-          <NFL />
+          <NBA />
         </div>
       </div>
     </div>
