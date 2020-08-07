@@ -1,7 +1,6 @@
 {
   "name": "sports-new-tab",
   "version": "0.1.0",
-  "homepage": "https://oneiricarts.github.io/sports-new-tab-react",
   "private": true,
   "dependencies": {
     "@types/jest": "24.0.12",
@@ -10,7 +9,6 @@
     "@types/react-dom": "16.8.4",
     "@types/reactstrap": "^8.0.1",
     "bootstrap": "^4.3.1",
-    "gh-pages": "^2.0.1",
     "prettier": "^2.0.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -19,11 +17,10 @@
     "typescript": "3.4.5"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "build-extension": "INLINE_RUNTIME_CHUNK=false react-scripts build",
+    "deploy": "npm run build && firebase deploy",
     "test": "react-scripts test",
     "lint": "./node_modules/prettier/bin-prettier.js --check .",
     "prettier": "./node_modules/prettier/bin-prettier.js --write .",
