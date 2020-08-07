@@ -1,5 +1,5 @@
 export interface Game {
-  id: number;
+  id: number | string;
 
   status: string;
   awayTeam: string;
@@ -9,7 +9,7 @@ export interface Game {
   awayTeamScore?: number;
   homeTeamScore?: number;
 
-  hidden: boolean;
+  hidden?: boolean;
 }
 
 export interface Schedule {
