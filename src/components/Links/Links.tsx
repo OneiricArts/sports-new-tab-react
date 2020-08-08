@@ -86,7 +86,7 @@ const Links = () => {
 
       chrome.topSites.get(data => {
         console.log(data);
-        dispatch({ type: 'addTopSites', topSites: data });
+        dispatch({ type: 'addTopSites', topSites: data.slice(0, 5) });
       });
 
       // TODO remove after a couple versions
