@@ -16,6 +16,7 @@ interface LinksDataI {
 
 type LinksAction =
   | { type: 'addTopSites'; topSites: LinkI[] }
+  | { type: 'addMySites'; mysites: LinkI[] } // TODO remove
   | { type: 'removeMySiteByIndex'; index: number }
   | { type: 'addMySite'; site: LinkI };
 
@@ -27,6 +28,10 @@ const linksReducer: LinksReducerI = (prevState, action) => {
   switch (action.type) {
     case 'addTopSites':
       newState = { ...prevState, topSites: action.topSites };
+      break;
+
+    case 'addMySites':
+      newState = { ...prevState, mySites: action.mysites };
       break;
 
     case 'removeMySiteByIndex':
@@ -92,9 +97,9 @@ const Links = () => {
       // TODO remove after a couple versions
       try {
         chrome.storage.local.get('Links_data', data => {
-          if (!data?.Link_data?.myLinks) return;
+          if (!data?.Links_data?.myLinks) return;
 
-          dispatch({ type: 'addTopSites', topSites: data.Links_data.myLinks });
+          dispatch({ type: 'addMySites', mysites: data.Links_data.myLinks });
 
           chrome.storage.local.remove('Links_data');
         });
