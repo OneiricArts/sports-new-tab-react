@@ -18,7 +18,7 @@ export const ControlBar = ({ toggles, toggle }: ControlBarProps) => {
       color="dark"
       dark
       expand="md"
-      className="d-flex"
+      className="d-flex justify-content-start"
       style={{ color: 'white', gap: '15px' }}
     >
       {toggles.map(t => (
