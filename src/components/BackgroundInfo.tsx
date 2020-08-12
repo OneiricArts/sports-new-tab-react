@@ -48,6 +48,9 @@ const BackgroundInfo = () => {
 
   const reset = () => {
     window.CNT_resetBackgroundFilter?.();
+    setFeatured(options.featured);
+    setLandscape(options.orientation === 'landscape');
+    setTopic(options.query || '');
   };
 
   return showFilters ? (
