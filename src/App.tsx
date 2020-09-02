@@ -10,12 +10,14 @@ import {
   WidgetNames
 } from './WidgetVisibility';
 import { Message } from './Message';
+import Soccer from './components/Soccer';
 
 function App() {
   const [widgetsVisible, dispatch] = useReducer(
     widgetVisibilityReducer,
     {
       NBA: true,
+      Soccer: true,
       Links: true
     },
     loadWidetsVisibleFromCache
@@ -39,7 +41,9 @@ function App() {
         <Message />
 
         <div className="card-columns">
+          {/* TODO add ErrorBoundary */}
           {widgetsVisible.NBA && <NBA />}
+          {widgetsVisible.Soccer && <Soccer />}
           {widgetsVisible.Links && <Links />}
         </div>
       </div>
