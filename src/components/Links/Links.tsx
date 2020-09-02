@@ -87,21 +87,21 @@ const Links = () => {
 
   useEffect(() => {
     const prefillData = () => {
-      if (!chrome.topSites || !chrome.storage) return;
+      if (!window.chrome?.topSites || !window.chrome?.storage) return;
 
-      chrome.topSites.get(data => {
+      window.chrome?.topSites.get(data => {
         console.log(data);
         dispatch({ type: 'addTopSites', topSites: data.slice(0, 5) });
       });
 
       // TODO remove after a couple versions
       try {
-        chrome.storage.local.get('Links_data', data => {
+        window.chrome?.storage.local.get('Links_data', data => {
           if (!data?.Links_data?.myLinks) return;
 
           dispatch({ type: 'addMySites', mysites: data.Links_data.myLinks });
 
-          chrome.storage.local.remove('Links_data');
+          window.chrome?.storage.local.remove('Links_data');
         });
       } catch {}
     };
@@ -145,7 +145,7 @@ const Links = () => {
         <LinkList list={localState.mySites} onRemove={removeMySiteByIndex} />
       </CardBody>
 
-      {chrome.topSites && (
+      {window.chrome?.topSites && (
         <CardHeader className="border-top">Chrome Top Sites</CardHeader>
       )}
 
