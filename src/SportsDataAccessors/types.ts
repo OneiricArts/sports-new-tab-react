@@ -6,8 +6,8 @@ export interface Game {
   homeTeam: string;
   awayTeamWinning?: boolean;
   homeTeamWinning?: boolean;
-  awayTeamScore?: number;
-  homeTeamScore?: number;
+  awayTeamScore?: number | string;
+  homeTeamScore?: number | string;
 
   hidden?: boolean;
 }
