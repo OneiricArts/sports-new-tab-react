@@ -1,7 +1,7 @@
 export interface Game {
   id: number | string;
 
-  status: string;
+  status: GameStatus;
   awayTeam: string;
   homeTeam: string;
   awayTeamWinning?: boolean;
@@ -17,6 +17,11 @@ export interface Schedule {
   //  playoffs?: boolean;
   games: Game[];
 }
+
+export type GameStatus =
+  | { type: 'UTC_TIME'; value: number }
+  | { type: 'TIME_STRING'; value: string }
+  | { type: 'GAMESTATUS_STRING'; value: string };
 
 export interface NFLGame extends Game {
   // teamHasPossession?: (team: string) => boolean;

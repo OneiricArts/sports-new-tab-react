@@ -67,24 +67,7 @@ const NBA = () => {
         </span>
       }
     >
-      {nbaSchedule.games && (
-        <GameTableNba
-          games={nbaSchedule.games.map(g => {
-            let time: string;
-            if (g.status.type === 'UTC_TIME') {
-              const date = new Date(g.status.value);
-              const timeString = date.toLocaleTimeString();
-
-              const [h, m] = timeString.split(' ')[0].split(':');
-              time = `${h}:${m}`;
-            } else {
-              time = g.status.value;
-            }
-
-            return { ...g, status: time };
-          })}
-        />
-      )}
+      {nbaSchedule.games && <GameTableNba games={nbaSchedule.games} />}
     </Card>
   );
 };

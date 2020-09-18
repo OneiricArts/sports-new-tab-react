@@ -1,10 +1,8 @@
-export type StatusI =
-  { type: 'UTC_TIME', value: number } |
-  { type: 'GAMESTATUS_STRING', value: string };
+import { GameStatus } from '../types';
 
 export interface NBAGameI {
   id: string;
-  status: StatusI;
+  status: GameStatus;
 
   homeTeam: string;
   homeTeamScore?: number;

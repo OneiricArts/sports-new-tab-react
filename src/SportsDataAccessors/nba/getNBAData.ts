@@ -1,6 +1,7 @@
 import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import teamCodeInfo from './teamInfo';
 import { NBAGameI, NBADataI } from './NbaDatatypes';
+import { GameStatus } from '../types';
 
 const getNBAData = async (): Promise<NBADataI> => {
   const today = formatDate(new Date());
@@ -38,7 +39,7 @@ const labelData: LabelDataI = data => {
      * Status
      */
 
-    let status: StatusI;
+    let status: GameStatus;
 
     // pregame
     if (!d.isGameActivated && d.period.current === 0) {
