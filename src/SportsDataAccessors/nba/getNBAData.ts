@@ -1,7 +1,6 @@
-import { StatsNbaScoreboardI } from "./StatsNbaScoreboardI";
-import teamCodeInfo from "./teamInfo";
-import { NBAGameI, NBADataI, StatusI } from "./NbaDatatypes";
-
+import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
+import teamCodeInfo from './teamInfo';
+import { NBAGameI, NBADataI } from './NbaDatatypes';
 
 const getNBAData = async (): Promise<NBADataI> => {
   const today = formatDate(new Date());
@@ -16,13 +15,13 @@ const getNBAData = async (): Promise<NBADataI> => {
   };
 };
 
-
 type LabelDataI = (data: StatsNbaScoreboardI) => NBAGameI[] | undefined;
 
-const getPeriod = (period: number) => period > 4 ? `OT${period - 4}` : `${period}Q`;
+const getPeriod = (period: number) =>
+  period > 4 ? `OT${period - 4}` : `${period}Q`;
 
-const labelData: LabelDataI = (data) => {
-  const labeledData = data.games?.map((d) => {
+const labelData: LabelDataI = data => {
+  const labeledData = data.games?.map(d => {
     /**
      * Status
      */
@@ -34,7 +33,6 @@ const labelData: LabelDataI = (data) => {
 
     // const [h, m] = timeString.split(" ")[0].split(":");
     // const time = `${ h }: ${ m }`;
-
 
     /**
      * Status
@@ -49,20 +47,18 @@ const labelData: LabelDataI = (data) => {
 
     // postgame
     else if (!d.isGameActivated && d.period.current > 1) {
-      const value = d.period.current > 4 ? `Final OT${d.period.current - 4} ` : 'Final';
+      const value =
+        d.period.current > 4 ? `Final OT${d.period.current - 4} ` : 'Final';
       status = { type: 'GAMESTATUS_STRING', value };
     }
 
     // playing
     else {
-
       if (d.period.isHalftime) {
         status = { type: 'GAMESTATUS_STRING', value: 'Half' };
-      }
-
-      else {
+      } else {
         const suffix = d.period.isEndOfPeriod ? 'End of' : d.clock;
-        const value = `${suffix} ${getPeriod(d.period.current)}`
+        const value = `${suffix} ${getPeriod(d.period.current)}`;
 
         status = { type: 'GAMESTATUS_STRING', value: value };
       }
@@ -71,8 +67,12 @@ const labelData: LabelDataI = (data) => {
     /**
      * Score
      */
-    const homeTeamScore = d.hTeam.score ? parseInt(d.hTeam.score, 10) : undefined;
-    const awayTeamScore = d.vTeam.score ? parseInt(d.vTeam.score, 10) : undefined;
+    const homeTeamScore = d.hTeam.score
+      ? parseInt(d.hTeam.score, 10)
+      : undefined;
+    const awayTeamScore = d.vTeam.score
+      ? parseInt(d.vTeam.score, 10)
+      : undefined;
 
     let homeTeamWinning: boolean | undefined;
     let awayTeamWinning: boolean | undefined;
@@ -80,12 +80,13 @@ const labelData: LabelDataI = (data) => {
     if (homeTeamScore && awayTeamScore) {
       homeTeamWinning = homeTeamScore > awayTeamScore;
       awayTeamWinning = awayTeamScore > homeTeamScore;
-
     }
 
     // TODO make it nullable (if not found)
-    const homeTeamInfo = teamCodeInfo[d.hTeam.triCode as keyof typeof teamCodeInfo];
-    const awayTeamInfo = teamCodeInfo[d.vTeam.triCode as keyof typeof teamCodeInfo];
+    const homeTeamInfo =
+      teamCodeInfo[d.hTeam.triCode as keyof typeof teamCodeInfo];
+    const awayTeamInfo =
+      teamCodeInfo[d.vTeam.triCode as keyof typeof teamCodeInfo];
 
     const homeTeam = homeTeamInfo?.nickname ?? d.hTeam.triCode;
     const awayTeam = awayTeamInfo?.nickname ?? d.vTeam.triCode;
@@ -102,7 +103,7 @@ const labelData: LabelDataI = (data) => {
     };
   });
 
-  return labeledData
+  return labeledData;
 };
 
 function formatDate(date: Date) {
