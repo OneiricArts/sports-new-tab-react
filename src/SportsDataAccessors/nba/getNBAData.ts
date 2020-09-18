@@ -2,9 +2,14 @@ import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import teamCodeInfo from './teamInfo';
 import { NBAGameI, NBADataI } from './NbaDatatypes';
 import { GameStatus } from '../types';
+import { formatDate } from '../helpers';
 
 const getNBAData = async (): Promise<NBADataI> => {
-  const today = formatDate(new Date());
+  const today = formatDate(
+    new Date(),
+    ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
+  );
+
   const url = `https://data.nba.net/prod/v1/${today}/scoreboard.json`;
 
   const response = await fetch(url, { mode: 'cors' });
@@ -106,14 +111,6 @@ const labelData: LabelDataI = data => {
 
   return labeledData;
 };
-
-function formatDate(date: Date) {
-  const yyyy = date.getFullYear();
-  const mm = date.getMonth() + 1;
-  const dd = date.getDate();
-  const twoDigits = (n: number) => (n < 10 ? `0${n}` : `${n}`);
-  return `${yyyy}${twoDigits(mm)}${twoDigits(dd)}`;
-}
 
 // const getSeasonYear = async () => {
 //   const url = "https://data.nba.net/prod/v1/today.json";

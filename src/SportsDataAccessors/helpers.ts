@@ -1,6 +1,23 @@
 import { GameStatus } from './types';
 
 /**
+ * Formatting Dates for API helpers
+ *
+ */
+
+const twoDigits = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+
+type DateFormatter = (p: { yyyy: string; mm: string; dd: string }) => string;
+
+export function formatDate(date: Date, func: DateFormatter) {
+  const yyyy = date.getFullYear().toString();
+  const mm = date.getMonth() + 1;
+  const dd = date.getDate();
+
+  return func({ yyyy, mm: twoDigits(mm), dd: twoDigits(dd) });
+}
+
+/**
  * Convert gameStatus to a string for the UI
  *
  */
