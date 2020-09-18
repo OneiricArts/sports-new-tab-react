@@ -42,7 +42,7 @@ function convertToTypes(unTypedData: any) {
 
     schedule.games.push({
       id,
-      status: statusToDisplay,
+      status: { type: 'GAMESTATUS_STRING', value: statusToDisplay },
       awayTeam,
       homeTeam,
       awayTeamWinning,

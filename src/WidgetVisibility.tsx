@@ -1,5 +1,6 @@
 interface WidgetVisibility {
   NBA: boolean;
+  Soccer: boolean;
   Links: boolean;
 }
 export type WidgetNames = keyof WidgetVisibility;
@@ -38,7 +39,8 @@ export const loadWidetsVisibleFromCache = (init: WidgetVisibility) => {
     const json = JSON.parse(cache);
     if (!json) return init;
 
-    return json;
+    // TODO have type checking for localStorage, could be missing newly added keys
+    return { ...init, ...json };
   } catch {
     return init;
   }

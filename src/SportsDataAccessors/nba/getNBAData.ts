@@ -1,10 +1,15 @@
-import { StatsNbaScoreboardI } from "./StatsNbaScoreboardI";
-import teamCodeInfo from "./teamInfo";
-import { NBAGameI, NBADataI, StatusI } from "./NbaDatatypes";
-
+import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
+import teamCodeInfo from './teamInfo';
+import { NBAGameI, NBADataI } from './NbaDatatypes';
+import { GameStatus } from '../types';
+import { formatDate } from '../helpers';
 
 const getNBAData = async (): Promise<NBADataI> => {
-  const today = formatDate(new Date());
+  const today = formatDate(
+    new Date(),
+    ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
+  );
+
   const url = `https://data.nba.net/prod/v1/${today}/scoreboard.json`;
 
   const response = await fetch(url, { mode: 'cors' });
@@ -16,13 +21,13 @@ const getNBAData = async (): Promise<NBADataI> => {
   };
 };
 
-
 type LabelDataI = (data: StatsNbaScoreboardI) => NBAGameI[] | undefined;
 
-const getPeriod = (period: number) => period > 4 ? `OT${period - 4}` : `${period}Q`;
+const getPeriod = (period: number) =>
+  period > 4 ? `OT${period - 4}` : `${period}Q`;
 
-const labelData: LabelDataI = (data) => {
-  const labeledData = data.games?.map((d) => {
+const labelData: LabelDataI = data => {
+  const labeledData = data.games?.map(d => {
     /**
      * Status
      */
@@ -35,12 +40,11 @@ const labelData: LabelDataI = (data) => {
     // const [h, m] = timeString.split(" ")[0].split(":");
     // const time = `${ h }: ${ m }`;
 
-
     /**
      * Status
      */
 
-    let status: StatusI;
+    let status: GameStatus;
 
     // pregame
     if (!d.isGameActivated && d.period.current === 0) {
@@ -49,20 +53,18 @@ const labelData: LabelDataI = (data) => {
 
     // postgame
     else if (!d.isGameActivated && d.period.current > 1) {
-      const value = d.period.current > 4 ? `Final OT${d.period.current - 4} ` : 'Final';
+      const value =
+        d.period.current > 4 ? `Final OT${d.period.current - 4} ` : 'Final';
       status = { type: 'GAMESTATUS_STRING', value };
     }
 
     // playing
     else {
-
       if (d.period.isHalftime) {
         status = { type: 'GAMESTATUS_STRING', value: 'Half' };
-      }
-
-      else {
+      } else {
         const suffix = d.period.isEndOfPeriod ? 'End of' : d.clock;
-        const value = `${suffix} ${getPeriod(d.period.current)}`
+        const value = `${suffix} ${getPeriod(d.period.current)}`;
 
         status = { type: 'GAMESTATUS_STRING', value: value };
       }
@@ -71,8 +73,12 @@ const labelData: LabelDataI = (data) => {
     /**
      * Score
      */
-    const homeTeamScore = d.hTeam.score ? parseInt(d.hTeam.score, 10) : undefined;
-    const awayTeamScore = d.vTeam.score ? parseInt(d.vTeam.score, 10) : undefined;
+    const homeTeamScore = d.hTeam.score
+      ? parseInt(d.hTeam.score, 10)
+      : undefined;
+    const awayTeamScore = d.vTeam.score
+      ? parseInt(d.vTeam.score, 10)
+      : undefined;
 
     let homeTeamWinning: boolean | undefined;
     let awayTeamWinning: boolean | undefined;
@@ -80,12 +86,13 @@ const labelData: LabelDataI = (data) => {
     if (homeTeamScore && awayTeamScore) {
       homeTeamWinning = homeTeamScore > awayTeamScore;
       awayTeamWinning = awayTeamScore > homeTeamScore;
-
     }
 
     // TODO make it nullable (if not found)
-    const homeTeamInfo = teamCodeInfo[d.hTeam.triCode as keyof typeof teamCodeInfo];
-    const awayTeamInfo = teamCodeInfo[d.vTeam.triCode as keyof typeof teamCodeInfo];
+    const homeTeamInfo =
+      teamCodeInfo[d.hTeam.triCode as keyof typeof teamCodeInfo];
+    const awayTeamInfo =
+      teamCodeInfo[d.vTeam.triCode as keyof typeof teamCodeInfo];
 
     const homeTeam = homeTeamInfo?.nickname ?? d.hTeam.triCode;
     const awayTeam = awayTeamInfo?.nickname ?? d.vTeam.triCode;
@@ -102,16 +109,8 @@ const labelData: LabelDataI = (data) => {
     };
   });
 
-  return labeledData
+  return labeledData;
 };
-
-function formatDate(date: Date) {
-  const yyyy = date.getFullYear();
-  const mm = date.getMonth() + 1;
-  const dd = date.getDate();
-  const twoDigits = (n: number) => (n < 10 ? `0${n}` : `${n}`);
-  return `${yyyy}${twoDigits(mm)}${twoDigits(dd)}`;
-}
 
 // const getSeasonYear = async () => {
 //   const url = "https://data.nba.net/prod/v1/today.json";

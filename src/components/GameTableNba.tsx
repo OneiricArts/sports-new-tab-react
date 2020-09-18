@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Table } from 'reactstrap';
 import { Game } from '../SportsDataAccessors/types';
+import { displayGameStatus } from '../SportsDataAccessors/helpers';
 
-const GameRow = ({ game }: { game: Game }) => {
+export const GameRow = ({ game }: { game: Game }) => {
   return (
     <tr>
-      <td className="align-middle">{game.status}</td>
+      <td className="align-middle">{displayGameStatus(game.status)}</td>
 
       <td
         className={`align-middle ${game.awayTeamWinning ? 'winning_team' : ''}`}
@@ -25,7 +26,7 @@ const GameRow = ({ game }: { game: Game }) => {
   );
 };
 
-const TableHeader = () => (
+export const TableHeader = () => (
   <thead>
     <tr>
       <th />
