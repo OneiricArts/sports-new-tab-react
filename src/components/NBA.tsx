@@ -2,30 +2,8 @@ import React, { useEffect, useReducer } from 'react';
 import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
 import { NBADataI } from '../SportsDataAccessors/nba/NbaDatatypes';
+import createScheduleReducer from './createScheduleReducer';
 import GameTableNba from './GameTableNba';
-
-type nbaScheduleActionI = { type: 'SET_NEW'; newState: NBADataI };
-
-type nbaScheduleReducerI = (
-  prevState: NBADataI,
-  action: nbaScheduleActionI
-) => NBADataI;
-
-const nbaScheduleReducer: nbaScheduleReducerI = (prevState, action) => {
-  let newState: NBADataI;
-
-  switch (action.type) {
-    case 'SET_NEW':
-      newState = { ...action.newState };
-      break;
-
-    default:
-      newState = { ...prevState };
-  }
-
-  localStorage.setItem('NBA_DATA_v1', JSON.stringify(newState));
-  return newState;
-};
 
 const initFromCache = (init: NBADataI): NBADataI => {
   try {
@@ -49,7 +27,7 @@ const NBA = () => {
   }, []);
 
   const [nbaSchedule, nbaScheduleDispatch] = useReducer(
-    nbaScheduleReducer,
+    createScheduleReducer<NBADataI>('NBA_DATA_v1'),
     {
       displayDate: ''
     },
