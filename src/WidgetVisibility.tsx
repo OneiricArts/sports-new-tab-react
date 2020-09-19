@@ -1,4 +1,5 @@
 interface WidgetVisibility {
+  NFL: boolean;
   NBA: boolean;
   Soccer: boolean;
   Links: boolean;

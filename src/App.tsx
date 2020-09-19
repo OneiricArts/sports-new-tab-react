@@ -11,11 +11,13 @@ import {
 } from './WidgetVisibility';
 import { Message } from './Message';
 import Soccer from './components/Soccer';
+import NFL from './components/NFL';
 
 function App() {
   const [widgetsVisible, dispatch] = useReducer(
     widgetVisibilityReducer,
     {
+      NFL: true,
       NBA: true,
       Soccer: true,
       Links: true
@@ -42,6 +44,7 @@ function App() {
 
         <div className="card-columns">
           {/* TODO add ErrorBoundary */}
+          {widgetsVisible.NFL && <NFL />}
           {widgetsVisible.NBA && <NBA />}
           {widgetsVisible.Soccer && <Soccer />}
           {widgetsVisible.Links && <Links />}
