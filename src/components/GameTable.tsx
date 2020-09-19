@@ -23,7 +23,7 @@ const GameRow = ({
 
   return (
     <tr>
-      <td className="align-middle">{game.status}</td>
+      <td className="align-middle">{game.status.value}</td>
 
       <td
         className={`align-middle ${
@@ -31,7 +31,7 @@ const GameRow = ({
         } ${game.awayTeamHasPosession ? 'has_posession' : ''}`}
       >
         {game.awayTeam}
-        {true && <FootballEmoji />}
+        {game.awayTeamHasPosession && <FootballEmoji />}
       </td>
 
       <td
