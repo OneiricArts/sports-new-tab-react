@@ -3,9 +3,25 @@ import ReactDOM from 'react-dom';
 import { Button, Progress, Spinner } from 'reactstrap';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
-import { fetchNFLDataAsync } from '../SportsDataAccessors/NFLHelper';
-import { Schedule } from '../SportsDataAccessors/types';
+import getNFLData from '../SportsDataAccessors/nfl/getNflData';
+import { NFLSchedule, Schedule } from '../SportsDataAccessors/types';
 import GameTable from './GameTable';
+
+function carryOverHiddenGames(
+  schedule: NFLSchedule,
+  cachedSchedule: NFLSchedule
+) {
+  if (schedule.displayDate !== cachedSchedule.displayDate) return schedule;
+
+  schedule.games.map(g => {
+    const cachedGame = cachedSchedule.games.find(cg => cg.id === g.id);
+    if (cachedGame) g.hidden = cachedGame.hidden;
+
+    return g;
+  });
+
+  return schedule;
+}
 
 export default function NFL() {
   const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
@@ -15,7 +31,8 @@ export default function NFL() {
     games: []
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  const isLoading = false;
 
   const upDateSchedule = async () => {
     let cachedSchedule: Schedule | undefined;
@@ -30,18 +47,23 @@ export default function NFL() {
 
     ReactDOM.unstable_batchedUpdates(() => {
       if (cachedSchedule) setSchedule(cachedSchedule);
-      setIsLoading(true);
+      // setIsLoading(true);
     });
 
     try {
-      const schedule = await fetchNFLDataAsync(cachedSchedule);
+      let schedule = await getNFLData();
+      if (cachedSchedule) {
+        schedule = carryOverHiddenGames(schedule, cachedSchedule);
+      }
+      console.log(schedule);
       ReactDOM.unstable_batchedUpdates(() => {
         setSchedule(schedule);
-        setIsLoading(false);
+        // setIsLoading(false);
       });
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
-    } catch {
-      setIsLoading(false);
+    } catch (e) {
+      // setIsLoading(false);
+      console.error(e);
     }
   };
 
