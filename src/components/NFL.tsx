@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, Progress, Spinner } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
+import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
 import getNFLData from '../SportsDataAccessors/nfl/getNflData';
@@ -33,6 +34,8 @@ function NFLScheduleCard() {
     displayDate: '',
     games: []
   });
+
+  const [throwFcError] = useThrowForErrorBoundary();
 
   // const [isLoading, setIsLoading] = useState<boolean>(false);
   const isLoading = false;
@@ -66,7 +69,7 @@ function NFLScheduleCard() {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
     } catch (e) {
       // setIsLoading(false);
-      console.error(e);
+      throwFcError(e);
     }
   };
 

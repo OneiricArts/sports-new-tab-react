@@ -4,6 +4,7 @@ import getNBAData from '../SportsDataAccessors/nba/getNBAData';
 import { NBADataI, NBAGameI } from '../SportsDataAccessors/nba/NbaDatatypes';
 import createScheduleReducer from './createScheduleReducer';
 import GameTableNba from './GameTableNba';
+import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
@@ -23,11 +24,13 @@ const initFromCache = (init: NBADataI): NBADataI => {
 };
 
 const NBASchedule = () => {
+  const [throwFcError] = useThrowForErrorBoundary();
+
   useEffect(() => {
-    getNBAData().then(data =>
-      nbaScheduleDispatch({ type: 'SET_NEW', newState: data })
-    );
-  }, []);
+    getNBAData()
+      .then(data => nbaScheduleDispatch({ type: 'SET_NEW', newState: data }))
+      .catch(e => throwFcError(e));
+  }, [throwFcError]);
 
   const [nbaSchedule, nbaScheduleDispatch] = useReducer(
     createScheduleReducer<NBADataI>('NBA_DATA_v1'),
