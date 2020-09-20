@@ -43,7 +43,6 @@ function App() {
         <Message />
 
         <div className="card-columns">
-          {/* TODO add ErrorBoundary */}
           {widgetsVisible.NFL && <NFL />}
           {widgetsVisible.NBA && <NBA />}
           {widgetsVisible.Soccer && <Soccer />}

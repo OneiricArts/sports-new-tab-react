@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, Progress, Spinner } from 'reactstrap';
+import ErrorCard from '../ErrorCard';
+import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
 import getNFLData from '../SportsDataAccessors/nfl/getNflData';
 import { NFLSchedule } from '../SportsDataAccessors/types';
+import { ErrorBoundary } from './ErrorBoundary';
 import GameTable from './GameTable';
+import { widgetOnError } from './widgetCatchError';
 
 function carryOverHiddenGames(
   schedule: NFLSchedule,
@@ -23,13 +27,15 @@ function carryOverHiddenGames(
   return schedule;
 }
 
-export default function NFL() {
-  const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
+const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
 
+function NFLScheduleCard() {
   const [schedule, setSchedule] = useState<NFLSchedule>({
     displayDate: '',
     games: []
   });
+
+  const [throwFcError] = useThrowForErrorBoundary();
 
   // const [isLoading, setIsLoading] = useState<boolean>(false);
   const isLoading = false;
@@ -63,7 +69,7 @@ export default function NFL() {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
     } catch (e) {
       // setIsLoading(false);
-      console.error(e);
+      throwFcError(e);
     }
   };
 
@@ -128,3 +134,14 @@ export default function NFL() {
     </Card>
   );
 }
+
+const NFL = () => (
+  <ErrorBoundary
+    onError={widgetOnError('NFL', LOCAL_STORAGE_KEY)}
+    message={<ErrorCard name="NFL" />}
+  >
+    <NFLScheduleCard />
+  </ErrorBoundary>
+);
+
+export default NFL;

@@ -6,6 +6,10 @@ import getChampionsLeagueData, {
 } from '../SportsDataAccessors/soccer/getChampionsLeagueData';
 import createScheduleReducer from './createScheduleReducer';
 import { CardHeader, Table } from 'reactstrap';
+import ErrorCard from '../ErrorCard';
+import { ErrorBoundary } from './ErrorBoundary';
+import { widgetOnError } from './widgetCatchError';
+import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 
 const initFromCache = (
   init: ChampionsLeagueScoreboardI
@@ -23,12 +27,14 @@ const initFromCache = (
   }
 };
 
-const Soccer = () => {
+const SoccerSchedule = () => {
+  const [throwFcError] = useThrowForErrorBoundary();
+
   useEffect(() => {
-    getChampionsLeagueData().then(data =>
-      scheduleDispatch({ type: 'SET_NEW', newState: data })
-    );
-  }, []);
+    getChampionsLeagueData()
+      .then(data => scheduleDispatch({ type: 'SET_NEW', newState: data }))
+      .catch(e => throwFcError(e));
+  }, [throwFcError]);
 
   const [schedule, scheduleDispatch] = useReducer(
     createScheduleReducer<ChampionsLeagueScoreboardI>('SOCCER_DATA_v1'),
@@ -61,4 +67,12 @@ const Soccer = () => {
   );
 };
 
+const Soccer = () => (
+  <ErrorBoundary
+    onError={widgetOnError('Soccer', 'SOCCER_DATA_v1')}
+    message={<ErrorCard name="Soccer" />}
+  >
+    <SoccerSchedule />
+  </ErrorBoundary>
+);
 export default Soccer;
