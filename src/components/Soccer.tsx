@@ -6,6 +6,9 @@ import getChampionsLeagueData, {
 } from '../SportsDataAccessors/soccer/getChampionsLeagueData';
 import createScheduleReducer from './createScheduleReducer';
 import { CardHeader, Table } from 'reactstrap';
+import ErrorCard from '../ErrorCard';
+import { ErrorBoundary } from './ErrorBoundary';
+import { widgetOnError } from './widgetCatchError';
 
 const initFromCache = (
   init: ChampionsLeagueScoreboardI
@@ -23,7 +26,7 @@ const initFromCache = (
   }
 };
 
-const Soccer = () => {
+const SoccerSchedule = () => {
   useEffect(() => {
     getChampionsLeagueData().then(data =>
       scheduleDispatch({ type: 'SET_NEW', newState: data })
