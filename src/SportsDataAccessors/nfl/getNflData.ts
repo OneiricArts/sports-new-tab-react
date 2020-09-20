@@ -72,10 +72,20 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
   let status: GameStatus;
 
   if (game.qtr && game.qtr !== 'Pregame') {
-    status = {
-      type: 'GAMESTATUS_STRING',
-      value: playing ? `${game.qtr}Q, ${game.clock}` : game.qtr
-    };
+    if (playing) {
+      const quarter = parseInt(game.qtr, 10) > 4 ? 'OT' : `${game.qtr}Q`;
+      status = {
+        type: 'GAMESTATUS_STRING',
+        value: `${quarter}, ${game.clock}`
+      };
+    } else {
+      let value = game.qtr;
+      if (game.qtr === 'final overtime') value = 'final OT';
+      status = {
+        type: 'GAMESTATUS_STRING',
+        value: value
+      };
+    }
   } else {
     const t = `${id.substring(4, 6)}.${id.substring(6, 8)}`;
 
