@@ -27,6 +27,7 @@ export interface NFLGame extends Game {
   // teamHasPossession?: (team: string) => boolean;
   awayTeamHasPosession?: boolean;
   homeTeamHasPosession?: boolean;
+  redzone: boolean;
 }
 
 export interface NFLSchedule {

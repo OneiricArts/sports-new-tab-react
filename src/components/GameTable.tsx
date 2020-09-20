@@ -22,7 +22,7 @@ const GameRow = ({
   const handleClick = () => removeGame(game.id as number);
 
   return (
-    <tr>
+    <tr className={`${game.redzone ? 'table-danger' : ''}`}>
       <td className="align-middle">{game.status.value}</td>
 
       <td

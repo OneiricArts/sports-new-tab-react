@@ -88,6 +88,7 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
   return {
     id,
     status,
+    redzone: game.redzone ?? false,
 
     homeTeam: nflTeamsInfo[game.home.abbr]?.name || game.home.abbr,
     homeTeamScore: game.home.score.T ?? undefined,
