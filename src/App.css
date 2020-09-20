@@ -50,7 +50,7 @@ body {
 
 @media (max-width: 575px) {
   .has_posession {
-    text-decoration: underline #d3d3d3;
+    text-decoration: underline #9e9d99;
     text-decoration-style: wavy;
   }
 }
