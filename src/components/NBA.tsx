@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
-import { NBADataI } from '../SportsDataAccessors/nba/NbaDatatypes';
+import { NBADataI, NBAGameI } from '../SportsDataAccessors/nba/NbaDatatypes';
 import createScheduleReducer from './createScheduleReducer';
 import GameTableNba from './GameTableNba';
 
@@ -45,7 +45,11 @@ const NBA = () => {
         </span>
       }
     >
-      {nbaSchedule.games && <GameTableNba games={nbaSchedule.games} />}
+      {(nbaSchedule.games?.length ?? 0) > 0 ? (
+        <GameTableNba games={nbaSchedule.games as NBAGameI[]} />
+      ) : (
+        <div className="p-3">No games today.</div>
+      )}
     </Card>
   );
 };

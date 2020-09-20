@@ -120,7 +120,11 @@ export default function NFL() {
         <Progress animated style={{ height: '5px' }} color="info" value={100} />
       )}
 
-      <GameTable games={schedule.games} removeGame={removeGame} />
+      {schedule.games.length === 0 ? (
+        <div className="p-3">No games today.</div>
+      ) : (
+        <GameTable games={schedule.games} removeGame={removeGame} />
+      )}
     </Card>
   );
 }

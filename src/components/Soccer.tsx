@@ -53,7 +53,9 @@ const Soccer = () => {
             </Fragment>
           ))}
 
-        {Object.entries(schedule).length === 0 && <div>No Games</div>}
+        {Object.entries(schedule).length === 0 && (
+          <div className="p-3">No games today.</div>
+        )}
       </Table>
     </Card>
   );
