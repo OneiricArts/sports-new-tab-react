@@ -4,7 +4,7 @@ import { Button, Progress, Spinner } from 'reactstrap';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
 import getNFLData from '../SportsDataAccessors/nfl/getNflData';
-import { NFLSchedule, Schedule } from '../SportsDataAccessors/types';
+import { NFLSchedule } from '../SportsDataAccessors/types';
 import GameTable from './GameTable';
 
 function carryOverHiddenGames(
@@ -26,7 +26,7 @@ function carryOverHiddenGames(
 export default function NFL() {
   const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
 
-  const [schedule, setSchedule] = useState<Schedule>({
+  const [schedule, setSchedule] = useState<NFLSchedule>({
     displayDate: '',
     games: []
   });
@@ -35,7 +35,7 @@ export default function NFL() {
   const isLoading = false;
 
   const upDateSchedule = async () => {
-    let cachedSchedule: Schedule | undefined;
+    let cachedSchedule: NFLSchedule | undefined;
 
     // TODO only look at cache when needed
     console.log('using cache');
