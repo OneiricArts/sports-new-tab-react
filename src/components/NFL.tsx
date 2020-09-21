@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, Progress, Spinner } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
@@ -40,7 +40,7 @@ function NFLScheduleCard() {
   // const [isLoading, setIsLoading] = useState<boolean>(false);
   const isLoading = false;
 
-  const upDateSchedule = async () => {
+  const upDateSchedule = useCallback(async () => {
     let cachedSchedule: NFLSchedule | undefined;
 
     // TODO only look at cache when needed
@@ -71,7 +71,7 @@ function NFLScheduleCard() {
       // setIsLoading(false);
       throwFcError(e);
     }
-  };
+  }, [throwFcError]);
 
   const resetSchedule = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -80,7 +80,7 @@ function NFLScheduleCard() {
 
   useEffect(() => {
     upDateSchedule();
-  }, []);
+  }, [upDateSchedule]);
 
   useVisibilityHandlers(upDateSchedule);
 
