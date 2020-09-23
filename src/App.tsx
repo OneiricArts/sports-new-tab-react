@@ -14,6 +14,7 @@ import Soccer from './components/Soccer';
 import NFL from './components/NFL';
 import NHL from './components/NHL';
 import MLB from './components/MLB';
+import NoInternet from './components/NoInternet';
 
 function App() {
   const [widgetsVisible, dispatch] = useReducer(
@@ -45,6 +46,7 @@ function App() {
 
       <div className="container-fluid">
         <Message />
+        <NoInternet />
 
         <div className="card-columns">
           {widgetsVisible.NFL && <NFL />}
