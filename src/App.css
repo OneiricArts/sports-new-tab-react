@@ -41,6 +41,11 @@ body {
   margin-bottom: 0;
 }
 
+a {
+  /* material design copy: links are bright pink */
+  color: #ff4081;
+}
+
 .container-fluid {
   /* push down navbar*/
   padding-top: 20px;
