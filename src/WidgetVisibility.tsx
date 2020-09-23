@@ -2,6 +2,7 @@ interface WidgetVisibility {
   NFL: boolean;
   NBA: boolean;
   NHL: boolean;
+  MLB: boolean;
   Soccer: boolean;
   Links: boolean;
 }

@@ -13,6 +13,7 @@ import { Message } from './Message';
 import Soccer from './components/Soccer';
 import NFL from './components/NFL';
 import NHL from './components/NHL';
+import MLB from './components/MLB';
 
 function App() {
   const [widgetsVisible, dispatch] = useReducer(
@@ -21,6 +22,7 @@ function App() {
       NFL: true,
       NBA: true,
       NHL: true,
+      MLB: true,
       Soccer: true,
       Links: true
     },
@@ -48,6 +50,7 @@ function App() {
           {widgetsVisible.NFL && <NFL />}
           {widgetsVisible.NBA && <NBA />}
           {widgetsVisible.NHL && <NHL />}
+          {widgetsVisible.MLB && <MLB />}
           {widgetsVisible.Soccer && <Soccer />}
           {widgetsVisible.Links && <Links />}
         </div>
