@@ -1,6 +1,7 @@
 import React from 'react';
 import { CustomInput, Navbar } from 'reactstrap';
 import { WidgetNames } from '../WidgetVisibility';
+import { ExtensionInfo } from './ExtensionInfo';
 
 interface Togglable {
   name: WidgetNames;
@@ -31,6 +32,8 @@ export const ControlBar = ({ toggles, toggle }: ControlBarProps) => {
           onChange={() => toggle(t.name)}
         />
       ))}
+
+      <ExtensionInfo />
     </Navbar>
   );
 };
