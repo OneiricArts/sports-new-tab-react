@@ -42,3 +42,23 @@ export const displayGameStatus = (status: GameStatus): string => {
 
   return statusString;
 };
+
+/**
+ * @param {Date} [date=(new Date())] - date on which to determine if DST is on
+ * @returns {boolean} isDaylightSavingsOn
+ *
+ * https://stackoverflow.com/questions/11887934/how-to-check-if-the-dst-daylight-saving-time-is-in-effect-and-if-it-is-whats
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset
+ */
+export const isDaylightSavingsTimeOn = (date = new Date()) => {
+  const jan = new Date(date.getFullYear(), 0, 1);
+  const jul = new Date(date.getFullYear(), 6, 1);
+
+  const stdTimezoneOffset = Math.max(
+    jan.getTimezoneOffset(),
+    jul.getTimezoneOffset()
+  );
+  const dalightSavingsTime = date.getTimezoneOffset() < stdTimezoneOffset;
+
+  return dalightSavingsTime;
+};
