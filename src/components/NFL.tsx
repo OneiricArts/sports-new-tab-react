@@ -84,7 +84,7 @@ function NFLScheduleCard() {
 
   useVisibilityHandlers(upDateSchedule);
 
-  const removeGame = (id: number) => {
+  const removeGame = (id: number | string) => {
     const newGames = schedule.games.map(game => {
       if (game.id === id) {
         game.hidden = true;

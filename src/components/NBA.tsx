@@ -3,7 +3,7 @@ import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
 import { NBADataI, NBAGameI } from '../SportsDataAccessors/nba/NbaDatatypes';
 import createScheduleReducer from './createScheduleReducer';
-import GameTableNba from './GameTableNba';
+import GameTable from './GameTable';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -52,7 +52,7 @@ const NBASchedule = () => {
       }
     >
       {(nbaSchedule.games?.length ?? 0) > 0 ? (
-        <GameTableNba games={nbaSchedule.games as NBAGameI[]} />
+        <GameTable games={nbaSchedule.games as NBAGameI[]} />
       ) : (
         <div className="p-3">No games today.</div>
       )}

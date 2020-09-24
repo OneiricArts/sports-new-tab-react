@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Button, Table } from 'reactstrap';
-import { NFLGame } from '../SportsDataAccessors/types';
+import { displayGameStatus } from '../SportsDataAccessors/helpers';
+import { Game, NFLGame } from '../SportsDataAccessors/types';
+
+type GameI = Game | NFLGame;
 
 const FootballEmoji = () => (
   <span
@@ -16,46 +19,48 @@ const GameRow = ({
   game,
   removeGame
 }: {
-  game: NFLGame;
-  removeGame: (id: number) => void;
+  game: GameI;
+  removeGame?: (id: number | string) => void;
 }) => {
-  const handleClick = () => removeGame(game.id as number);
+  const handleClick = () => removeGame?.(game.id);
 
   return (
-    <tr className={`${game.redzone ? 'table-danger' : ''}`}>
-      <td className="align-middle">{game.status.value}</td>
+    <tr className={`${(game as NFLGame).redzone ? 'table-danger' : ''}`}>
+      <td className="align-middle">{displayGameStatus(game.status)}</td>
 
       <td
         className={`align-middle ${
           game.awayTeamWinning ? 'winning_team' : ''
-        } ${game.awayTeamHasPosession ? 'has_posession' : ''}`}
+        } ${(game as NFLGame).awayTeamHasPosession ? 'has_posession' : ''}`}
       >
         {game.awayTeam}
-        {game.awayTeamHasPosession && <FootballEmoji />}
+        {(game as NFLGame).awayTeamHasPosession && <FootballEmoji />}
       </td>
 
       <td
-        className={`align-middle ${game.homeTeamWinning && 'winning_team'} ${
-          game.homeTeamHasPosession ? 'has_posession' : ''
-        }`}
+        className={`align-middle ${
+          game.homeTeamWinning ? 'winning_team' : ''
+        } ${(game as NFLGame).homeTeamHasPosession ? 'has_posession' : ''}`}
       >
         {game.homeTeam}
-        {game.homeTeamHasPosession && <FootballEmoji />}
+        {(game as NFLGame).homeTeamHasPosession && <FootballEmoji />}
       </td>
 
       <td className="align-middle text-right">{game.awayTeamScore}</td>
       <td className="align-middle text-right">{game.homeTeamScore}</td>
 
-      <td className="align-middle text-right">
-        <Button
-          outline={true}
-          color="secondary"
-          size="sm"
-          onClick={handleClick}
-        >
-          &#9587;
-        </Button>
-      </td>
+      {removeGame && (
+        <td className="align-middle text-right">
+          <Button
+            outline={true}
+            color="secondary"
+            size="sm"
+            onClick={handleClick}
+          >
+            &#9587;
+          </Button>
+        </td>
+      )}
     </tr>
   );
 };
@@ -79,16 +84,16 @@ const GameTable = ({
   games,
   removeGame
 }: {
-  games: NFLGame[];
-  removeGame: (id: number) => void;
+  games: GameI[];
+  removeGame?: (id: number | string) => void;
 }) => (
   <Table responsive size="sm">
     <TableHeader />
     <tbody>
       {games
         .filter(game => !game.hidden)
-        .map((game, index) => (
-          <GameRow key={index} game={game} removeGame={removeGame} />
+        .map(game => (
+          <GameRow key={game.id} game={game} removeGame={removeGame} />
         ))}
     </tbody>
   </Table>
