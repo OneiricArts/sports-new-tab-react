@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, Fragment } from 'react';
 import { Card } from '../simpleui';
-import GameTableNba from './GameTableNba';
+import GameTable from './GameTable';
 import getChampionsLeagueData, {
   ChampionsLeagueScoreboardI
 } from '../SportsDataAccessors/soccer/getChampionsLeagueData';
@@ -55,7 +55,7 @@ const SoccerSchedule = () => {
                   {displayDate}
                 </span>
               </CardHeader>
-              <GameTableNba games={games} />
+              <GameTable games={games} />
             </Fragment>
           ))}
 

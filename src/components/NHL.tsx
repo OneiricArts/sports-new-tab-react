@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 import { Card } from '../simpleui';
 import createScheduleReducer from './createScheduleReducer';
-import GameTableNba from './GameTableNba';
+import GameTable from './GameTable';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -53,7 +53,7 @@ const NHLSchedule = () => {
       }
     >
       {(schedule.games?.length ?? 0) > 0 ? (
-        <GameTableNba games={schedule.games as Game[]} />
+        <GameTable games={schedule.games as Game[]} />
       ) : (
         <div className="p-3">No games today.</div>
       )}
