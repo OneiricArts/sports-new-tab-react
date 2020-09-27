@@ -23,6 +23,7 @@ export function formatDate(date: Date, func: DateFormatter) {
  */
 export const displayGameStatus = (status: GameStatus): string => {
   if (status.type === 'GAMESTATUS_STRING') return status.value;
+  if (status.type === 'DATE_STRING') return status.value;
 
   let date: Date;
   if (status.type === 'UTC_TIME') {

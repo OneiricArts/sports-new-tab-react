@@ -1,6 +1,7 @@
 import { nflTeamsInfo } from './teamInfo';
 import { GameStatus, NFLGame, NFLSchedule } from '../types';
 import { LiveUpdateApiI, LiveUpdateGameObjI } from './LiveUpdateApiTypes';
+import getEspnNflData, { EsnpSchedule } from './getEspnNflData';
 
 const getNFLData = async (): Promise<NFLSchedule> => {
   const url = `https://static.nfl.com/liveupdate/scores/scores.json`;
@@ -8,7 +9,12 @@ const getNFLData = async (): Promise<NFLSchedule> => {
   const response = await fetch(url, { mode: 'cors' });
   const data: LiveUpdateApiI = await response.json();
 
-  return labelData(data);
+  const schedule = labelData(data);
+
+  const espnSchedule = await getEspnNflData();
+  if (espnSchedule) return mergeEspnData(schedule, espnSchedule);
+
+  return schedule;
 };
 
 type LabelDataI = (data: LiveUpdateApiI) => NFLSchedule;
@@ -90,7 +96,7 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
     const t = `${id.substring(4, 6)}.${id.substring(6, 8)}`;
 
     status = {
-      type: 'GAMESTATUS_STRING',
+      type: 'DATE_STRING',
       value: t
     };
   }
@@ -110,6 +116,31 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
     awayTeamWinning,
     awayTeamHasPosession
   };
+};
+
+const mergeEspnData = (
+  season: NFLSchedule,
+  espnSchedule: EsnpSchedule
+): NFLSchedule => {
+  const mergedSchedule: NFLSchedule = { ...season };
+
+  mergedSchedule.displayDate = espnSchedule.displayDate ?? season.displayDate;
+
+  mergedSchedule.games = season.games.map(g => {
+    // find by home and away team because no guarantee the weeks are lined up
+    // between the two APIs (e.g. when do weeks switch to next, tues, mon midnight)
+    const espnMatchingGame = espnSchedule?.games?.find(
+      eg => eg.homeTeam === g.homeTeam && eg.awayTeam === g.awayTeam
+    );
+
+    if (g.status.type === 'DATE_STRING' && espnMatchingGame?.status) {
+      return { ...g, status: espnMatchingGame.status };
+    }
+
+    return { ...g };
+  });
+
+  return mergedSchedule;
 };
 
 export default getNFLData;
