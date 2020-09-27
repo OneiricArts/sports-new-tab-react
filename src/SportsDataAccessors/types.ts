@@ -21,6 +21,7 @@ export interface Schedule {
 export type GameStatus =
   | { type: 'UTC_TIME'; value: number }
   | { type: 'TIME_STRING'; value: string }
+  | { type: 'DATE_STRING'; value: string }
   | { type: 'GAMESTATUS_STRING'; value: string };
 
 export interface NFLGame extends Game {
