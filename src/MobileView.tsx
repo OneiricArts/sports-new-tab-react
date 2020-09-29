@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Navbar } from 'reactstrap';
+import { ExtensionInfo } from './components/ExtensionInfo';
 import Links from './components/Links/Links';
 import MLB from './components/MLB';
 import NBA from './components/NBA';
@@ -66,7 +67,17 @@ export const MobileView = () => {
         ))}
       </Navbar>
 
-      <WidgetToRender />
+      <div style={{ flex: 1 }} className="mb-3">
+        <WidgetToRender />
+      </div>
+
+      <Navbar
+        color="dark"
+        className="d-flex justify-content-start p-2 mb-3 rounded"
+        style={{ color: 'gray' }}
+      >
+        <ExtensionInfo />
+      </Navbar>
     </>
   );
 };

@@ -43,12 +43,12 @@ function App() {
   });
 
   return (
-    <div className="App">
+    <div className="App d-flex flex-column align-self-stretch h-100">
       <ResponsiveComponent
         sm={<ControlBar toggles={toggles} toggle={toggleWidget} />}
       />
 
-      <div className="container-fluid">
+      <div className="container-fluid d-flex flex-column pb-0 h-100">
         <Message />
         <NoInternet />
 
