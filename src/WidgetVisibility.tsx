@@ -6,6 +6,7 @@ interface WidgetVisibility {
   Soccer: boolean;
   Links: boolean;
 }
+// Attention: Also add new key to MobileView !!!
 export type WidgetNames = keyof WidgetVisibility;
 
 type WidgetVisibilityAction = { type: 'toggle'; name: keyof WidgetVisibility };
