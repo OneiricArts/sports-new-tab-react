@@ -33,7 +33,9 @@ export const ControlBar = ({ toggles, toggle }: ControlBarProps) => {
         />
       ))}
 
-      <ExtensionInfo />
+      <div className="ml-auto text-muted d-none d-lg-block">
+        <ExtensionInfo />
+      </div>
     </Navbar>
   );
 };

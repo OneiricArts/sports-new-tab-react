@@ -15,6 +15,8 @@ import NFL from './components/NFL';
 import NHL from './components/NHL';
 import MLB from './components/MLB';
 import NoInternet from './components/NoInternet';
+import { ResponsiveComponent } from './components/ResponsiveComponent';
+import { MobileView } from './MobileView';
 
 function App() {
   const [widgetsVisible, dispatch] = useReducer(
@@ -41,21 +43,28 @@ function App() {
   });
 
   return (
-    <div className="App">
-      <ControlBar toggles={toggles} toggle={toggleWidget} />
+    <div className="App d-flex flex-column align-self-stretch h-100">
+      <ResponsiveComponent
+        sm={<ControlBar toggles={toggles} toggle={toggleWidget} />}
+      />
 
-      <div className="container-fluid">
+      <div className="container-fluid d-flex flex-column pb-0 h-100">
         <Message />
         <NoInternet />
 
-        <div className="card-columns">
-          {widgetsVisible.NFL && <NFL />}
-          {widgetsVisible.NBA && <NBA />}
-          {widgetsVisible.NHL && <NHL />}
-          {widgetsVisible.MLB && <MLB />}
-          {widgetsVisible.Soccer && <Soccer />}
-          {widgetsVisible.Links && <Links />}
-        </div>
+        <ResponsiveComponent
+          xs={<MobileView />}
+          sm={
+            <div className="py-4 card-columns">
+              {widgetsVisible.NFL && <NFL />}
+              {widgetsVisible.NBA && <NBA />}
+              {widgetsVisible.NHL && <NHL />}
+              {widgetsVisible.MLB && <MLB />}
+              {widgetsVisible.Soccer && <Soccer />}
+              {widgetsVisible.Links && <Links />}
+            </div>
+          }
+        />
       </div>
 
       <BackgroundInfo />
