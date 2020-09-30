@@ -124,7 +124,8 @@ const mergeEspnData = (
 ): NFLSchedule => {
   const mergedSchedule: NFLSchedule = { ...season };
 
-  mergedSchedule.displayDate = espnSchedule.displayDate ?? season.displayDate;
+  // are the two APIs on the same week? if we've found a matching game, yes
+  let foundAtLeastOneMatchingGame = false;
 
   mergedSchedule.games = season.games.map(g => {
     // find by home and away team because no guarantee the weeks are lined up
@@ -133,12 +134,18 @@ const mergeEspnData = (
       eg => eg.homeTeam === g.homeTeam && eg.awayTeam === g.awayTeam
     );
 
+    if (espnMatchingGame) foundAtLeastOneMatchingGame = true;
+
     if (g.status.type === 'DATE_STRING' && espnMatchingGame?.status) {
       return { ...g, status: espnMatchingGame.status };
     }
 
     return { ...g };
   });
+
+  // only override the display date if the two APIs are on the same week
+  if (foundAtLeastOneMatchingGame)
+    mergedSchedule.displayDate = espnSchedule.displayDate ?? season.displayDate;
 
   return mergedSchedule;
 };
