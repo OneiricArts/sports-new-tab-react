@@ -8,6 +8,7 @@ import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
 import { Game, Schedule } from '../SportsDataAccessors/types';
 import getNhlData from '../SportsDataAccessors/nhl/getNhlData';
+import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -26,11 +27,13 @@ const initFromCache = (init: Schedule): Schedule => {
 const NHLSchedule = () => {
   const [throwFcError] = useThrowForErrorBoundary();
 
+  const [visibleCount] = useVisibilityHandlers();
+
   useEffect(() => {
     getNhlData()
       .then(data => scheduleDispatch({ type: 'SET_NEW', newState: data }))
       .catch(e => throwFcError(e));
-  }, [throwFcError]);
+  }, [throwFcError, visibleCount]);
 
   const [schedule, scheduleDispatch] = useReducer(
     createScheduleReducer<Schedule>('NHL_DATA_v1'),

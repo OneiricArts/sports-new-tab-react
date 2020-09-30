@@ -8,6 +8,7 @@ import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
+import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 
 const initFromCache = (init: NBADataI): NBADataI => {
   try {
@@ -26,11 +27,13 @@ const initFromCache = (init: NBADataI): NBADataI => {
 const NBASchedule = () => {
   const [throwFcError] = useThrowForErrorBoundary();
 
+  const [visibleCount] = useVisibilityHandlers();
+
   useEffect(() => {
     getNBAData()
       .then(data => nbaScheduleDispatch({ type: 'SET_NEW', newState: data }))
       .catch(e => throwFcError(e));
-  }, [throwFcError]);
+  }, [throwFcError, visibleCount]);
 
   const [nbaSchedule, nbaScheduleDispatch] = useReducer(
     createScheduleReducer<NBADataI>('NBA_DATA_v1'),

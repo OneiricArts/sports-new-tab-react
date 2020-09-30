@@ -10,6 +10,7 @@ import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
+import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 
 const initFromCache = (
   init: ChampionsLeagueScoreboardI
@@ -30,11 +31,13 @@ const initFromCache = (
 const SoccerSchedule = () => {
   const [throwFcError] = useThrowForErrorBoundary();
 
+  const [visibleCount] = useVisibilityHandlers();
+
   useEffect(() => {
     getChampionsLeagueData()
       .then(data => scheduleDispatch({ type: 'SET_NEW', newState: data }))
       .catch(e => throwFcError(e));
-  }, [throwFcError]);
+  }, [throwFcError, visibleCount]);
 
   const [schedule, scheduleDispatch] = useReducer(
     createScheduleReducer<ChampionsLeagueScoreboardI>('SOCCER_DATA_v1'),
