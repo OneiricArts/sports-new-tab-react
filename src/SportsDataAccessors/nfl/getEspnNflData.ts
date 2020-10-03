@@ -51,7 +51,7 @@ const labelGame = (game: EventsEntity): EspnGame => {
     awayTeam = 'Football Team';
 
   return {
-    status: { type: 'TIME_STRING', value: game.date },
+    status: { type: 'TIME_STRING', value: game.date, format: 'DAY_TIME' },
     homeTeam,
     awayTeam
   };

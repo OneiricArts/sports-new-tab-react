@@ -31,6 +31,15 @@ export const displayGameStatus = (status: GameStatus): string => {
   } else if (status.type === 'TIME_STRING') {
     const utc = Date.parse(status.value);
     date = new Date(utc);
+
+    if (status.format === 'DAY_TIME') {
+      const time = date
+        .toLocaleTimeString('en-us', { hour: '2-digit', minute: '2-digit' })
+        .split(' ')[0];
+      const day = date.toLocaleString('en-us', { weekday: 'short' });
+
+      return `${day} ${time}`;
+    }
   } else {
     // something went seriously wrong -- e.g. localStorage has different type
     return 'ERROR';
