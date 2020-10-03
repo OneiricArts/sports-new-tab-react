@@ -1,4 +1,4 @@
-import { NFLGame } from '../types';
+import { GameStatus, NFLGame } from '../types';
 import { EspnNfl, EventsEntity } from './EspnNflTypes';
 
 type EspnGame = Partial<NFLGame>;
@@ -50,8 +50,18 @@ const labelGame = (game: EventsEntity): EspnGame => {
   if (awayCompetitor?.team.location.toLocaleLowerCase() === 'washington')
     awayTeam = 'Football Team';
 
+  let status: GameStatus = {
+    type: 'TIME_STRING',
+    value: game.date,
+    format: 'DAY_TIME'
+  };
+
+  if (game.status.type.state === 'post') {
+    status = { type: 'GAMESTATUS_STRING', value: 'Postponed' };
+  }
+
   return {
-    status: { type: 'TIME_STRING', value: game.date, format: 'DAY_TIME' },
+    status,
     homeTeam,
     awayTeam
   };
