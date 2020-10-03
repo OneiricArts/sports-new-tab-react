@@ -114,17 +114,17 @@ interface Broadcast {
 
 interface Broadcasters {
   national?:
-  | (NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity | null)[]
-  | null;
+    | (NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity | null)[]
+    | null;
   canadian?:
-  | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
-  | null;
+    | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
+    | null;
   vTeam?:
-  | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
-  | null;
+    | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
+    | null;
   hTeam?:
-  | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
-  | null;
+    | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
+    | null;
   spanish_hTeam?: null[] | null;
   spanish_vTeam?: null[] | null;
   spanish_national?: null[] | null;
@@ -194,6 +194,6 @@ interface StreamsEntity1 {
 interface VTeamOrHTeam1 {
   streams?: StreamsEntity1[] | null;
   broadcasters?:
-  | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
-  | null;
+    | NationalEntityOrCanadianEntityOrVTeamEntityOrHTeamEntityOrBroadcastersEntity1[]
+    | null;
 }
