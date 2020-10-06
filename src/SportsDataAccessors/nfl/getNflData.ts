@@ -43,6 +43,19 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
   }
 
   /**
+   * Score
+   */
+
+  let homeTeamScore = game.home.score.T ?? undefined;
+  let awayTeamScore = game.away.score.T ?? undefined;
+
+  // do not show 0 as score if pregame
+  if (homeTeamScore === 0 && awayTeamScore === 0 && game.qtr === 'Pregame') {
+    homeTeamScore = undefined;
+    awayTeamScore = undefined;
+  }
+
+  /**
    * Who is winning
    */
   let homeTeamWinning: boolean | undefined;
@@ -107,12 +120,12 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
     redzone: game.redzone ?? false,
 
     homeTeam: nflTeamsInfo[game.home.abbr]?.name || game.home.abbr,
-    homeTeamScore: game.home.score.T ?? undefined,
+    homeTeamScore,
     homeTeamWinning,
     homeTeamHasPosession,
 
     awayTeam: nflTeamsInfo[game.away.abbr]?.name || game.away.abbr,
-    awayTeamScore: game.away.score.T ?? undefined,
+    awayTeamScore,
     awayTeamWinning,
     awayTeamHasPosession
   };
