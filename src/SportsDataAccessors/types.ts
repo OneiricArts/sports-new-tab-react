@@ -2,6 +2,7 @@ export interface Game {
   id: number | string;
 
   status: GameStatus;
+  startTime?: string;
   awayTeam: string;
   homeTeam: string;
   awayTeamWinning?: boolean;

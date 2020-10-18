@@ -56,12 +56,15 @@ const labelGame = (game: EventsEntity): EspnGame => {
     format: 'DAY_TIME'
   };
 
-  if (game.status.type.state === 'post') {
+  if (game.status.type.state === 'postponed') {
     status = { type: 'GAMESTATUS_STRING', value: 'Postponed' };
   }
 
+  let startTime = game.date;
+
   return {
     status,
+    startTime,
     homeTeam,
     awayTeam
   };
