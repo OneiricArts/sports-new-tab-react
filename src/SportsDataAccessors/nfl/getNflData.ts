@@ -9,12 +9,65 @@ const getNFLData = async (): Promise<NFLSchedule> => {
   const response = await fetch(url, { mode: 'cors' });
   const data: LiveUpdateApiI = await response.json();
 
-  const schedule = labelData(data);
+  let schedule = labelData(data);
 
   const espnSchedule = await getEspnNflData();
-  if (espnSchedule) return mergeEspnData(schedule, espnSchedule);
+  if (espnSchedule) schedule = mergeEspnData(schedule, espnSchedule);
+
+  schedule.games = sortGames(schedule.games);
 
   return schedule;
+};
+
+const sortGames = (games: NFLGame[]) => {
+  return games.sort((g1, g2) => {
+    /**
+     * Status value options:
+     *
+     * final / final OT
+     * Halftime
+     * 1Q - 1:30
+     *
+     * Mon 5:20
+     *
+     */
+
+    /**
+     *  If ONLY ONE of the games is final, that is pushed down
+     */
+
+    if (
+      g1.status.value.toString().toLowerCase().includes('final') &&
+      !g2.status.value.toString().toLowerCase().includes('final')
+    ) {
+      return 1;
+    }
+
+    if (
+      !g1.status.value.toString().toLowerCase().includes('final') &&
+      g2.status.value.toString().toLowerCase().includes('final')
+    ) {
+      return -1;
+    }
+
+    /**
+     * Sort by start time
+     */
+
+    if (
+      g1.startTime &&
+      g2.startTime &&
+      g1.startTime !== g2.startTime // if same datetime, sort by id
+    ) {
+      return Date.parse(g1.startTime) - Date.parse(g2.startTime);
+    }
+
+    /**
+     * DEFAULT - Sort by id
+     */
+
+    return g1.id.toString().localeCompare(g2.id.toString());
+  });
 };
 
 type LabelDataI = (data: LiveUpdateApiI) => NFLSchedule;
@@ -22,11 +75,9 @@ type LabelDataI = (data: LiveUpdateApiI) => NFLSchedule;
 const labelData: LabelDataI = data => {
   const games: NFLSchedule['games'] = [];
 
-  Object.entries(data)
-    .sort(([gameId1], [gameId2]) => gameId1.localeCompare(gameId2))
-    .forEach(([gameId, gameData]) => {
-      games.push(labelGame(gameId, gameData));
-    });
+  Object.entries(data).forEach(([gameId, gameData]) => {
+    games.push(labelGame(gameId, gameData));
+  });
 
   return { displayDate: '', games };
 };
