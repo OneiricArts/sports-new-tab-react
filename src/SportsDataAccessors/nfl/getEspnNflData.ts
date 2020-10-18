@@ -60,8 +60,11 @@ const labelGame = (game: EventsEntity): EspnGame => {
     status = { type: 'GAMESTATUS_STRING', value: 'Postponed' };
   }
 
+  let startTime = game.date;
+
   return {
     status,
+    startTime,
     homeTeam,
     awayTeam
   };

@@ -150,10 +150,14 @@ const mergeEspnData = (
     if (espnMatchingGame) foundAtLeastOneMatchingGame = true;
 
     if (g.status.type === 'DATE_STRING' && espnMatchingGame?.status) {
-      return { ...g, status: espnMatchingGame.status };
+      return {
+        ...g,
+        status: espnMatchingGame.status,
+        startTime: espnMatchingGame.startTime
+      };
     }
 
-    return { ...g };
+    return { ...g, startTime: espnMatchingGame?.startTime };
   });
 
   // only override the display date if the two APIs are on the same week
