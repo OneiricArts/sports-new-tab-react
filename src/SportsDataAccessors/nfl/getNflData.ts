@@ -150,7 +150,7 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
       };
     } else {
       let value = game.qtr;
-      if (game.qtr === 'final overtime') value = 'final OT';
+      if (game.qtr === 'final overtime') value = 'Final OT';
       status = {
         type: 'GAMESTATUS_STRING',
         value: value
