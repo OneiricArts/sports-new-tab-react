@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Sports New Tab Page (Beta)",
-	"version": "0.9.9.3",
+	"version": "0.9.9.4",
 	"chrome_url_overrides": {
 		"newtab": "index.html"
 	},
@@ -14,7 +14,9 @@
 		"https://*.unsplash.com/*",
 		"topSites"
 	],
-	"icons": { "16": "icon16.png",
-          "128": "icon128.png" },
-    "content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js 'unsafe-eval'; object-src 'self'"
+	"icons": {
+		"16": "icon16.png",
+		"128": "icon128.png"
+	},
+	"content_security_policy": "script-src 'self' https://www.google-analytics.com/analytics.js 'unsafe-eval'; object-src 'self'"
 }
