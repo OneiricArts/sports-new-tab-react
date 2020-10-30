@@ -51,7 +51,11 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
   }
 
   if (matchInfo.status === 'LIVE') {
-    status = { type: 'GAMESTATUS_STRING', value: `${matchInfo.minute}'` };
+    if (matchInfo.phase === 'HALF_TIME_BREAK') {
+      status = { type: 'GAMESTATUS_STRING', value: 'Half' };
+    } else {
+      status = { type: 'GAMESTATUS_STRING', value: `${matchInfo.minute}'` };
+    }
   }
 
   return {
