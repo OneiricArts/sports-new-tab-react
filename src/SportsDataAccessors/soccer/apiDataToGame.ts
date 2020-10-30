@@ -10,8 +10,8 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
   let homeTeamWinning = false;
   let awayTeamWinning = false;
   if (
-    matchInfo.homeTeamScore?.aggregatedScore &&
-    matchInfo.awayTeamScore?.aggregatedScore
+    matchInfo.homeTeamScore?.aggregatedScore !== undefined &&
+    matchInfo.awayTeamScore?.aggregatedScore !== undefined
   ) {
     homeTeamWinning =
       matchInfo.homeTeamScore.aggregatedScore >
@@ -20,7 +20,10 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
     awayTeamWinning =
       matchInfo.awayTeamScore.aggregatedScore >
       matchInfo.homeTeamScore.aggregatedScore;
-  } else if (matchInfo.homeTeamScore?.score && matchInfo.awayTeamScore?.score) {
+  } else if (
+    matchInfo.homeTeamScore?.score !== undefined &&
+    matchInfo.awayTeamScore?.score !== undefined
+  ) {
     homeTeamWinning =
       matchInfo.homeTeamScore.score > matchInfo.awayTeamScore.score;
     awayTeamWinning =
@@ -48,7 +51,11 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
   }
 
   if (matchInfo.status === 'LIVE') {
-    status = { type: 'GAMESTATUS_STRING', value: `${matchInfo.minute}'` };
+    if (matchInfo.phase === 'HALF_TIME_BREAK') {
+      status = { type: 'GAMESTATUS_STRING', value: 'Half' };
+    } else {
+      status = { type: 'GAMESTATUS_STRING', value: `${matchInfo.minute}'` };
+    }
   }
 
   return {

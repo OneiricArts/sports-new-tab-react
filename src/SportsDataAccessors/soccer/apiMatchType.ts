@@ -21,6 +21,9 @@ export interface ApiMatchType {
   matchDay: MatchDay;
   minute?: number; // TODO verify
   penaltyScorerList?: null[] | null;
+  phase?: 'HALF_TIME_BREAK' | string; // Not sure what all the options are yet
+  phaseDisplayText?: 'Half-time' | string; // Not sure what all the options are yet
+  phaseDisplayTextShort?: 'HT' | string; // Not sure what all the options are yet
   reasonOfWin: string;
   redCardList?: null[] | null;
   referees?: RefereesEntity[] | null;
