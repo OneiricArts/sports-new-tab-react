@@ -61,11 +61,10 @@ const SoccerSchedule = () => {
               <GameTable games={games} />
             </Fragment>
           ))}
-
-        {Object.entries(schedule).length === 0 && (
-          <div className="p-3">No games today.</div>
-        )}
       </Table>
+      {Object.entries(schedule).length === 0 && (
+        <div className="p-3">No games today.</div>
+      )}
     </Card>
   );
 };
