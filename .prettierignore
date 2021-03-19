@@ -4,3 +4,5 @@ package-lock.json
 **/dist/index.js
 
 public/manifest.json
+
+public/background.js
