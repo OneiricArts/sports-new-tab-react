@@ -17,7 +17,7 @@ declare global {
 
 window.CNT_getBackgroundFilter = window.CNT_getBackgroundFilter || undefined;
 
-export const BackgroundInfo = () => {
+export const SearchKeywordFilter = () => {
   if (!window.CNT_getBackgroundFilter || !window.CNT_setBackgroundFilter) {
     throw new Error(
       'CNT_getBackgroundFilter or CNT_setBackgroundFilter not found'
