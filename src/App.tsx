@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import './App.css';
-import BackgroundInfo from './components/BackgroundInfo';
+import { UnsplashPicker } from './components/Unsplash/UnsplashPicker';
 import NBA from './components/NBA';
 import Links from './components/Links/Links';
 import { ControlBar } from './components/ControlBar';
@@ -67,7 +67,7 @@ function App() {
         />
       </div>
 
-      <BackgroundInfo />
+      <UnsplashPicker />
     </div>
   );
 }
