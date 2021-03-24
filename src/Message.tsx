@@ -6,22 +6,15 @@ import React from 'react';
  */
 
 export const Message = () => (
-  <></>
-  // <div
-  //   className="jumbotron py-2"
-  //   style={{
-  //     backgroundColor: 'white'
-  //   }}
-  // >
-  //   <div>
-  //     <strong>Updates coming!</strong> New codebase, starting with NBA. You can
-  //     now <strong>control background images</strong>!At the bottom right you
-  //     will see options to filter pictures.
-  //   </div>
-  //   <div>
-  //     <a href="https://forms.gle/susMwSUk7QhUUxsY6">
-  //       To find out more and provide feedback or thoughts go here.
-  //     </a>
-  //   </div>
-  // </div>
+  <div
+    className="jumbotron py-2 my-0"
+    style={{
+      backgroundColor: '#e0f2f1'
+    }}
+  >
+    Please try out `Background Options` in the bottom right corner{' '}
+    <a href="https://forms.gle/iSkqzc53vC5zD7PX8">
+      and provide feedback or thoughts.
+    </a>
+  </div>
 );
