@@ -91,11 +91,13 @@ export function updateSearchFilters(config: RandomFilterConfig) {
   });
 }
 
+export type UpdateFilterI = (config: TopicFilterConfig) => void;
+
 export function useTopicFilterUpdate() {
   const [, _tick] = useState(0);
   const tick = () => _tick(t => t + 1);
 
-  const update = (config: TopicFilterConfig) => {
+  const update: UpdateFilterI = config => {
     const curr = getTopicsFilters();
 
     window.CNT_setBackgroundFilter({

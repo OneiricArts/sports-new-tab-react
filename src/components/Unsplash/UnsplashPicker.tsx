@@ -1,25 +1,60 @@
 import React, { FC, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import { BackgroundInfo } from '../BackgroundInfo';
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Nav,
+  NavItem,
+  NavLink
+} from 'reactstrap';
+import { SearchKeywordFilter } from './SearchKeywordFilter';
 import { ErrorBoundary } from '../ErrorBoundary';
+import { TopicsPicker } from './TopicsPicker';
+import { ResponsiveComponent } from '../ResponsiveComponent';
 
 const UnsplashPickerModal = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
+  const [activeTab, setActiveTab] = useState<'topic' | 'keyword'>('topic');
+
   return (
     <>
       <OpenModalButton openModal={openModal} />
 
       {isOpen && (
-        // lg vs md size depending on view
         <Modal isOpen={true} toggle={closeModal} size="md">
           <ModalHeader toggle={closeModal}>Background options</ModalHeader>
 
           <ModalBody>
-            <BackgroundInfo />
+            <Nav tabs className="mb-2">
+              <NavItem>
+                <NavLink
+                  href="#"
+                  active={activeTab === 'topic'}
+                  onClick={() => setActiveTab('topic')}
+                >
+                  Topic
+                </NavLink>
+              </NavItem>
+
+              <NavItem>
+                <NavLink
+                  href="#"
+                  active={activeTab === 'keyword'}
+                  onClick={() => setActiveTab('keyword')}
+                >
+                  Keyword filter
+                </NavLink>
+              </NavItem>
+            </Nav>
+
+            {activeTab === 'topic' && <TopicsPicker />}
+            {activeTab === 'keyword' && <SearchKeywordFilter />}
           </ModalBody>
 
           <ModalFooter>
