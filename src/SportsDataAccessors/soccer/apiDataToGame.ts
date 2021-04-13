@@ -9,44 +9,33 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
   // TODO fix if only one match
   let homeTeamWinning = false;
   let awayTeamWinning = false;
-  if (
-    matchInfo.homeTeamScore?.aggregatedScore !== undefined &&
-    matchInfo.awayTeamScore?.aggregatedScore !== undefined
-  ) {
-    homeTeamWinning =
-      matchInfo.homeTeamScore.aggregatedScore >
-      matchInfo.awayTeamScore.aggregatedScore;
 
-    awayTeamWinning =
-      matchInfo.awayTeamScore.aggregatedScore >
-      matchInfo.homeTeamScore.aggregatedScore;
-  } else if (
-    matchInfo.homeTeamScore?.score !== undefined &&
-    matchInfo.awayTeamScore?.score !== undefined
-  ) {
-    homeTeamWinning =
-      matchInfo.homeTeamScore.score > matchInfo.awayTeamScore.score;
-    awayTeamWinning =
-      matchInfo.awayTeamScore.score > matchInfo.homeTeamScore.score;
-  }
+  const score = matchInfo.relatedMatches?.[0]?.score ?? matchInfo.score;
 
-  let homeTeamScore: number | string | undefined =
-    matchInfo.homeTeamScore?.score;
+  const aggregateHomeScore = score?.aggregate?.home;
+  const aggregateAwayScore = score?.aggregate?.away;
+  const homeScore = score?.total?.home;
+  const awayScore = score?.total?.away;
 
-  let awayTeamScore: number | string | undefined =
-    matchInfo.awayTeamScore?.score;
+  homeTeamWinning =
+    matchInfo.relatedMatches?.[0]?.winner?.match?.team?.teamCode ===
+    matchInfo.relatedMatches?.[0].homeTeam?.teamCode;
+
+  awayTeamWinning =
+    matchInfo.relatedMatches?.[0]?.winner?.match?.team?.teamCode ===
+    matchInfo.relatedMatches?.[0]?.awayTeam?.teamCode;
+
+  let homeTeamScore: number | string | undefined = homeScore;
+  let awayTeamScore: number | string | undefined = awayScore;
 
   if (
-    matchInfo?.leg?.legNumber === 2 &&
-    [
-      matchInfo.homeTeamScore?.score,
-      matchInfo.homeTeamScore?.aggregatedScore,
-      matchInfo.awayTeamScore?.score,
-      matchInfo.awayTeamScore?.aggregatedScore
-    ].every(s => s !== undefined)
+    matchInfo?.leg.number === 2 &&
+    [homeScore, aggregateHomeScore, awayScore, aggregateAwayScore].every(
+      s => s !== undefined
+    )
   ) {
-    homeTeamScore = `${matchInfo.homeTeamScore?.score} (${matchInfo.homeTeamScore?.aggregatedScore})`;
-    awayTeamScore = `${matchInfo.awayTeamScore?.score} (${matchInfo.awayTeamScore?.aggregatedScore})`;
+    homeTeamScore = `${homeScore} (${aggregateHomeScore})`;
+    awayTeamScore = `${awayScore} (${aggregateAwayScore})`;
   }
 
   let status: GameStatus = {
@@ -55,22 +44,27 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
   };
 
   if (matchInfo.status === 'UPCOMING') {
-    status = { type: 'TIME_STRING', value: matchInfo.matchDateTime };
+    status = { type: 'TIME_STRING', value: matchInfo.kickOffTime.dateTime };
   }
 
+  // TODO CONFIRM
   if (matchInfo.status === 'LIVE') {
-    if (matchInfo.phase === 'HALF_TIME_BREAK') {
+    // TODO
+    if (false) {
       status = { type: 'GAMESTATUS_STRING', value: 'Half' };
     } else {
-      status = { type: 'GAMESTATUS_STRING', value: `${matchInfo.minute}'` };
+      status = {
+        type: 'GAMESTATUS_STRING',
+        value: `${matchInfo.kickOffTime.dateTime}'`
+      };
     }
   }
 
   return {
     id: matchInfo.id,
     status,
-    homeTeam: matchInfo.homeTeam.displayNameShort,
-    awayTeam: matchInfo.awayTeam.displayNameShort,
+    homeTeam: matchInfo.homeTeam.internationalName,
+    awayTeam: matchInfo.awayTeam.internationalName,
     homeTeamScore,
     awayTeamScore,
     homeTeamWinning,

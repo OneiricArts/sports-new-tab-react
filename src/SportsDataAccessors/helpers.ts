@@ -9,6 +9,18 @@ const twoDigits = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
 type DateFormatter = (p: { yyyy: string; mm: string; dd: string }) => string;
 
+export const dateFormatters = {
+  'yyyy-mm-dd': ({
+    yyyy,
+    mm,
+    dd
+  }: {
+    yyyy: string;
+    mm: string;
+    dd: string;
+  }): string => `${yyyy}-${mm}-${dd}`
+};
+
 export function formatDate(date: Date, func: DateFormatter) {
   const yyyy = date.getFullYear().toString();
   const mm = date.getMonth() + 1;
