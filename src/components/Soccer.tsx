@@ -5,7 +5,7 @@ import getChampionsLeagueData, {
   ChampionsLeagueScoreboardI
 } from '../SportsDataAccessors/soccer/getChampionsLeagueData';
 import createScheduleReducer from './createScheduleReducer';
-import { CardHeader, Table } from 'reactstrap';
+import { CardHeader } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
@@ -47,21 +47,20 @@ const SoccerSchedule = () => {
 
   return (
     <Card title={<span className="font-weight-bold">Champions League</span>}>
-      <Table responsive size="sm">
-        {Object.entries(schedule)
-          .sort()
-          .slice(0, 3)
-          .map(([displayDate, games]) => (
-            <Fragment key={displayDate}>
-              <CardHeader className="border-top">
-                <span className="font-weight-light text-muted">
-                  {displayDate}
-                </span>
-              </CardHeader>
-              <GameTable games={games} />
-            </Fragment>
-          ))}
-      </Table>
+      {Object.entries(schedule)
+        .sort()
+        .slice(0, 3)
+        .map(([displayDate, games]) => (
+          <Fragment key={displayDate}>
+            <CardHeader className="border-top">
+              <span className="font-weight-light text-muted">
+                {displayDate}
+              </span>
+            </CardHeader>
+            <GameTable games={games} />
+          </Fragment>
+        ))}
+
       {Object.entries(schedule).length === 0 && (
         <div className="p-3">No games today.</div>
       )}
