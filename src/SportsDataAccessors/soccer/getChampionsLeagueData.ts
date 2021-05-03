@@ -1,4 +1,4 @@
-import { formatDate } from '../helpers';
+import { dateFormatters, formatDate } from '../helpers';
 import { Game } from '../types';
 import { ApiMatchType } from './apiMatchType';
 import { apiDataToGame } from './apiDataToGame';
@@ -12,78 +12,40 @@ export interface ChampionsLeagueScoreboardI {
 const getChampionsLeagueData = async (): Promise<
   ChampionsLeagueScoreboardI
 > => {
-  let date = new Date(); // '2020/02/25' '2020/08/19'
+  const startDate = new Date(); // '2020/02/25' '2020/08/19'
+  // startDate.setDate(startDate.getDate() - 7);
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() + 7);
 
-  const ids = await getMatchIdsForWeek(date);
-  if (!ids.length) return {};
+  //https://match.uefa.com/v2/matches?fromDate=2021-04-13&toDate=2021-04-13&competitionId=1&offset=0&limit=100
+  const url = `https://match.uefa.com/v2/matches?fromDate=${formatDate(
+    startDate,
+    dateFormatters['yyyy-mm-dd']
+  )}&toDate=${formatDate(
+    endDate,
+    dateFormatters['yyyy-mm-dd']
+  )}&competitionId=1&offset=0&limit=100`;
 
-  const gamesData = await getMatchesData(ids);
+  const response = await fetch(url, { mode: 'cors' });
+  const matchesData: ApiMatchType[] = await response.json();
 
-  const schedule = await groupMatchesByRoundDate(gamesData);
-
-  return schedule;
+  const matches = matchesData.filter(e => e.round.phase !== 'QUALIFYING');
+  return await groupMatchesByRoundDate(matches);
 };
 
 const groupMatchesByRoundDate = async (gamesData: ApiMatchType[]) => {
   const schedule: { [key: string]: ChampionsLeagueGame[] } = {};
 
   gamesData.forEach(e => {
-    const date = new Date(e.matchDateTime);
+    const date = new Date(e.kickOffTime.date);
     let displayDate = formatDate(date, ({ mm, dd }) => `${mm}-${dd}`);
-    const key = `${displayDate} ${e.round.shortName}`;
+    const key = `${displayDate} ${e.round.metaData.name}`;
 
     if (schedule[key]) schedule[key].push(apiDataToGame(e));
     else schedule[key] = [apiDataToGame(e)];
   });
 
   return schedule;
-};
-
-const getMatchIdsForWeek = (date: Date) => getMatchIdsForNDays(date, 7);
-
-const getMatchIdsForNDays = async (
-  startDate: Date,
-  numDays: number
-): Promise<string[]> => {
-  let matchIds: string[] = [];
-  let date = startDate;
-
-  for (let i = 0; i < numDays; i += 1) {
-    const ids = await fetchMatchIdsForDate(date);
-    matchIds.push(...ids);
-
-    date.setDate(date.getDate() + 1);
-  }
-
-  return matchIds;
-};
-
-const fetchMatchIdsForDate = async (date: Date): Promise<string[]> => {
-  const apiDate = formatDate(date, ({ yyyy, mm, dd }) => `${yyyy}-${mm}-${dd}`);
-  const url = `https://match.uefa.com/v1/matches/versions?date=${apiDate}&competitionId=1`;
-
-  const response = await fetch(url, { mode: 'cors' });
-  const json = await response.json();
-
-  return Object.keys(json);
-};
-
-const getMatchesData = async (
-  ids: string[],
-  filterPrelimRound = true
-): Promise<ApiMatchType[]> => {
-  //https://match.uefa.com/v1/matches/?matchId=2027126,2027123,2027127,2027121&style=SHORT&language=EN
-  const url = `https://match.uefa.com/v1/matches/?matchId=${ids.join(
-    ','
-  )}&style=SHORT&language=EN`;
-
-  const response = await fetch(url, { mode: 'cors' });
-  const matchesData: ApiMatchType[] = await response.json();
-
-  if (filterPrelimRound)
-    return matchesData.filter(e => e.round.phase !== 'QUALIFYING');
-
-  return matchesData;
 };
 
 export default getChampionsLeagueData;
