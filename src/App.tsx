@@ -9,7 +9,6 @@ import {
   loadWidetsVisibleFromCache,
   WidgetNames
 } from './WidgetVisibility';
-import { Message } from './Message';
 import Soccer from './components/Soccer';
 import NFL from './components/NFL';
 import NHL from './components/NHL';
@@ -49,7 +48,7 @@ function App() {
       />
 
       <div className="container-fluid d-flex flex-column pb-0 h-100">
-        <Message />
+        {/* <Message /> */}
         <NoInternet />
 
         <ResponsiveComponent
