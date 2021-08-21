@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
-import { NBADataI, NBAGameI } from '../SportsDataAccessors/nba/NbaDatatypes';
 import createScheduleReducer from './createScheduleReducer';
 import GameTable from './GameTable';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
@@ -9,13 +8,14 @@ import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
+import { Game, Schedule } from '../SportsDataAccessors/types';
 
-const initFromCache = (init: NBADataI): NBADataI => {
+const initFromCache = (init: Schedule): Schedule => {
   try {
     const data = localStorage.getItem('NBA_DATA_v1');
     if (!data) return init;
 
-    const json = JSON.parse(data) as NBADataI;
+    const json = JSON.parse(data) as Schedule;
     if (json.displayDate && json.games) return json;
 
     return init;
@@ -36,9 +36,10 @@ const NBASchedule = () => {
   }, [throwFcError, visibleCount]);
 
   const [nbaSchedule, nbaScheduleDispatch] = useReducer(
-    createScheduleReducer<NBADataI>('NBA_DATA_v1'),
+    createScheduleReducer<Schedule>('NBA_DATA_v1'),
     {
-      displayDate: ''
+      displayDate: '',
+      games: []
     },
     initFromCache
   );
@@ -55,7 +56,7 @@ const NBASchedule = () => {
       }
     >
       {(nbaSchedule.games?.length ?? 0) > 0 ? (
-        <GameTable games={nbaSchedule.games as NBAGameI[]} />
+        <GameTable games={nbaSchedule.games as Game[]} />
       ) : (
         <div className="p-3">No games today.</div>
       )}

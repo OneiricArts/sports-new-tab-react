@@ -1,7 +1,7 @@
 import { nflTeamsInfo } from './teamInfo';
 import { GameStatus, NFLGame, NFLSchedule } from '../types';
 import { LiveUpdateApiI, LiveUpdateGameObjI } from './LiveUpdateApiTypes';
-import getEspnNflData, { EsnpSchedule } from './getEspnNflData';
+import getEspnNflData from './getEspnNflData';
 
 const getNFLData = async (): Promise<NFLSchedule> => {
   const url = `https://static.nfl.com/liveupdate/scores/scores.json`;
@@ -184,7 +184,7 @@ const labelGame = (id: string, game: LiveUpdateGameObjI): NFLGame => {
 
 const mergeEspnData = (
   season: NFLSchedule,
-  espnSchedule: EsnpSchedule
+  espnSchedule: NFLSchedule
 ): NFLSchedule => {
   const mergedSchedule: NFLSchedule = { ...season };
 
@@ -214,6 +214,12 @@ const mergeEspnData = (
   // only override the display date if the two APIs are on the same week
   if (foundAtLeastOneMatchingGame)
     mergedSchedule.displayDate = espnSchedule.displayDate ?? season.displayDate;
+  else {
+    return {
+      displayDate: espnSchedule.displayDate ?? '',
+      games: espnSchedule.games ?? []
+    };
+  }
 
   return mergedSchedule;
 };

@@ -1,14 +1,7 @@
-import { GameStatus, NFLGame } from '../types';
+import { GameStatus, NFLGame, NFLSchedule } from '../types';
 import { EspnNfl, EventsEntity } from './EspnNflTypes';
 
-type EspnGame = Partial<NFLGame>;
-
-export type EsnpSchedule = {
-  displayDate?: string;
-  games?: EspnGame[];
-};
-
-const getEspnNflData = async (): Promise<EsnpSchedule | undefined> => {
+const getEspnNflData = async (): Promise<NFLSchedule | undefined> => {
   const url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`;
 
   try {
@@ -21,8 +14,8 @@ const getEspnNflData = async (): Promise<EsnpSchedule | undefined> => {
   }
 };
 
-const labelData = (data: EspnNfl): EsnpSchedule => {
-  const games = data.events?.map(g => labelGame(g));
+const labelData = (data: EspnNfl): NFLSchedule => {
+  const games = data.events?.map(g => labelGame(g)) ?? [];
 
   const seasonName = data.leagues[0].season.type.name;
   const weekNumber = data.week.number;
@@ -32,7 +25,7 @@ const labelData = (data: EspnNfl): EsnpSchedule => {
   return { displayDate, games };
 };
 
-const labelGame = (game: EventsEntity): EspnGame => {
+const labelGame = (game: EventsEntity): NFLGame => {
   const homeCompetitor = game?.competitions?.[0]?.competitors?.find(
     e => e.homeAway === 'home'
   );
@@ -60,13 +53,34 @@ const labelGame = (game: EventsEntity): EspnGame => {
     status = { type: 'GAMESTATUS_STRING', value: 'Postponed' };
   }
 
+  if (game.status.type.state === 'post') {
+    status = { type: 'GAMESTATUS_STRING', value: 'Final' };
+  }
+
   let startTime = game.date;
 
+  const homeTeamScore = game.competitions?.[0]?.competitors?.[0].score;
+  const awayTeamScore = game.competitions?.[0]?.competitors?.[1].score;
+
+  let homeTeamWinning;
+  let awayTeamWinning;
+
+  if (homeTeamScore && awayTeamScore) {
+    homeTeamWinning = parseInt(homeTeamScore) > parseInt(awayTeamScore);
+    awayTeamWinning = parseInt(awayTeamScore) > parseInt(homeTeamScore);
+  }
+
   return {
+    id: game.id,
     status,
     startTime,
     homeTeam,
-    awayTeam
+    awayTeam,
+    redzone: false,
+    homeTeamScore,
+    awayTeamScore,
+    homeTeamWinning,
+    awayTeamWinning
   };
 };
 

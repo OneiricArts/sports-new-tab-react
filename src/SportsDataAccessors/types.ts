@@ -11,6 +11,11 @@ export interface Game {
   homeTeamScore?: number | string;
 
   hidden?: boolean;
+  extraInfo?: ExtraInfo;
+}
+
+interface ExtraInfo {
+  broadcaster?: string;
 }
 
 export interface Schedule {
