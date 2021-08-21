@@ -1,10 +1,9 @@
 import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import teamCodeInfo from './teamInfo';
-import { NBAGameI, NBADataI } from './NbaDatatypes';
-import { GameStatus } from '../types';
+import { Game, GameStatus, Schedule } from '../types';
 import { formatDate } from '../helpers';
 
-const getNBAData = async (): Promise<NBADataI> => {
+const getNBAData = async (): Promise<Schedule> => {
   const today = formatDate(
     new Date(),
     ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
@@ -17,11 +16,11 @@ const getNBAData = async (): Promise<NBADataI> => {
 
   return {
     displayDate: `${today.substr(4, 2)}.${today.substr(6)}`,
-    games: labelData(data)
+    games: labelData(data) ?? []
   };
 };
 
-type LabelDataI = (data: StatsNbaScoreboardI) => NBAGameI[] | undefined;
+type LabelDataI = (data: StatsNbaScoreboardI) => Game[] | undefined;
 
 const getPeriod = (period: number) =>
   period > 4 ? `OT${period - 4}` : `${period}Q`;
@@ -97,6 +96,14 @@ const labelData: LabelDataI = data => {
     const homeTeam = homeTeamInfo?.nickname ?? d.hTeam.triCode;
     const awayTeam = awayTeamInfo?.nickname ?? d.vTeam.triCode;
 
+    let extraInfo: Game['extraInfo'] = { broadcaster: 'Unkown' };
+    try {
+      if (d.watch?.broadcast?.video?.deepLink?.[0]) {
+        extraInfo.broadcaster =
+          d.watch?.broadcast?.video?.deepLink?.[0].broadcaster;
+      }
+    } catch {}
+
     return {
       id: d.gameId,
       status,
@@ -105,7 +112,8 @@ const labelData: LabelDataI = data => {
       homeTeamWinning,
       awayTeam,
       awayTeamScore,
-      awayTeamWinning
+      awayTeamWinning,
+      extraInfo
     };
   });
 
