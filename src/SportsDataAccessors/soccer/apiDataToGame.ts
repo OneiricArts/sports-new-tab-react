@@ -19,7 +19,7 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
 
   homeTeamWinning =
     matchInfo.relatedMatches?.[0]?.winner?.match?.team?.teamCode ===
-    matchInfo.relatedMatches?.[0].homeTeam?.teamCode;
+    matchInfo.relatedMatches?.[0]?.homeTeam?.teamCode;
 
   awayTeamWinning =
     matchInfo.relatedMatches?.[0]?.winner?.match?.team?.teamCode ===
@@ -29,7 +29,7 @@ export const apiDataToGame = (matchInfo: ApiMatchType): ChampionsLeagueGame => {
   let awayTeamScore: number | string | undefined = awayScore;
 
   if (
-    matchInfo?.leg.number === 2 &&
+    matchInfo?.leg?.number === 2 &&
     [homeScore, aggregateHomeScore, awayScore, aggregateAwayScore].every(
       s => s !== undefined
     )
