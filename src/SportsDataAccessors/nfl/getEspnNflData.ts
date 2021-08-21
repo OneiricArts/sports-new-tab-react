@@ -57,10 +57,29 @@ const labelGame = (game: EventsEntity): NFLGame => {
     status = { type: 'GAMESTATUS_STRING', value: 'Final' };
   }
 
+  if (game.status.type.state === 'in') {
+    status = {
+      type: 'GAMESTATUS_STRING',
+      value: `${game.status.displayClock} ${
+        game.status.period > 4 ? 'OT' : `${game.status.period}Q`
+      }`
+    };
+  }
+
   let startTime = game.date;
 
-  const homeTeamScore = game.competitions?.[0]?.competitors?.[0].score;
-  const awayTeamScore = game.competitions?.[0]?.competitors?.[1].score;
+  let homeTeamScore = game.competitions?.[0]?.competitors?.[0].score;
+  let awayTeamScore = game.competitions?.[0]?.competitors?.[1].score;
+
+  // do not show 0 as score if pregame
+  if (
+    homeTeamScore === '0' &&
+    awayTeamScore === '0' &&
+    game.status.type.state === 'pre'
+  ) {
+    homeTeamScore = undefined;
+    awayTeamScore = undefined;
+  }
 
   let homeTeamWinning;
   let awayTeamWinning;
