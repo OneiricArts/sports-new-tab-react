@@ -1,4 +1,4 @@
-import { GameStatus, NFLGame, NFLSchedule } from '../types';
+import { Game, GameStatus, NFLGame, NFLSchedule } from '../types';
 import { EspnNfl, EventsEntity } from './EspnNflTypes';
 
 const seasonTypeNames = {
@@ -25,6 +25,8 @@ const getEspnNflData = async (): Promise<NFLSchedule | undefined> => {
 
 const labelData = (data: EspnNfl): NFLSchedule => {
   const games = data.events?.map(g => labelGame(g)) ?? [];
+
+  // const seasonName = data.leagues?.[0].season.type.name;
   const weekNumber = data.week.number;
   let displayDate: string;
 
@@ -102,6 +104,17 @@ const labelGame = (game: EventsEntity): NFLGame => {
     awayTeamWinning = parseInt(awayTeamScore) > parseInt(homeTeamScore);
   }
 
+  let extraInfo: Game['extraInfo'] = { broadcaster: 'Unkown' };
+  if (game.competitions?.[0]?.broadcasts?.[0]?.names?.length) {
+    extraInfo.broadcaster = game.competitions?.[0]?.broadcasts?.[0]?.names?.join(
+      ', '
+    );
+  }
+
+  if (game.competitions?.[0].situation?.lastPlay?.text) {
+    extraInfo.status = game.competitions?.[0].situation?.lastPlay?.text;
+  }
+
   return {
     id: game.id,
     status,
@@ -112,7 +125,8 @@ const labelGame = (game: EventsEntity): NFLGame => {
     homeTeamScore,
     awayTeamScore,
     homeTeamWinning,
-    awayTeamWinning
+    awayTeamWinning,
+    extraInfo
   };
 };
 

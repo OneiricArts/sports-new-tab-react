@@ -110,8 +110,13 @@ const ExtraInfo = ({
     <tr>
       <td colSpan={6} style={{ padding: 0 }}>
         <Collapse isOpen={isOpen}>
-          <div className="text-muted small font-weight-light px-2 py-2 text-center w-100">
-            {extraInfo.broadcaster && `📺 ${extraInfo.broadcaster}`}
+          <div className="text-muted small font-weight-light px-2 py-2 w-100">
+            <div>
+              <div className="mx-auto">
+                {extraInfo.broadcaster && `📺 ${extraInfo.broadcaster}`}
+              </div>
+              {extraInfo.status && <div>{extraInfo.status}</div>}
+            </div>
           </div>
         </Collapse>
       </td>

@@ -16,6 +16,7 @@ export interface Game {
 
 interface ExtraInfo {
   broadcaster?: string;
+  status?: string;
 }
 
 export interface Schedule {
