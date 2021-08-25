@@ -90,7 +90,7 @@ const ExtraInfo = ({
       <td colSpan={6} style={{ padding: 0 }}>
         <Collapse isOpen={isOpen}>
           <div className="text-muted small font-weight-light px-2 py-2 text-center w-100">
-            {`📺 ${extraInfo.broadcaster}`}
+            {extraInfo.broadcaster && `📺 ${extraInfo.broadcaster}`}
           </div>
         </Collapse>
       </td>
@@ -101,14 +101,12 @@ const ExtraInfo = ({
 const TableHeader = () => (
   <thead>
     <tr>
-      <th />
-      {/* status */}
+      <th /* status */ />
       <th>away</th>
       <th>@home</th>
       <th className="text-right">a</th>
       <th className="text-right">h</th>
-      <th className="text-right" />
-      {/* X */}
+      <th className="text-right" /* X */ />
     </tr>
   </thead>
 );

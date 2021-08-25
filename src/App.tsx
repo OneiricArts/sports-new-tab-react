@@ -54,7 +54,7 @@ function App() {
         <ResponsiveComponent
           xs={<MobileView />}
           sm={
-            <div className="py-4 card-columns">
+            <div className="pb-4 card-columns">
               {widgetsVisible.NFL && <NFL />}
               {widgetsVisible.NBA && <NBA />}
               {widgetsVisible.NHL && <NHL />}
