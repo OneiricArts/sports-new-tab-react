@@ -1,6 +1,15 @@
 import { GameStatus, NFLGame, NFLSchedule } from '../types';
 import { EspnNfl, EventsEntity } from './EspnNflTypes';
 
+const seasonTypeNames = {
+  1: 'Preseason',
+  2: 'Regular Season',
+  3: 'Postseason',
+  4: 'Off Season'
+} as const;
+
+type SeasonNames = typeof seasonTypeNames[keyof typeof seasonTypeNames];
+
 const getEspnNflData = async (): Promise<NFLSchedule | undefined> => {
   const url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`;
 
@@ -16,11 +25,15 @@ const getEspnNflData = async (): Promise<NFLSchedule | undefined> => {
 
 const labelData = (data: EspnNfl): NFLSchedule => {
   const games = data.events?.map(g => labelGame(g)) ?? [];
-
-  const seasonName = data.leagues[0].season.type.name;
   const weekNumber = data.week.number;
+  let displayDate: string;
 
-  const displayDate = `${seasonName} week ${weekNumber}`;
+  // TODO cleanup
+  const seasonName = seasonTypeNames[data.season.type as 1 | 2 | 3 | 4] as
+    | SeasonNames
+    | undefined;
+  if (seasonName) displayDate = `${seasonName} week ${weekNumber}`;
+  else displayDate = `week ${weekNumber}`;
 
   return { displayDate, games };
 };
