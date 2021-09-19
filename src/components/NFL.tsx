@@ -44,7 +44,7 @@ function NFLScheduleCard() {
     let cachedSchedule: NFLSchedule | undefined;
 
     // TODO only look at cache when needed
-    console.log('using cache');
+    // console.log('using cache');
     const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (cachedScheduleString) {
       cachedSchedule = JSON.parse(cachedScheduleString);
@@ -61,7 +61,7 @@ function NFLScheduleCard() {
       if (cachedSchedule) {
         schedule = carryOverHiddenGames(schedule, cachedSchedule);
       }
-      console.log(schedule);
+      // console.log(schedule);
       ReactDOM.unstable_batchedUpdates(() => {
         setSchedule(schedule);
         // setIsLoading(false);
@@ -96,7 +96,7 @@ function NFLScheduleCard() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
   };
 
-  console.log('rendering...');
+  // console.log('rendering...');
   return (
     <Card
       title={
