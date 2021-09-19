@@ -115,6 +115,29 @@ const labelGame = (game: EventsEntity): NFLGame => {
     extraInfo.status = game.competitions?.[0].situation?.lastPlay?.text;
   }
 
+  // let homeTeamIndex = game.competitions?.[0]?.competitors?.find(
+  //   c => c.homeAway === 'home'
+  // );
+
+  // let awayTeamIndex = game.competitions?.[0]?.competitors?.find(
+  //   c => c.homeAway === 'away'
+  // );
+
+  // TODO fix typo in posession
+  let awayTeamHasPosession = false;
+  let homeTeamHasPosession = false;
+  if (
+    game.competitions?.[0]?.competitors?.[0]?.id ===
+    (game as any).competitions?.[0]?.situation?.possession
+  ) {
+    homeTeamHasPosession = true;
+  } else if (
+    game.competitions?.[0].competitors?.[1]?.id ===
+    (game as any).competitions?.[0]?.situation?.possession
+  ) {
+    awayTeamHasPosession = true;
+  }
+
   return {
     id: game.id,
     status,
@@ -126,6 +149,8 @@ const labelGame = (game: EventsEntity): NFLGame => {
     awayTeamScore,
     homeTeamWinning,
     awayTeamWinning,
+    homeTeamHasPosession,
+    awayTeamHasPosession,
     extraInfo
   };
 };
