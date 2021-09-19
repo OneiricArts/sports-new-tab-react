@@ -66,13 +66,11 @@ const labelGame = (game: EventsEntity): NFLGame => {
 
   if (game.status.type.state === 'postponed') {
     status = { type: 'GAMESTATUS_STRING', value: 'Postponed' };
-  }
-
-  if (game.status.type.state === 'post') {
+  } else if (game.status.type.name === 'STATUS_HALFTIME') {
+    status = { type: 'GAMESTATUS_STRING', value: 'Half' };
+  } else if (game.status.type.state === 'post') {
     status = { type: 'GAMESTATUS_STRING', value: 'Final' };
-  }
-
-  if (game.status.type.state === 'in') {
+  } else if (game.status.type.state === 'in') {
     status = {
       type: 'GAMESTATUS_STRING',
       value: `${game.status.displayClock} ${
