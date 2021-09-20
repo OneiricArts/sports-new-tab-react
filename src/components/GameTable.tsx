@@ -43,12 +43,38 @@ const GameRow = ({
         [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
     ).length > 0;
 
+  const homeTeamHasPosession = (game as NFLGame).homeTeamHasPosession;
+  const awayTeamHasPosession = (game as NFLGame).awayTeamHasPosession;
+  const firstLoad = React.useRef(true);
+  React.useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+
+    setHighlight(true);
+
+    const tm = setTimeout(() => {
+      setHighlight(() => false);
+    }, 2000);
+
+    return () => clearTimeout(tm);
+  }, [
+    game.homeTeamScore,
+    game.awayTeamScore,
+    homeTeamHasPosession,
+    awayTeamHasPosession
+  ]);
+
+  const [highlight, setHighlight] = React.useState(false);
+
   return (
     <>
       <tr
         className={cx({
-          'table-danger': (game as NFLGame).redzone,
-          'table-success': favTeam
+          'table-danger': (game as NFLGame).redzone && !highlight,
+          'table-success': favTeam && !highlight,
+          flash: highlight
         })}
         onClick={() => {
           if (game.extraInfo) {

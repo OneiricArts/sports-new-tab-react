@@ -30,9 +30,16 @@ function carryOverHiddenGames(
 const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
 
 function NFLScheduleCard() {
-  const [schedule, setSchedule] = useState<NFLSchedule>({
-    displayDate: '',
-    games: []
+  const [schedule, setSchedule] = useState<NFLSchedule>(() => {
+    const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (cachedScheduleString) {
+      return JSON.parse(cachedScheduleString);
+    }
+
+    return {
+      displayDate: '',
+      games: []
+    };
   });
 
   const [throwFcError] = useThrowForErrorBoundary();
