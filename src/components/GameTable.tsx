@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Button, Collapse, Table } from 'reactstrap';
+import { isBeta } from '../flags';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
 import { Game, NFLGame } from '../SportsDataAccessors/types';
+import { cx } from './classNames';
 
 type GameI = Game | NFLGame;
 
@@ -17,18 +19,37 @@ const FootballEmoji = () => (
 
 const GameRow = ({
   game,
-  removeGame
+  removeGame,
+  sport
 }: {
   game: GameI;
   removeGame?: (id: number | string) => void;
+  sport?: 'nfl' | 'mlb' | 'nba';
 }) => {
   const handleClick = () => removeGame?.(game.id);
 
   const [showExtraInfo, setShowExtraInfo] = React.useState(false);
+
+  const favTeam =
+    isBeta &&
+    ([
+      ['49ers', 'nfl'],
+      ['buccaneers', 'nfl'],
+      ['warriors', 'nba'],
+      ['giants', 'mlb']
+    ] as const).filter(
+      ([v, x]) =>
+        sport === x &&
+        [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
+    ).length > 0;
+
   return (
     <>
       <tr
-        className={`${(game as NFLGame).redzone ? 'table-danger' : ''}`}
+        className={cx({
+          'table-danger': (game as NFLGame).redzone,
+          'table-success': favTeam
+        })}
         onClick={() => {
           if (game.extraInfo) {
             setShowExtraInfo(e => !e);
@@ -113,10 +134,12 @@ const TableHeader = () => (
 
 const GameTable = ({
   games,
-  removeGame
+  removeGame,
+  sport
 }: {
   games: GameI[];
   removeGame?: (id: number | string) => void;
+  sport?: 'nfl' | 'mlb' | 'nba';
 }) => (
   <Table responsive size="sm">
     <TableHeader />
@@ -124,7 +147,12 @@ const GameTable = ({
       {games
         .filter(game => !game.hidden)
         .map(game => (
-          <GameRow key={game.id} game={game} removeGame={removeGame} />
+          <GameRow
+            key={game.id}
+            game={game}
+            removeGame={removeGame}
+            sport={sport}
+          />
         ))}
     </tbody>
   </Table>

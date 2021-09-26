@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import './App.css';
 import { UnsplashPicker } from './components/Unsplash/UnsplashPicker';
 import NBA from './components/NBA';
@@ -16,8 +16,11 @@ import MLB from './components/MLB';
 import NoInternet from './components/NoInternet';
 import { ResponsiveComponent } from './components/ResponsiveComponent';
 import { MobileView } from './MobileView';
+import { setFlagsFromUrl } from './flags';
 
 function App() {
+  useEffect(() => setFlagsFromUrl(), []);
+
   const [widgetsVisible, dispatch] = useReducer(
     widgetVisibilityReducer,
     {

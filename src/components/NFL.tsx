@@ -129,7 +129,7 @@ function NFLScheduleCard() {
       {schedule.games.length === 0 ? (
         <div className="p-3">No games today.</div>
       ) : (
-        <GameTable games={schedule.games} removeGame={removeGame} />
+        <GameTable games={schedule.games} removeGame={removeGame} sport="nfl" />
       )}
     </Card>
   );
