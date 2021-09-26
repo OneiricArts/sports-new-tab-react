@@ -56,7 +56,7 @@ const NBASchedule = () => {
       }
     >
       {(nbaSchedule.games?.length ?? 0) > 0 ? (
-        <GameTable games={nbaSchedule.games as Game[]} />
+        <GameTable games={nbaSchedule.games as Game[]} sport="nba" />
       ) : (
         <div className="p-3">No games today.</div>
       )}
