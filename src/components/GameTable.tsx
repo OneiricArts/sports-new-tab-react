@@ -150,7 +150,7 @@ const ExtraInfo = ({
   );
 };
 
-const TableHeader = () => (
+const TableHeader = ({ showX }: { showX: boolean }) => (
   <thead>
     <tr>
       <th /* status */ />
@@ -158,7 +158,7 @@ const TableHeader = () => (
       <th>@home</th>
       <th className="text-right">a</th>
       <th className="text-right">h</th>
-      <th className="text-right" /* X */ />
+      {showX && <th className="text-right" /* X */ />}
     </tr>
   </thead>
 );
@@ -173,7 +173,7 @@ const GameTable = ({
   sport?: 'nfl' | 'mlb' | 'nba';
 }) => (
   <Table responsive size="sm">
-    <TableHeader />
+    <TableHeader showX={!!removeGame} />
     <tbody>
       {games
         .filter(game => !game.hidden)
