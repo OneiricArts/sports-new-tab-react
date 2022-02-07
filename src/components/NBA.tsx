@@ -1,14 +1,17 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
 import createScheduleReducer from './createScheduleReducer';
-import GameTable from './GameTable';
+import GameTable, { ExpandedContentWrapper } from './GameTable';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Game, Schedule } from '../SportsDataAccessors/types';
+import { Button } from 'reactstrap';
+import { Standings } from './NBAStandings';
+import { INbaStandings } from './INbaStandings';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -29,9 +32,14 @@ const NBASchedule = () => {
 
   const [visibleCount] = useVisibilityHandlers();
 
+  const [standings, setStandings] = useState<INbaStandings | undefined>();
+
   useEffect(() => {
     getNBAData()
-      .then(data => nbaScheduleDispatch({ type: 'SET_NEW', newState: data }))
+      .then(data => {
+        nbaScheduleDispatch({ type: 'SET_NEW', newState: data.schedule });
+        setStandings(data.standings);
+      })
       .catch(e => throwFcError(e));
   }, [throwFcError, visibleCount]);
 
@@ -44,23 +52,45 @@ const NBASchedule = () => {
     initFromCache
   );
 
+  const [showStandings, setShowStandings] = useState(false);
+
   return (
-    <Card
-      title={
-        <span>
-          <span className="font-weight-bold">NBA</span>
-          <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
-            {nbaSchedule.displayDate}
-          </span>
-        </span>
-      }
-    >
-      {(nbaSchedule.games?.length ?? 0) > 0 ? (
-        <GameTable games={nbaSchedule.games as Game[]} sport="nba" />
-      ) : (
-        <div className="p-3">No games today.</div>
+    <>
+      {showStandings && standings && (
+        <Standings
+          onClose={() => setShowStandings(false)}
+          standings={standings}
+        />
       )}
-    </Card>
+      <Card
+        title={
+          <div style={{ display: 'flex' }}>
+            <span className="font-weight-bold">NBA</span>
+            <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
+              {nbaSchedule.displayDate}
+            </span>
+
+            <Button
+              style={{ marginLeft: 'auto' }}
+              outline
+              size="sm"
+              onClick={() => {
+                setShowStandings(true);
+              }}
+              disabled={!standings}
+            >
+              Standings
+            </Button>
+          </div>
+        }
+      >
+        {(nbaSchedule.games?.length ?? 0) > 0 ? (
+          <GameTable games={nbaSchedule.games as Game[]} sport="nba" />
+        ) : (
+          <div className="p-3">No games today.</div>
+        )}
+      </Card>
+    </>
   );
 };
 
@@ -72,5 +102,19 @@ const NBA = () => (
     <NBASchedule />
   </ErrorBoundary>
 );
+
+export const getExpandedContent = (
+  broadcaster?: string,
+  teamRecords?: string
+) => () => {
+  return (
+    <ExpandedContentWrapper>
+      {teamRecords && <h6 style={{ textAlign: 'center' }}>{teamRecords}</h6>}
+      {broadcaster && (
+        <div style={{ textAlign: 'center' }}>{`📺 ${broadcaster}`}</div>
+      )}
+    </ExpandedContentWrapper>
+  );
+};
 
 export default NBA;

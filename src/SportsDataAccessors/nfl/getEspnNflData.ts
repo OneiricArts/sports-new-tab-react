@@ -1,3 +1,4 @@
+import { getExpandedContent } from '../../components/NFL';
 import { GameStatus, NFLGame, NFLSchedule } from '../types';
 import { EspnNfl, EventsEntity } from './EspnNflTypes';
 
@@ -25,6 +26,8 @@ const getEspnNflData = async (): Promise<NFLSchedule | undefined> => {
 
 const labelData = (data: EspnNfl): NFLSchedule => {
   const games = data.events?.map(g => labelGame(g)) ?? [];
+
+  // const seasonName = data.leagues?.[0].season.type.name;
   const weekNumber = data.week.number;
   let displayDate: string;
 
@@ -64,13 +67,11 @@ const labelGame = (game: EventsEntity): NFLGame => {
 
   if (game.status.type.state === 'postponed') {
     status = { type: 'GAMESTATUS_STRING', value: 'Postponed' };
-  }
-
-  if (game.status.type.state === 'post') {
+  } else if (game.status.type.name === 'STATUS_HALFTIME') {
+    status = { type: 'GAMESTATUS_STRING', value: 'Half' };
+  } else if (game.status.type.state === 'post') {
     status = { type: 'GAMESTATUS_STRING', value: 'Final' };
-  }
-
-  if (game.status.type.state === 'in') {
+  } else if (game.status.type.state === 'in') {
     status = {
       type: 'GAMESTATUS_STRING',
       value: `${game.status.displayClock} ${
@@ -102,6 +103,45 @@ const labelGame = (game: EventsEntity): NFLGame => {
     awayTeamWinning = parseInt(awayTeamScore) > parseInt(homeTeamScore);
   }
 
+  let broadcaster: string | undefined;
+  let lastPlay: string | undefined;
+
+  if (game.competitions?.[0]?.broadcasts?.[0]?.names?.length) {
+    broadcaster = game.competitions?.[0]?.broadcasts?.[0]?.names?.join(', ');
+  }
+
+  if (game.competitions?.[0].situation?.lastPlay?.text) {
+    lastPlay = game.competitions?.[0].situation?.lastPlay?.text;
+  }
+
+  const expandedContent =
+    broadcaster || lastPlay
+      ? getExpandedContent(broadcaster, lastPlay)
+      : undefined;
+
+  // let homeTeamIndex = game.competitions?.[0]?.competitors?.find(
+  //   c => c.homeAway === 'home'
+  // );
+
+  // let awayTeamIndex = game.competitions?.[0]?.competitors?.find(
+  //   c => c.homeAway === 'away'
+  // );
+
+  // TODO fix typo in posession
+  let awayTeamHasPosession = false;
+  let homeTeamHasPosession = false;
+  if (
+    game.competitions?.[0]?.competitors?.[0]?.id ===
+    (game as any).competitions?.[0]?.situation?.possession
+  ) {
+    homeTeamHasPosession = true;
+  } else if (
+    game.competitions?.[0].competitors?.[1]?.id ===
+    (game as any).competitions?.[0]?.situation?.possession
+  ) {
+    awayTeamHasPosession = true;
+  }
+
   return {
     id: game.id,
     status,
@@ -112,7 +152,10 @@ const labelGame = (game: EventsEntity): NFLGame => {
     homeTeamScore,
     awayTeamScore,
     homeTeamWinning,
-    awayTeamWinning
+    awayTeamWinning,
+    homeTeamHasPosession,
+    awayTeamHasPosession,
+    expandedContent
   };
 };
 

@@ -8,7 +8,7 @@ import { Card } from '../simpleui';
 import getNFLData from '../SportsDataAccessors/nfl/getNflData';
 import { NFLSchedule } from '../SportsDataAccessors/types';
 import { ErrorBoundary } from './ErrorBoundary';
-import GameTable from './GameTable';
+import GameTable, { ExpandedContentWrapper } from './GameTable';
 import { widgetOnError } from './widgetCatchError';
 
 function carryOverHiddenGames(
@@ -30,9 +30,16 @@ function carryOverHiddenGames(
 const LOCAL_STORAGE_KEY = 'nfl-schedule-data';
 
 function NFLScheduleCard() {
-  const [schedule, setSchedule] = useState<NFLSchedule>({
-    displayDate: '',
-    games: []
+  const [schedule, setSchedule] = useState<NFLSchedule>(() => {
+    const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (cachedScheduleString) {
+      return JSON.parse(cachedScheduleString);
+    }
+
+    return {
+      displayDate: '',
+      games: []
+    };
   });
 
   const [throwFcError] = useThrowForErrorBoundary();
@@ -44,7 +51,7 @@ function NFLScheduleCard() {
     let cachedSchedule: NFLSchedule | undefined;
 
     // TODO only look at cache when needed
-    console.log('using cache');
+    // console.log('using cache');
     const cachedScheduleString = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (cachedScheduleString) {
       cachedSchedule = JSON.parse(cachedScheduleString);
@@ -61,7 +68,7 @@ function NFLScheduleCard() {
       if (cachedSchedule) {
         schedule = carryOverHiddenGames(schedule, cachedSchedule);
       }
-      console.log(schedule);
+      // console.log(schedule);
       ReactDOM.unstable_batchedUpdates(() => {
         setSchedule(schedule);
         // setIsLoading(false);
@@ -96,7 +103,7 @@ function NFLScheduleCard() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
   };
 
-  console.log('rendering...');
+  // console.log('rendering...');
   return (
     <Card
       title={
@@ -143,5 +150,17 @@ const NFL = () => (
     <NFLScheduleCard />
   </ErrorBoundary>
 );
+
+export const getExpandedContent = (
+  broadcaster?: string,
+  status?: string
+) => () => {
+  return (
+    <ExpandedContentWrapper>
+      {broadcaster && <div>{`📺 ${broadcaster}`}</div>}
+      {status && <div>{status}</div>}
+    </ExpandedContentWrapper>
+  );
+};
 
 export default NFL;

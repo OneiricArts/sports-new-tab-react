@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FC } from 'react';
 import { Button, Collapse, Table } from 'reactstrap';
 import { isBeta } from '../flags';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
@@ -28,7 +29,12 @@ const GameRow = ({
 }) => {
   const handleClick = () => removeGame?.(game.id);
 
-  const [showExtraInfo, setShowExtraInfo] = React.useState(false);
+  const homeTeamHasPosession =
+    'homeTeamHasPosession' in game ? game.homeTeamHasPosession : undefined;
+  const awayTeamHasPosession =
+    'homeTeamHasPosession' in game ? game.awayTeamHasPosession : undefined;
+
+  const [showExpandedContent, setShowExpandedContent] = React.useState(false);
 
   const favTeam =
     isBeta &&
@@ -43,16 +49,40 @@ const GameRow = ({
         [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
     ).length > 0;
 
+  const firstLoad = React.useRef(true);
+  React.useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
+
+    setHighlight(true);
+
+    const tm = setTimeout(() => {
+      setHighlight(() => false);
+    }, 2000);
+
+    return () => clearTimeout(tm);
+  }, [
+    game.homeTeamScore,
+    game.awayTeamScore,
+    homeTeamHasPosession,
+    awayTeamHasPosession
+  ]);
+
+  const [highlight, setHighlight] = React.useState(false);
+
   return (
     <>
       <tr
         className={cx({
-          'table-danger': (game as NFLGame).redzone,
-          'table-success': favTeam
+          'table-danger': (game as NFLGame).redzone && !highlight,
+          'table-success': favTeam && !highlight,
+          flash: highlight
         })}
         onClick={() => {
-          if (game.extraInfo) {
-            setShowExtraInfo(e => !e);
+          if (game.expandedContent) {
+            setShowExpandedContent(e => !e);
           }
         }}
       >
@@ -63,7 +93,7 @@ const GameRow = ({
             game.awayTeamWinning ? 'winning_team' : ''
           } ${(game as NFLGame).awayTeamHasPosession ? 'has_posession' : ''}`}
         >
-          {game.awayTeam}
+          {game.awayTeamDisplay ?? game.awayTeam}
           {(game as NFLGame).awayTeamHasPosession && <FootballEmoji />}
         </td>
 
@@ -72,7 +102,7 @@ const GameRow = ({
             game.homeTeamWinning ? 'winning_team' : ''
           } ${(game as NFLGame).homeTeamHasPosession ? 'has_posession' : ''}`}
         >
-          {game.homeTeam}
+          {game.homeTeamDisplay ?? game.homeTeam}
           {(game as NFLGame).homeTeamHasPosession && <FootballEmoji />}
         </td>
 
@@ -92,34 +122,39 @@ const GameRow = ({
           </td>
         )}
       </tr>
-      {game.extraInfo && (
-        <ExtraInfo extraInfo={game.extraInfo} isOpen={showExtraInfo} />
+      {game.expandedContent && (
+        <ExpandedContent
+          expandedContent={game.expandedContent}
+          isOpen={showExpandedContent}
+        />
       )}
     </>
   );
 };
 
-const ExtraInfo = ({
-  extraInfo,
+const ExpandedContent = ({
+  expandedContent,
   isOpen
 }: {
-  extraInfo: NonNullable<GameI['extraInfo']>;
+  expandedContent: () => React.ReactNode;
   isOpen: boolean;
 }) => {
   return (
     <tr>
       <td colSpan={6} style={{ padding: 0 }}>
-        <Collapse isOpen={isOpen}>
-          <div className="text-muted small font-weight-light px-2 py-2 text-center w-100">
-            {extraInfo.broadcaster && `📺 ${extraInfo.broadcaster}`}
-          </div>
-        </Collapse>
+        <Collapse isOpen={isOpen}>{expandedContent()}</Collapse>
       </td>
     </tr>
   );
 };
 
-const TableHeader = () => (
+export const ExpandedContentWrapper: FC = ({ children }) => (
+  <div className="text-muted small font-weight-light px-2 py-2 w-100">
+    {children}
+  </div>
+);
+
+const TableHeader = ({ showX }: { showX: boolean }) => (
   <thead>
     <tr>
       <th /* status */ />
@@ -127,7 +162,7 @@ const TableHeader = () => (
       <th>@home</th>
       <th className="text-right">a</th>
       <th className="text-right">h</th>
-      <th className="text-right" /* X */ />
+      {showX && <th className="text-right" /* X */ />}
     </tr>
   </thead>
 );
@@ -142,7 +177,7 @@ const GameTable = ({
   sport?: 'nfl' | 'mlb' | 'nba';
 }) => (
   <Table responsive size="sm">
-    <TableHeader />
+    <TableHeader showX={!!removeGame} />
     <tbody>
       {games
         .filter(game => !game.hidden)

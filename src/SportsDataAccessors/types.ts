@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface Game {
   id: number | string;
 
@@ -11,11 +13,10 @@ export interface Game {
   homeTeamScore?: number | string;
 
   hidden?: boolean;
-  extraInfo?: ExtraInfo;
-}
 
-interface ExtraInfo {
-  broadcaster?: string;
+  awayTeamDisplay?: ReactNode;
+  homeTeamDisplay?: ReactNode;
+  expandedContent?: () => ReactNode;
 }
 
 export interface Schedule {

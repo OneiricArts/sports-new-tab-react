@@ -1,5 +1,5 @@
 export interface EspnNfl {
-  leagues: LeaguesEntity[]; // null?
+  leagues?: LeaguesEntity[] | null;
   season: Season;
   week: Week;
   events?: EventsEntity[] | null;
@@ -65,11 +65,17 @@ export interface EventsEntity {
   date: string;
   name: string;
   shortName: string;
-  season: Season;
+  season: Season2;
   competitions?: CompetitionsEntity[] | null;
   links?: LinksEntity[] | null;
-  weather?: Weather | null;
+  weather?: Weather1 | null;
   status: Status;
+}
+
+export interface Season2 {
+  year: number;
+  type: number;
+  slug: string;
 }
 
 export interface CompetitionsEntity {
@@ -85,14 +91,15 @@ export interface CompetitionsEntity {
   venue: Venue;
   competitors?: CompetitorsEntity[] | null;
   notes?: null[] | null;
+  situation?: Situation | null;
   status: Status;
-  broadcasts?: BroadcastsEntity[] | null;
+  broadcasts?: (BroadcastsEntity | null)[] | null;
   leaders?: LeadersEntity[] | null;
-  tickets?: TicketsEntity[] | null;
   startDate: string;
-  geoBroadcasts?: GeoBroadcastsEntity[] | null;
-  odds?: OddsEntity[] | null;
+  geoBroadcasts?: (GeoBroadcastsEntity | null)[] | null;
   headlines?: HeadlinesEntity[] | null;
+  tickets?: TicketsEntity[] | null;
+  odds?: OddsEntity[] | null;
 }
 
 export interface Type1 {
@@ -121,18 +128,16 @@ export interface CompetitorsEntity {
   homeAway: string;
   team: Team;
   score: string;
+  linescores?: LinescoresEntity[] | null;
   statistics?: null[] | null;
   records?: RecordsEntity[] | null;
-  leaders?: LeadersEntity[] | null;
   winner?: boolean | null;
-  linescores?: LinescoresEntity[] | null;
 }
 
 export interface Team {
   id: string;
   uid: string;
   location: string;
-  name?: string | null;
   abbreviation: string;
   displayName: string;
   shortDisplayName: string;
@@ -142,6 +147,7 @@ export interface Team {
   venue: VenueOrTeam;
   links?: LinksEntity1[] | null;
   logo: string;
+  name?: string | null;
 }
 
 export interface VenueOrTeam {
@@ -156,11 +162,116 @@ export interface LinksEntity1 {
   isPremium: boolean;
 }
 
+export interface LinescoresEntity {
+  value: number;
+}
+
 export interface RecordsEntity {
   name: string;
   abbreviation?: string | null;
   type: string;
   summary: string;
+}
+
+export interface Situation {
+  $ref: string;
+  lastPlay: LastPlay;
+  down: number;
+  yardLine: number;
+  distance: number;
+  downDistanceText: string;
+  shortDownDistanceText: string;
+  possessionText: string;
+  isRedZone: boolean;
+  homeTimeouts: number;
+  awayTimeouts: number;
+  possession: string;
+}
+
+export interface LastPlay {
+  id: string;
+  type: Type2;
+  text: string;
+  scoreValue: number;
+  team: VenueOrTeam;
+  probability: Probability;
+  drive: Drive;
+  start: StartOrEnd;
+  end: StartOrEnd;
+  statYardage: number;
+  athletesInvolved?: AthletesInvolvedEntity[] | null;
+}
+
+export interface Type2 {
+  id: string;
+  text: string;
+  abbreviation: string;
+}
+
+export interface Probability {
+  tiePercentage: number;
+  homeWinPercentage: number;
+  awayWinPercentage: number;
+  secondsLeft: number;
+}
+
+export interface Drive {
+  description: string;
+  start: Start;
+  timeElapsed: TimeElapsed;
+}
+
+export interface Start {
+  yardLine: number;
+  text: string;
+}
+
+export interface TimeElapsed {
+  displayValue: string;
+}
+
+export interface StartOrEnd {
+  yardLine: number;
+  team: VenueOrTeam;
+}
+
+export interface AthletesInvolvedEntity {
+  id: string;
+  fullName: string;
+  displayName: string;
+  shortName: string;
+  links?: LinksEntity2[] | null;
+  headshot: string;
+  jersey: string;
+  position: string;
+  team: VenueOrTeam;
+}
+
+export interface LinksEntity2 {
+  rel?: string[] | null;
+  href: string;
+}
+
+export interface Status {
+  clock: number;
+  displayClock: string;
+  period: number;
+  type: Type3;
+}
+
+export interface Type3 {
+  id: string;
+  name: string;
+  state: string;
+  completed: boolean;
+  description: string;
+  detail: string;
+  shortDetail: string;
+}
+
+export interface BroadcastsEntity {
+  market: string;
+  names?: string[] | null;
 }
 
 export interface LeadersEntity {
@@ -184,67 +295,26 @@ export interface Athlete {
   displayName: string;
   shortName: string;
   links?: LinksEntity2[] | null;
-  headshot: string;
+  headshot?: string | null;
   jersey: string;
   position: Position;
   team: VenueOrTeam;
   active: boolean;
 }
 
-export interface LinksEntity2 {
-  rel?: string[] | null;
-  href: string;
-}
-
 export interface Position {
   abbreviation: string;
 }
 
-export interface LinescoresEntity {
-  value: number;
-}
-
-export interface Status {
-  clock: number;
-  displayClock: string;
-  period: number;
-  type: Type2;
-}
-
-export interface Type2 {
-  id: string;
-  name: string;
-  state: string;
-  completed: boolean;
-  description: string;
-  detail: string;
-  shortDetail: string;
-}
-
-export interface BroadcastsEntity {
-  market: string;
-  names?: string[] | null;
-}
-
-export interface TicketsEntity {
-  summary: string;
-  numberAvailable: number;
-  links?: LinksEntity3[] | null;
-}
-
-export interface LinksEntity3 {
-  href: string;
-}
-
 export interface GeoBroadcastsEntity {
-  type: Type3;
+  type: Type4;
   market: Market;
   media: Media;
   lang: string;
   region: string;
 }
 
-export interface Type3 {
+export interface Type4 {
   id: string;
   shortName: string;
 }
@@ -256,6 +326,96 @@ export interface Market {
 
 export interface Media {
   shortName: string;
+}
+
+export interface HeadlinesEntity {
+  description: string;
+  type: string;
+  shortLinkText: string;
+  video?: VideoEntity[] | null;
+}
+
+export interface VideoEntity {
+  id: number;
+  source: string;
+  headline: string;
+  thumbnail: string;
+  duration: number;
+  tracking: Tracking;
+  deviceRestrictions: DeviceRestrictions;
+  geoRestrictions: GeoRestrictions;
+  links: Links;
+}
+
+export interface Tracking {
+  sportName: string;
+  leagueName: string;
+  coverageType: string;
+  trackingName: string;
+  trackingId: string;
+}
+
+export interface DeviceRestrictions {
+  type: string;
+  devices?: string[] | null;
+}
+
+export interface GeoRestrictions {
+  type: string;
+  countries?: string[] | null;
+}
+
+export interface Links {
+  api: Api;
+  web: Web;
+  source: Source;
+  mobile: Mobile;
+}
+
+export interface Api {
+  self: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  artwork: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+}
+
+export interface SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity {
+  href: string;
+}
+
+export interface Web {
+  href: string;
+  short: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  self: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+}
+
+export interface Source {
+  mezzanine: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  flash: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  hds: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  HLS: HLS;
+  HD: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  full: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  href: string;
+}
+
+export interface HLS {
+  href: string;
+  HD: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+}
+
+export interface Mobile {
+  alert: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  source: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  href: string;
+  streaming: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+  progressiveDownload: SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity;
+}
+
+export interface TicketsEntity {
+  summary: string;
+  numberAvailable: number;
+  links?:
+    | SelfOrArtworkOrShortOrHDOrMezzanineOrFlashOrHdsOrFullOrAlertOrSourceOrStreamingOrProgressiveDownloadOrLinksEntity[]
+    | null;
 }
 
 export interface OddsEntity {
@@ -270,12 +430,6 @@ export interface Provider {
   priority: number;
 }
 
-export interface HeadlinesEntity {
-  description: string;
-  type: string;
-  shortLinkText: string;
-}
-
 export interface LinksEntity {
   language: string;
   rel?: string[] | null;
@@ -286,8 +440,8 @@ export interface LinksEntity {
   isPremium: boolean;
 }
 
-export interface Weather {
+export interface Weather1 {
   displayValue: string;
-  highTemperature: number;
+  temperature: number;
   conditionId: string;
 }
