@@ -28,6 +28,11 @@ const GameRow = ({
 }) => {
   const handleClick = () => removeGame?.(game.id);
 
+  const homeTeamHasPosession =
+    'homeTeamHasPosession' in game ? game.homeTeamHasPosession : undefined;
+  const awayTeamHasPosession =
+    'homeTeamHasPosession' in game ? game.awayTeamHasPosession : undefined;
+
   const [showExtraInfo, setShowExtraInfo] = React.useState(false);
 
   const favTeam =
@@ -43,8 +48,6 @@ const GameRow = ({
         [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
     ).length > 0;
 
-  const homeTeamHasPosession = (game as NFLGame).homeTeamHasPosession;
-  const awayTeamHasPosession = (game as NFLGame).awayTeamHasPosession;
   const firstLoad = React.useRef(true);
   React.useEffect(() => {
     if (firstLoad.current) {
