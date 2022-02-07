@@ -5,7 +5,10 @@ import { formatDate } from '../helpers';
 import { INBATeamRank, INbaStandings } from '../../components/INbaStandings';
 import { getExpandedContent } from '../../components/NBA';
 
-const getNBAData = async (): Promise<Schedule> => {
+const getNBAData = async (): Promise<{
+  schedule: Schedule;
+  standings?: INbaStandings;
+}> => {
   const today = formatDate(
     new Date(),
     ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
@@ -18,7 +21,9 @@ const getNBAData = async (): Promise<Schedule> => {
 
   const [scoreboardData, standingsData] = (await Promise.allSettled([
     fetch(url, { mode: 'cors' }).then(r => r.json()),
-    fetch(standingsUrl).then(r => r.json())
+    fetch(standingsUrl).then(r => {
+      if (r.status === 200) return r.json();
+    })
   ]).then(promises => {
     return promises.map(p => (p.status === 'fulfilled' ? p.value : undefined));
   })) as [StatsNbaScoreboardI | undefined, INbaStandings | undefined];
@@ -26,8 +31,11 @@ const getNBAData = async (): Promise<Schedule> => {
   if (!scoreboardData) throw Error('Could not retrieve NBA scoreboard');
 
   return {
-    displayDate: `${today.substr(4, 2)}.${today.substr(6)}`,
-    games: labelData(scoreboardData, standingsData) ?? []
+    schedule: {
+      displayDate: `${today.substr(4, 2)}.${today.substr(6)}`,
+      games: labelData(scoreboardData, standingsData) ?? []
+    },
+    standings: standingsData
   };
 };
 

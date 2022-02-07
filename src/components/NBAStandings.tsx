@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Col,
   Modal,
@@ -8,7 +8,6 @@ import {
   NavItem,
   NavLink,
   Row,
-  Spinner,
   TabContent,
   Table,
   TabPane
@@ -25,36 +24,32 @@ export type ITeamRecord = {
   streak: string;
 };
 
-export const Standings = ({ onClose }: { onClose: () => void }) => {
-  const [standings, setStandings] = useState<{
-    east: Array<ITeamRecord>;
-    west: Array<ITeamRecord>;
-  } | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [east, west] = await fetchStandings();
-      setStandings({ east, west });
-    };
-
-    fetchData();
-  }, []);
-
+export const Standings = ({
+  onClose,
+  standings
+}: {
+  onClose: () => void;
+  standings: INbaStandings;
+}) => {
   const [activeTab, setActiveTab] = useState<'west' | 'east'>('west');
 
-  if (!standings)
-    return (
-      <Modal isOpen={true} toggle={onClose} size="sm">
-        <ModalBody
-          style={{
-            margin: 'auto',
-            padding: '30px'
-          }}
-        >
-          <Spinner />
-        </ModalBody>
-      </Modal>
-    );
+  const [east, west] = [
+    standings.league.standard.conference.east,
+    standings.league.standard.conference.west
+  ].map(arr =>
+    arr.map(t => ({
+      name: t.teamSitesOnly.teamNickname,
+      rank: t.confRank,
+      record: `${t.win} - ${t.loss}`,
+      last10: `${t.lastTenWin} - ${t.lastTenLoss}`,
+      streak: `${t.isWinStreak ? '🔥' : '💩'} ${t.streak}`
+    }))
+  );
+
+  const arrs = [
+    ['West', 'west', west],
+    ['East', 'east', east]
+  ] as const;
 
   return (
     <Modal isOpen={true} toggle={onClose} size="lg">
@@ -64,44 +59,35 @@ export const Standings = ({ onClose }: { onClose: () => void }) => {
           xs={
             <>
               <Nav tabs>
-                <NavItem>
-                  <NavLink
-                    onClick={() => setActiveTab('west')}
-                    className={cx({ active: activeTab === 'west' })}
-                  >
-                    West
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    onClick={() => setActiveTab('east')}
-                    className={cx({ active: activeTab === 'east' })}
-                  >
-                    East
-                  </NavLink>
-                </NavItem>
+                {arrs.map(([title, id, arr]) => (
+                  <NavItem>
+                    <NavLink
+                      onClick={() => setActiveTab(id)}
+                      className={cx({ active: activeTab === id })}
+                    >
+                      {title}
+                    </NavLink>
+                  </NavItem>
+                ))}
               </Nav>
 
               <TabContent activeTab={activeTab}>
-                <TabPane tabId="west">
-                  <RankTable teams={standings.west} />
-                </TabPane>
-                <TabPane tabId="east">
-                  <RankTable teams={standings.east} />
-                </TabPane>
+                {arrs.map(([_, id, arr]) => (
+                  <TabPane tabId={id}>
+                    <RankTable teams={arr} />
+                  </TabPane>
+                ))}
               </TabContent>
             </>
           }
           lg={
             <Row>
-              <Col className="pt-2">
-                <h4 className="pl-3">West</h4>
-                <RankTable teams={standings.west} />
-              </Col>
-              <Col className="pt-2">
-                <h4 className="pl-3">East</h4>
-                <RankTable teams={standings.east} />
-              </Col>
+              {arrs.map(([title, _, arr]) => (
+                <Col className="pt-2">
+                  <h4 className="pl-3">{title}</h4>
+                  <RankTable teams={arr} />
+                </Col>
+              ))}
             </Row>
           }
         />
@@ -147,25 +133,4 @@ const RankTable = ({ teams }: { teams: Array<ITeamRecord> }) => (
 const backgroundColor = (position: number): string | undefined => {
   if ([7, 8, 9, 10].includes(position)) return '#f5f4d0';
   // if (position > 10) return 'gray';
-};
-
-const fetchStandings = async () => {
-  const data: INbaStandings = await (
-    await fetch(
-      'https://data.nba.net/10s/prod/v1/current/standings_conference.json'
-    )
-  ).json();
-
-  return [
-    data.league.standard.conference.east,
-    data.league.standard.conference.west
-  ].map(arr =>
-    arr.map(t => ({
-      name: t.teamSitesOnly.teamNickname,
-      rank: t.confRank,
-      record: `${t.win} - ${t.loss}`,
-      last10: `${t.lastTenWin} - ${t.lastTenLoss}`,
-      streak: `${t.isWinStreak ? '🔥' : '💩'} ${t.streak}`
-    }))
-  );
 };

@@ -11,6 +11,7 @@ import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Game, Schedule } from '../SportsDataAccessors/types';
 import { Button } from 'reactstrap';
 import { Standings } from './NBAStandings';
+import { INbaStandings } from './INbaStandings';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -31,9 +32,14 @@ const NBASchedule = () => {
 
   const [visibleCount] = useVisibilityHandlers();
 
+  const [standings, setStandings] = useState<INbaStandings | undefined>();
+
   useEffect(() => {
     getNBAData()
-      .then(data => nbaScheduleDispatch({ type: 'SET_NEW', newState: data }))
+      .then(data => {
+        nbaScheduleDispatch({ type: 'SET_NEW', newState: data.schedule });
+        setStandings(data.standings);
+      })
       .catch(e => throwFcError(e));
   }, [throwFcError, visibleCount]);
 
@@ -50,7 +56,12 @@ const NBASchedule = () => {
 
   return (
     <>
-      {showStandings && <Standings onClose={() => setShowStandings(false)} />}
+      {showStandings && standings && (
+        <Standings
+          onClose={() => setShowStandings(false)}
+          standings={standings}
+        />
+      )}
       <Card
         title={
           <div style={{ display: 'flex' }}>
@@ -66,6 +77,7 @@ const NBASchedule = () => {
               onClick={() => {
                 setShowStandings(true);
               }}
+              disabled={!standings}
             >
               Standings
             </Button>
