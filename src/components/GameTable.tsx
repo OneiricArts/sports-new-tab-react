@@ -92,7 +92,7 @@ const GameRow = ({
             game.awayTeamWinning ? 'winning_team' : ''
           } ${(game as NFLGame).awayTeamHasPosession ? 'has_posession' : ''}`}
         >
-          {game.awayTeam}
+          {game.awayTeamDisplay ?? game.awayTeam}
           {(game as NFLGame).awayTeamHasPosession && <FootballEmoji />}
         </td>
 
@@ -101,7 +101,7 @@ const GameRow = ({
             game.homeTeamWinning ? 'winning_team' : ''
           } ${(game as NFLGame).homeTeamHasPosession ? 'has_posession' : ''}`}
         >
-          {game.homeTeam}
+          {game.homeTeamDisplay ?? game.homeTeam}
           {(game as NFLGame).homeTeamHasPosession && <FootballEmoji />}
         </td>
 

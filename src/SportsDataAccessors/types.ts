@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface Game {
   id: number | string;
 
@@ -12,6 +14,9 @@ export interface Game {
 
   hidden?: boolean;
   extraInfo?: ExtraInfo;
+
+  awayTeamDisplay?: ReactNode;
+  homeTeamDisplay?: ReactNode;
 }
 
 interface ExtraInfo {

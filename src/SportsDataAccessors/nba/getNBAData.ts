@@ -2,6 +2,7 @@ import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import teamCodeInfo from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
 import { formatDate } from '../helpers';
+import { INBATeamRank, INbaStandings } from '../../components/INbaStandings';
 
 const getNBAData = async (): Promise<Schedule> => {
   const today = formatDate(
@@ -11,21 +12,46 @@ const getNBAData = async (): Promise<Schedule> => {
 
   const url = `https://data.nba.net/prod/v1/${today}/scoreboard.json`;
 
-  const response = await fetch(url, { mode: 'cors' });
-  const data = await response.json();
+  const standingsUrl =
+    'https://data.nba.net/10s/prod/v1/current/standings_conference.json';
+
+  const [scoreboardData, standingsData] = (await Promise.allSettled([
+    fetch(url, { mode: 'cors' }).then(r => r.json()),
+    fetch(standingsUrl).then(r => r.json())
+  ]).then(promises => {
+    return promises.map(p => (p.status === 'fulfilled' ? p.value : undefined));
+  })) as [StatsNbaScoreboardI | undefined, INbaStandings | undefined];
+
+  if (!scoreboardData) throw Error('Could not retrieve NBA scoreboard');
 
   return {
     displayDate: `${today.substr(4, 2)}.${today.substr(6)}`,
-    games: labelData(data) ?? []
+    games: labelData(scoreboardData, standingsData) ?? []
   };
 };
 
-type LabelDataI = (data: StatsNbaScoreboardI) => Game[] | undefined;
+type LabelDataI = (
+  data: StatsNbaScoreboardI,
+  standings?: INbaStandings
+) => Game[] | undefined;
 
 const getPeriod = (period: number) =>
   period > 4 ? `OT${period - 4}` : `${period}Q`;
 
-const labelData: LabelDataI = data => {
+const labelData: LabelDataI = (data, standings) => {
+  const teamRanks: Record<string, INBATeamRank | undefined> = {};
+  console.log(standings);
+  if (standings) {
+    [
+      standings.league.standard.conference.east,
+      standings.league.standard.conference.west
+    ].forEach(arr =>
+      arr.forEach(t => {
+        teamRanks[t.teamSitesOnly.teamNickname] = t;
+      })
+    );
+  }
+
   const labeledData = data.games?.map(d => {
     /**
      * Status
@@ -109,6 +135,9 @@ const labelData: LabelDataI = data => {
       if (a && b) extraInfo.broadcaster = `${a}, ${b}`;
     } catch {}
 
+    const awayTeamDisplay = getDisplayName(awayTeam, teamRanks[awayTeam]);
+    const homeTeamDisplay = getDisplayName(homeTeam, teamRanks[homeTeam]);
+
     return {
       id: d.gameId,
       status,
@@ -118,11 +147,36 @@ const labelData: LabelDataI = data => {
       awayTeam,
       awayTeamScore,
       awayTeamWinning,
-      extraInfo
+      extraInfo,
+      awayTeamDisplay,
+      homeTeamDisplay
     };
   });
 
   return labeledData;
+};
+
+const getDisplayName = (team: string, rank?: INBATeamRank): string => {
+  if (!rank) return team;
+
+  let displayName = team;
+
+  const confRank = parseInt(rank.confRank, 10);
+  if (confRank === 1) {
+    displayName = `${displayName} 🥇`;
+  } else if (confRank === 2) {
+    displayName = `${displayName} 🥈`;
+  } else if (confRank === 3) {
+    displayName = `${displayName} 🥉`;
+  }
+
+  const winStreak = rank.isWinStreak ? parseInt(rank.streak, 10) : 0;
+  const numOfFire = Math.floor(winStreak / 3);
+  for (let i = 0; i < numOfFire; i += 1) {
+    displayName = `${displayName} 🔥`;
+  }
+
+  return displayName;
 };
 
 // const getSeasonYear = async () => {
