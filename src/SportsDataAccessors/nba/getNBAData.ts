@@ -98,10 +98,15 @@ const labelData: LabelDataI = data => {
 
     let extraInfo: Game['extraInfo'] = { broadcaster: 'Unkown' };
     try {
-      if (d.watch?.broadcast?.video?.deepLink?.[0]) {
-        extraInfo.broadcaster =
-          d.watch?.broadcast?.video?.deepLink?.[0].broadcaster;
-      }
+      const national =
+        d.watch?.broadcast?.broadcasters?.national?.[0]?.shortName;
+
+      if (national) extraInfo.broadcaster = `(National) ${national}`;
+
+      const a = d.watch?.broadcast?.broadcasters?.hTeam?.[0]?.shortName;
+      const b = d.watch?.broadcast?.broadcasters?.vTeam?.[0]?.shortName;
+
+      if (a && b) extraInfo.broadcaster = `${a}, ${b}`;
     } catch {}
 
     return {
