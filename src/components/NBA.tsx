@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
 import createScheduleReducer from './createScheduleReducer';
@@ -9,6 +9,8 @@ import { ErrorBoundary } from './ErrorBoundary';
 import { widgetOnError } from './widgetCatchError';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Game, Schedule } from '../SportsDataAccessors/types';
+import { Button } from 'reactstrap';
+import { Standings } from './NBAStandings';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -44,23 +46,39 @@ const NBASchedule = () => {
     initFromCache
   );
 
+  const [showStandings, setShowStandings] = useState(false);
+
   return (
-    <Card
-      title={
-        <span>
-          <span className="font-weight-bold">NBA</span>
-          <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
-            {nbaSchedule.displayDate}
-          </span>
-        </span>
-      }
-    >
-      {(nbaSchedule.games?.length ?? 0) > 0 ? (
-        <GameTable games={nbaSchedule.games as Game[]} sport="nba" />
-      ) : (
-        <div className="p-3">No games today.</div>
-      )}
-    </Card>
+    <>
+      {showStandings && <Standings onClose={() => setShowStandings(false)} />}
+      <Card
+        title={
+          <div style={{ display: 'flex' }}>
+            <span className="font-weight-bold">NBA</span>
+            <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
+              {nbaSchedule.displayDate}
+            </span>
+
+            <Button
+              style={{ marginLeft: 'auto' }}
+              outline
+              size="sm"
+              onClick={() => {
+                setShowStandings(true);
+              }}
+            >
+              Standings
+            </Button>
+          </div>
+        }
+      >
+        {(nbaSchedule.games?.length ?? 0) > 0 ? (
+          <GameTable games={nbaSchedule.games as Game[]} sport="nba" />
+        ) : (
+          <div className="p-3">No games today.</div>
+        )}
+      </Card>
+    </>
   );
 };
 
