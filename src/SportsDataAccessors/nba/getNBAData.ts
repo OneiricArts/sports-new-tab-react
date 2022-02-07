@@ -3,6 +3,7 @@ import teamCodeInfo from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
 import { formatDate } from '../helpers';
 import { INBATeamRank, INbaStandings } from '../../components/INbaStandings';
+import { getExpandedContent } from '../../components/NBA';
 
 const getNBAData = async (): Promise<Schedule> => {
   const today = formatDate(
@@ -122,18 +123,26 @@ const labelData: LabelDataI = (data, standings) => {
     const homeTeam = homeTeamInfo?.nickname ?? d.hTeam.triCode;
     const awayTeam = awayTeamInfo?.nickname ?? d.vTeam.triCode;
 
-    let extraInfo: Game['extraInfo'] = { broadcaster: 'Unkown' };
+    let broadcaster: string | undefined;
+    let teamRecords: string | undefined;
     try {
       const national =
         d.watch?.broadcast?.broadcasters?.national?.[0]?.shortName;
 
-      if (national) extraInfo.broadcaster = `(National) ${national}`;
+      if (national) broadcaster = `(National) ${national}`;
 
       const a = d.watch?.broadcast?.broadcasters?.hTeam?.[0]?.shortName;
       const b = d.watch?.broadcast?.broadcasters?.vTeam?.[0]?.shortName;
 
-      if (a && b) extraInfo.broadcaster = `${a}, ${b}`;
+      if (a && b) broadcaster = `${a}, ${b}`;
+
+      teamRecords = `${awayTeam}(${d.vTeam.win}-${d.vTeam.loss}) vs ${homeTeam}(${d.hTeam.win}-${d.hTeam.loss})`;
     } catch {}
+
+    const expandedContent =
+      broadcaster || teamRecords
+        ? getExpandedContent(broadcaster, teamRecords)
+        : undefined;
 
     const awayTeamDisplay = getDisplayName(awayTeam, teamRanks[awayTeam]);
     const homeTeamDisplay = getDisplayName(homeTeam, teamRanks[homeTeam]);
@@ -147,9 +156,9 @@ const labelData: LabelDataI = (data, standings) => {
       awayTeam,
       awayTeamScore,
       awayTeamWinning,
-      extraInfo,
       awayTeamDisplay,
-      homeTeamDisplay
+      homeTeamDisplay,
+      expandedContent
     };
   });
 

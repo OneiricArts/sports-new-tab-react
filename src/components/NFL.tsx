@@ -8,7 +8,7 @@ import { Card } from '../simpleui';
 import getNFLData from '../SportsDataAccessors/nfl/getNflData';
 import { NFLSchedule } from '../SportsDataAccessors/types';
 import { ErrorBoundary } from './ErrorBoundary';
-import GameTable from './GameTable';
+import GameTable, { ExpandedContentWrapper } from './GameTable';
 import { widgetOnError } from './widgetCatchError';
 
 function carryOverHiddenGames(
@@ -150,5 +150,17 @@ const NFL = () => (
     <NFLScheduleCard />
   </ErrorBoundary>
 );
+
+export const getExpandedContent = (
+  broadcaster?: string,
+  status?: string
+) => () => {
+  return (
+    <ExpandedContentWrapper>
+      {broadcaster && <div>{`📺 ${broadcaster}`}</div>}
+      {status && <div>{status}</div>}
+    </ExpandedContentWrapper>
+  );
+};
 
 export default NFL;

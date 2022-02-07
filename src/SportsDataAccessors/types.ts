@@ -13,15 +13,10 @@ export interface Game {
   homeTeamScore?: number | string;
 
   hidden?: boolean;
-  extraInfo?: ExtraInfo;
 
   awayTeamDisplay?: ReactNode;
   homeTeamDisplay?: ReactNode;
-}
-
-interface ExtraInfo {
-  broadcaster?: string;
-  status?: string;
+  expandedContent?: () => ReactNode;
 }
 
 export interface Schedule {

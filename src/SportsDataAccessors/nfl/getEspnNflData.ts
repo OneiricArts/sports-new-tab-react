@@ -1,4 +1,5 @@
-import { Game, GameStatus, NFLGame, NFLSchedule } from '../types';
+import { getExpandedContent } from '../../components/NFL';
+import { GameStatus, NFLGame, NFLSchedule } from '../types';
 import { EspnNfl, EventsEntity } from './EspnNflTypes';
 
 const seasonTypeNames = {
@@ -102,16 +103,21 @@ const labelGame = (game: EventsEntity): NFLGame => {
     awayTeamWinning = parseInt(awayTeamScore) > parseInt(homeTeamScore);
   }
 
-  let extraInfo: Game['extraInfo'] = { broadcaster: 'Unkown' };
+  let broadcaster: string | undefined;
+  let lastPlay: string | undefined;
+
   if (game.competitions?.[0]?.broadcasts?.[0]?.names?.length) {
-    extraInfo.broadcaster = game.competitions?.[0]?.broadcasts?.[0]?.names?.join(
-      ', '
-    );
+    broadcaster = game.competitions?.[0]?.broadcasts?.[0]?.names?.join(', ');
   }
 
   if (game.competitions?.[0].situation?.lastPlay?.text) {
-    extraInfo.status = game.competitions?.[0].situation?.lastPlay?.text;
+    lastPlay = game.competitions?.[0].situation?.lastPlay?.text;
   }
+
+  const expandedContent =
+    broadcaster || lastPlay
+      ? getExpandedContent(broadcaster, lastPlay)
+      : undefined;
 
   // let homeTeamIndex = game.competitions?.[0]?.competitors?.find(
   //   c => c.homeAway === 'home'
@@ -149,7 +155,7 @@ const labelGame = (game: EventsEntity): NFLGame => {
     awayTeamWinning,
     homeTeamHasPosession,
     awayTeamHasPosession,
-    extraInfo
+    expandedContent
   };
 };
 

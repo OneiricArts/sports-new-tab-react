@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FC } from 'react';
 import { Button, Collapse, Table } from 'reactstrap';
 import { isBeta } from '../flags';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
@@ -33,7 +34,7 @@ const GameRow = ({
   const awayTeamHasPosession =
     'homeTeamHasPosession' in game ? game.awayTeamHasPosession : undefined;
 
-  const [showExtraInfo, setShowExtraInfo] = React.useState(false);
+  const [showExpandedContent, setShowExpandedContent] = React.useState(false);
 
   const favTeam =
     isBeta &&
@@ -80,8 +81,8 @@ const GameRow = ({
           flash: highlight
         })}
         onClick={() => {
-          if (game.extraInfo) {
-            setShowExtraInfo(e => !e);
+          if (game.expandedContent) {
+            setShowExpandedContent(e => !e);
           }
         }}
       >
@@ -121,37 +122,37 @@ const GameRow = ({
           </td>
         )}
       </tr>
-      {game.extraInfo && (
-        <ExtraInfo extraInfo={game.extraInfo} isOpen={showExtraInfo} />
+      {game.expandedContent && (
+        <ExpandedContent
+          expandedContent={game.expandedContent}
+          isOpen={showExpandedContent}
+        />
       )}
     </>
   );
 };
 
-const ExtraInfo = ({
-  extraInfo,
+const ExpandedContent = ({
+  expandedContent,
   isOpen
 }: {
-  extraInfo: NonNullable<GameI['extraInfo']>;
+  expandedContent: () => React.ReactNode;
   isOpen: boolean;
 }) => {
   return (
     <tr>
       <td colSpan={6} style={{ padding: 0 }}>
-        <Collapse isOpen={isOpen}>
-          <div className="text-muted small font-weight-light px-2 py-2 w-100">
-            <div>
-              <div className="mx-auto">
-                {extraInfo.broadcaster && `📺 ${extraInfo.broadcaster}`}
-              </div>
-              {extraInfo.status && <div>{extraInfo.status}</div>}
-            </div>
-          </div>
-        </Collapse>
+        <Collapse isOpen={isOpen}>{expandedContent()}</Collapse>
       </td>
     </tr>
   );
 };
+
+export const ExpandedContentWrapper: FC = ({ children }) => (
+  <div className="text-muted small font-weight-light px-2 py-2 w-100">
+    {children}
+  </div>
+);
 
 const TableHeader = ({ showX }: { showX: boolean }) => (
   <thead>
