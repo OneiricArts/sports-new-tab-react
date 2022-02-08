@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { Card } from '../simpleui';
 import getNBAData from '../SportsDataAccessors/nba/getNBAData';
 import createScheduleReducer from './createScheduleReducer';
-import GameTable, { ExpandedContentWrapper } from './GameTable';
+import GameTable from './GameTable';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import ErrorCard from '../ErrorCard';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -102,19 +102,5 @@ const NBA = () => (
     <NBASchedule />
   </ErrorBoundary>
 );
-
-export const getExpandedContent = (
-  broadcaster?: string,
-  teamRecords?: string
-) => () => {
-  return (
-    <ExpandedContentWrapper>
-      {teamRecords && <h6 style={{ textAlign: 'center' }}>{teamRecords}</h6>}
-      {broadcaster && (
-        <div style={{ textAlign: 'center' }}>{`📺 ${broadcaster}`}</div>
-      )}
-    </ExpandedContentWrapper>
-  );
-};
 
 export default NBA;

@@ -1,9 +1,11 @@
 import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
-import teamCodeInfo from './teamInfo';
+import { teamCodeInfo } from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
 import { formatDate } from '../helpers';
 import { INBATeamRank, INbaStandings } from '../../components/INbaStandings';
-import { getExpandedContent } from '../../components/NBA';
+import { getNbaExpandedContent } from '../../components/NBAExpandedContent';
+import { ReactNode } from 'react';
+import { nbaDisplayName } from '../../components/NBADisplayName';
 
 const getNBAData = async (): Promise<{
   schedule: Schedule;
@@ -49,7 +51,6 @@ const getPeriod = (period: number) =>
 
 const labelData: LabelDataI = (data, standings) => {
   const teamRanks: Record<string, INBATeamRank | undefined> = {};
-  console.log(standings);
   if (standings) {
     [
       standings.league.standard.conference.east,
@@ -132,28 +133,34 @@ const labelData: LabelDataI = (data, standings) => {
     const awayTeam = awayTeamInfo?.nickname ?? d.vTeam.triCode;
 
     let broadcaster: string | undefined;
-    let teamRecords: string | undefined;
+    let isOnNationalTv = false;
     try {
       const national =
         d.watch?.broadcast?.broadcasters?.national?.[0]?.shortName;
 
-      if (national) broadcaster = `(National) ${national}`;
+      if (national) {
+        broadcaster = `(National) ${national}`;
+        isOnNationalTv = true;
+      } else {
+        const htB = d.watch?.broadcast?.broadcasters?.hTeam?.[0]?.shortName;
+        const vtB = d.watch?.broadcast?.broadcasters?.vTeam?.[0]?.shortName;
 
-      const a = d.watch?.broadcast?.broadcasters?.hTeam?.[0]?.shortName;
-      const b = d.watch?.broadcast?.broadcasters?.vTeam?.[0]?.shortName;
-
-      if (a && b) broadcaster = `${a}, ${b}`;
-
-      teamRecords = `${awayTeam}(${d.vTeam.win}-${d.vTeam.loss}) vs ${homeTeam}(${d.hTeam.win}-${d.hTeam.loss})`;
+        if (htB && vtB) broadcaster = `${htB}, ${vtB}`;
+      }
     } catch {}
 
-    const expandedContent =
-      broadcaster || teamRecords
-        ? getExpandedContent(broadcaster, teamRecords)
-        : undefined;
+    const expandedContent = getNbaExpandedContent({
+      broadcaster,
+      awayTeam,
+      homeTeam,
+      awayTeamRecord: `${d.vTeam.win}-${d.vTeam.loss}`,
+      homeTeamRecord: `${d.hTeam.win}-${d.hTeam.loss}`,
+      awayTeamRank: teamRanks[awayTeam]?.confRank,
+      homeTeamRank: teamRanks[homeTeam]?.confRank
+    });
 
-    const awayTeamDisplay = getDisplayName(awayTeam, teamRanks[awayTeam]);
-    const homeTeamDisplay = getDisplayName(homeTeam, teamRanks[homeTeam]);
+    const awayTeamDisplay = () => getDisplayName(awayTeam, teamRanks[awayTeam]);
+    const homeTeamDisplay = () => getDisplayName(homeTeam, teamRanks[homeTeam]);
 
     return {
       id: d.gameId,
@@ -166,34 +173,22 @@ const labelData: LabelDataI = (data, standings) => {
       awayTeamWinning,
       awayTeamDisplay,
       homeTeamDisplay,
-      expandedContent
+      expandedContent,
+      isOnNationalTv
     };
   });
 
   return labeledData;
 };
 
-const getDisplayName = (team: string, rank?: INBATeamRank): string => {
+const getDisplayName = (team: string, rank?: INBATeamRank): ReactNode => {
   if (!rank) return team;
 
-  let displayName = team;
-
-  const confRank = parseInt(rank.confRank, 10);
-  if (confRank === 1) {
-    displayName = `${displayName} 🥇`;
-  } else if (confRank === 2) {
-    displayName = `${displayName} 🥈`;
-  } else if (confRank === 3) {
-    displayName = `${displayName} 🥉`;
-  }
-
   const winStreak = rank.isWinStreak ? parseInt(rank.streak, 10) : 0;
-  const numOfFire = Math.floor(winStreak / 3);
-  for (let i = 0; i < numOfFire; i += 1) {
-    displayName = `${displayName} 🔥`;
-  }
+  const loseStreak = rank.isWinStreak ? 0 : parseInt(rank.streak, 10);
+  const confRank = parseInt(rank.confRank, 10);
 
-  return displayName;
+  return nbaDisplayName(team, confRank, winStreak, loseStreak);
 };
 
 // const getSeasonYear = async () => {

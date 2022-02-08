@@ -24,6 +24,15 @@ export type ITeamRecord = {
   streak: string;
 };
 
+const getStreakStr = (strk: string, win: boolean): string => {
+  const emoj = win ? '🔥' : '💩';
+  const letter = win ? 'W' : 'L';
+  // const [emoj, letter] = win ? ['🔥', 'W'] : ['💩', 'L'];
+
+  if (parseInt(strk) >= 4) return `${emoj}${strk}`;
+  return `${letter}${strk}`;
+};
+
 export const Standings = ({
   onClose,
   standings
@@ -42,7 +51,7 @@ export const Standings = ({
       rank: t.confRank,
       record: `${t.win} - ${t.loss}`,
       last10: `${t.lastTenWin} - ${t.lastTenLoss}`,
-      streak: `${t.isWinStreak ? '🔥' : '💩'} ${t.streak}`
+      streak: getStreakStr(t.streak, t.isWinStreak)
     }))
   );
 

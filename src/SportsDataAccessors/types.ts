@@ -12,10 +12,12 @@ export interface Game {
   awayTeamScore?: number | string;
   homeTeamScore?: number | string;
 
+  isOnNationalTv?: boolean;
+
   hidden?: boolean;
 
-  awayTeamDisplay?: ReactNode;
-  homeTeamDisplay?: ReactNode;
+  awayTeamDisplay?: () => ReactNode;
+  homeTeamDisplay?: () => ReactNode;
   expandedContent?: () => ReactNode;
 }
 
