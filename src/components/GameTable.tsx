@@ -5,6 +5,7 @@ import { isBeta } from '../flags';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
 import { Game, NFLGame } from '../SportsDataAccessors/types';
 import { cx } from './classNames';
+import { useNbaFavTeam } from './NBAFavTeams';
 
 type GameI = Game | NFLGame;
 
@@ -38,18 +39,23 @@ const GameRow = ({
 
   const [showExpandedContent, setShowExpandedContent] = React.useState(false);
 
-  const favTeam =
+  const betaFavTeam =
     isBeta &&
     ([
       ['49ers', 'nfl'],
       ['buccaneers', 'nfl'],
-      ['warriors', 'nba'],
       ['giants', 'mlb']
     ] as const).some(
       ([v, x]) =>
         sport === x &&
         [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
     );
+
+  const favTeam = useNbaFavTeam();
+  const isFavTeam =
+    (sport === 'nba' &&
+      [game.homeTeam, game.awayTeam].includes(favTeam ?? '')) ||
+    betaFavTeam;
 
   const firstLoad = React.useRef(true);
   React.useEffect(() => {
@@ -79,7 +85,7 @@ const GameRow = ({
       <tr
         className={cx({
           'table-danger': (game as NFLGame).redzone && !highlight,
-          'table-success': favTeam && !highlight,
+          'table-success': isFavTeam && !highlight,
           flash: highlight
         })}
         onClick={() => {

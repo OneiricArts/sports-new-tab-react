@@ -12,6 +12,7 @@ import { Game, Schedule } from '../SportsDataAccessors/types';
 import { Button } from 'reactstrap';
 import { Standings } from './NBAStandings';
 import { INbaStandings } from './INbaStandings';
+import { NBAFavTeams } from './NBAFavTeams';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -53,9 +54,12 @@ const NBASchedule = () => {
   );
 
   const [showStandings, setShowStandings] = useState(false);
+  const [showFavs, setShowFavs] = useState(false);
 
   return (
     <>
+      {showFavs && <NBAFavTeams onClose={() => setShowFavs(false)} />}
+
       {showStandings && standings && (
         <Standings
           onClose={() => setShowStandings(false)}
@@ -74,6 +78,19 @@ const NBASchedule = () => {
               style={{ marginLeft: 'auto' }}
               outline
               size="sm"
+              color="success"
+              onClick={() => {
+                setShowFavs(true);
+              }}
+            >
+              Fav Team
+            </Button>
+
+            <Button
+              style={{ marginLeft: '5px' }}
+              outline
+              size="sm"
+              color="primary"
               onClick={() => {
                 setShowStandings(true);
               }}
