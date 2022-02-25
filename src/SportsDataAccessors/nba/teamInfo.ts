@@ -45,7 +45,7 @@ export const teamCodeInfo = {
   PHX: { id: 1610612756, nickname: 'Suns', longName: 'Phoenix Suns' },
   POR: {
     id: 1610612757,
-    nickname: 'Blazers',
+    nickname: 'Trail Blazers',
     longName: 'Portland Trail Blazers'
   },
   SAC: { id: 1610612758, nickname: 'Kings', longName: 'Sacramento Kings' },
