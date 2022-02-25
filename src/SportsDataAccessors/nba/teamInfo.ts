@@ -1,4 +1,4 @@
-const teamCodeInfo = {
+export const teamCodeInfo = {
   ATL: { id: 1610612737, nickname: 'Hawks', longName: 'Atlanta Hawks' },
   BOS: { id: 1610612738, nickname: 'Celtics', longName: 'Boston Celtics' },
   BKN: { id: 1610612751, nickname: 'Nets', longName: 'Brooklyn Nets' },
@@ -54,5 +54,3 @@ const teamCodeInfo = {
   UTA: { id: 1610612762, nickname: 'Jazz', longName: 'Utah Jazz' },
   WAS: { id: 1610612764, nickname: 'Wizards', longName: 'Washington Wizards' }
 } as const;
-
-export default teamCodeInfo;

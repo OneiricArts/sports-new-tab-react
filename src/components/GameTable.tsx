@@ -21,11 +21,13 @@ const FootballEmoji = () => (
 const GameRow = ({
   game,
   removeGame,
-  sport
+  sport,
+  showNatTvCol
 }: {
   game: GameI;
   removeGame?: (id: number | string) => void;
   sport?: 'nfl' | 'mlb' | 'nba';
+  showNatTvCol: boolean;
 }) => {
   const handleClick = () => removeGame?.(game.id);
 
@@ -43,11 +45,11 @@ const GameRow = ({
       ['buccaneers', 'nfl'],
       ['warriors', 'nba'],
       ['giants', 'mlb']
-    ] as const).filter(
+    ] as const).some(
       ([v, x]) =>
         sport === x &&
         [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
-    ).length > 0;
+    );
 
   const firstLoad = React.useRef(true);
   React.useEffect(() => {
@@ -88,12 +90,15 @@ const GameRow = ({
       >
         <td className="align-middle">{displayGameStatus(game.status)}</td>
 
+        {showNatTvCol && (
+          <td className="px-0">{game.isOnNationalTv && '📺'}</td>
+        )}
         <td
           className={`align-middle ${
             game.awayTeamWinning ? 'winning_team' : ''
           } ${(game as NFLGame).awayTeamHasPosession ? 'has_posession' : ''}`}
         >
-          {game.awayTeamDisplay ?? game.awayTeam}
+          {game.awayTeamDisplay?.() ?? game.awayTeam}
           {(game as NFLGame).awayTeamHasPosession && <FootballEmoji />}
         </td>
 
@@ -102,7 +107,7 @@ const GameRow = ({
             game.homeTeamWinning ? 'winning_team' : ''
           } ${(game as NFLGame).homeTeamHasPosession ? 'has_posession' : ''}`}
         >
-          {game.homeTeamDisplay ?? game.homeTeam}
+          {game.homeTeamDisplay?.() ?? game.homeTeam}
           {(game as NFLGame).homeTeamHasPosession && <FootballEmoji />}
         </td>
 
@@ -154,10 +159,17 @@ export const ExpandedContentWrapper: FC = ({ children }) => (
   </div>
 );
 
-const TableHeader = ({ showX }: { showX: boolean }) => (
+const TableHeader = ({
+  showX,
+  showNatTvCol
+}: {
+  showX: boolean;
+  showNatTvCol: boolean;
+}) => (
   <thead>
     <tr>
       <th /* status */ />
+      {showNatTvCol && <th />}
       <th>away</th>
       <th>@home</th>
       <th className="text-right">a</th>
@@ -175,22 +187,27 @@ const GameTable = ({
   games: GameI[];
   removeGame?: (id: number | string) => void;
   sport?: 'nfl' | 'mlb' | 'nba';
-}) => (
-  <Table responsive size="sm">
-    <TableHeader showX={!!removeGame} />
-    <tbody>
-      {games
-        .filter(game => !game.hidden)
-        .map(game => (
-          <GameRow
-            key={game.id}
-            game={game}
-            removeGame={removeGame}
-            sport={sport}
-          />
-        ))}
-    </tbody>
-  </Table>
-);
+}) => {
+  const showNatTvCol = games.some(g => !!g.isOnNationalTv);
+
+  return (
+    <Table responsive size="sm">
+      <TableHeader showX={!!removeGame} showNatTvCol={showNatTvCol} />
+      <tbody>
+        {games
+          .filter(game => !game.hidden)
+          .map(game => (
+            <GameRow
+              key={game.id}
+              game={game}
+              removeGame={removeGame}
+              sport={sport}
+              showNatTvCol={showNatTvCol}
+            />
+          ))}
+      </tbody>
+    </Table>
+  );
+};
 
 export default GameTable;
