@@ -14,6 +14,7 @@ import {
 } from 'reactstrap';
 import { cx } from './classNames';
 import { INbaStandings } from './INbaStandings';
+import { useNbaFavTeam } from './NBAFavTeams';
 import { ResponsiveComponent } from './ResponsiveComponent';
 
 export type ITeamRecord = {
@@ -69,7 +70,7 @@ export const Standings = ({
             <>
               <Nav tabs>
                 {arrs.map(([title, id, arr]) => (
-                  <NavItem>
+                  <NavItem key={id}>
                     <NavLink
                       onClick={() => setActiveTab(id)}
                       className={cx({ active: activeTab === id })}
@@ -82,7 +83,7 @@ export const Standings = ({
 
               <TabContent activeTab={activeTab}>
                 {arrs.map(([_, id, arr]) => (
-                  <TabPane tabId={id}>
+                  <TabPane tabId={id} key={id}>
                     <RankTable teams={arr} />
                   </TabPane>
                 ))}
@@ -92,7 +93,7 @@ export const Standings = ({
           lg={
             <Row>
               {arrs.map(([title, _, arr]) => (
-                <Col className="pt-2">
+                <Col className="pt-2" key={title}>
                   <h4 className="pl-3">{title}</h4>
                   <RankTable teams={arr} />
                 </Col>
@@ -105,39 +106,45 @@ export const Standings = ({
   );
 };
 
-const RankTable = ({ teams }: { teams: Array<ITeamRecord> }) => (
-  <Table size="sm" striped>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Team</th>
-        <th>Record</th>
-        <th>L10</th>
-        <th>Strk</th>
-      </tr>
-    </thead>
-    <tbody>
-      {teams.map((s, i) => (
-        <tr
-          key={s.name}
-          style={{
-            // borderBottom: i === 9 ? '3pt solid grey' : undefined,
-            backgroundColor: backgroundColor(i + 1)
-          }}
-          className={cx({
-            'text-muted': i > 9
-          })}
-        >
-          <td>{s.rank}</td>
-          <td>{s.name}</td>
-          <td>{s.record}</td>
-          <td>{s.last10}</td>
-          <td>{s.streak}</td>
+const RankTable = ({ teams }: { teams: Array<ITeamRecord> }) => {
+  const favTeam = useNbaFavTeam();
+
+  return (
+    <Table size="sm" striped>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Team</th>
+          <th>Record</th>
+          <th>L10</th>
+          <th>Strk</th>
         </tr>
-      ))}
-    </tbody>
-  </Table>
-);
+      </thead>
+      <tbody>
+        {teams.map((s, i) => (
+          <tr
+            key={s.name}
+            style={{
+              // borderBottom: i === 9 ? '3pt solid grey' : undefined,
+              backgroundColor:
+                favTeam === s.name ? undefined : backgroundColor(i + 1)
+            }}
+            className={cx({
+              'text-muted': i > 9,
+              'table-success': favTeam === s.name
+            })}
+          >
+            <td>{s.rank}</td>
+            <td>{s.name}</td>
+            <td>{s.record}</td>
+            <td>{s.last10}</td>
+            <td>{s.streak}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  );
+};
 
 const backgroundColor = (position: number): string | undefined => {
   if ([7, 8, 9, 10].includes(position)) return '#f5f4d0';
