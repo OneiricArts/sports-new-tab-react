@@ -84,7 +84,7 @@ const labelData: LabelDataI = (data, standings) => {
     // pregame
     if (
       (!d.isGameActivated && d.period.current === 0) ||
-      (d.period.current <= 1 && d.clock === '')
+      (d.period.current <= 1 && d.clock === '' && d.gameDuration.minutes === '')
     ) {
       status = { type: 'UTC_TIME', value: utcTime } as const;
     }
