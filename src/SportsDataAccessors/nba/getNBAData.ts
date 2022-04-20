@@ -1,4 +1,4 @@
-import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
+import { Playoffs, StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import { teamCodeInfo } from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
 import { formatDate } from '../helpers';
@@ -34,7 +34,9 @@ const getNBAData = async (): Promise<{
 
   return {
     schedule: {
-      displayDate: `${today.substr(4, 2)}.${today.substr(6)}`,
+      displayDate: `${today.substr(4, 2)}.${today.substr(6)}${getPlayoffRound(
+        scoreboardData
+      )}`,
       games: labelData(scoreboardData, standingsData) ?? []
     },
     standings: standingsData
@@ -162,8 +164,10 @@ const labelData: LabelDataI = (data, standings) => {
       homeTeamRank: teamRanks[homeTeam]?.confRank
     });
 
-    const awayTeamDisplay = () => getDisplayName(awayTeam, teamRanks[awayTeam]);
-    const homeTeamDisplay = () => getDisplayName(homeTeam, teamRanks[homeTeam]);
+    const awayTeamDisplay = () =>
+      getDisplayName('away', awayTeam, teamRanks[awayTeam], d.playoffs);
+    const homeTeamDisplay = () =>
+      getDisplayName('home', homeTeam, teamRanks[homeTeam], d.playoffs);
 
     return {
       id: d.gameId,
@@ -184,7 +188,24 @@ const labelData: LabelDataI = (data, standings) => {
   return labeledData;
 };
 
-const getDisplayName = (team: string, rank?: INBATeamRank): ReactNode => {
+const getDisplayName = (
+  awayOrHome: 'away' | 'home',
+  team: string,
+  rank?: INBATeamRank,
+  playoffs?: Playoffs
+): ReactNode => {
+  if (!!playoffs) {
+    if (playoffs?.hTeam.seriesWin === '0' && playoffs.vTeam.seriesWin === '0') {
+      return team;
+    }
+
+    return `${team} (${
+      awayOrHome === 'home'
+        ? playoffs.hTeam.seriesWin
+        : playoffs.vTeam.seriesWin
+    })`;
+  }
+
   if (!rank) return team;
 
   const winStreak = rank.isWinStreak ? parseInt(rank.streak, 10) : 0;
@@ -192,6 +213,26 @@ const getDisplayName = (team: string, rank?: INBATeamRank): ReactNode => {
   const confRank = parseInt(rank.confRank, 10);
 
   return nbaDisplayName(team, confRank, winStreak, loseStreak);
+};
+
+const getPlayoffRound = (scoreboardData: StatsNbaScoreboardI) => {
+  let playoffTxt = '';
+  const roundNums = scoreboardData.games?.map(d => d.playoffs?.roundNum);
+
+  if (
+    roundNums &&
+    roundNums[0] &&
+    roundNums.every(rdNum => rdNum === roundNums[0])
+  ) {
+    let roundNum = roundNums[0];
+
+    if (roundNum === '1') playoffTxt = ' // Round 1';
+    else if (roundNum === '2') playoffTxt = ' // Conf Semis';
+    else if (roundNum === '3') playoffTxt = ' // Conf Finals';
+    else if (roundNum === '4') playoffTxt = ' // Finals';
+  }
+
+  return playoffTxt;
 };
 
 // const getSeasonYear = async () => {

@@ -49,9 +49,28 @@ interface GamesEntity {
   gameDuration: GameDuration;
   tags?: string[] | null;
   period: Period;
+  playoffs?: Playoffs;
   vTeam: VTeamOrHTeam;
   hTeam: VTeamOrHTeam;
   watch: Watch;
+}
+
+export interface Playoffs {
+  roundNum: string;
+  confName: string;
+  seriesId: string;
+  seriesSummaryText: string;
+  isSeriesCompleted: boolean;
+  gameNumInSeries: string;
+  isIfNecessary: boolean;
+  vTeam: VTeamOrHTeam1;
+  hTeam: VTeamOrHTeam1;
+}
+
+interface VTeamOrHTeam1 {
+  seedNum: string;
+  seriesWin: string;
+  isSeriesWinner: boolean;
 }
 
 interface Arena {
