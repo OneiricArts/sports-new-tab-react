@@ -34,7 +34,9 @@ const getNBAData = async (): Promise<{
 
   return {
     schedule: {
-      displayDate: `${today.substr(4, 2)}.${today.substr(6)}`,
+      displayDate: `${today.substr(4, 2)}.${today.substr(6)}${getPlayoffRound(
+        scoreboardData
+      )}`,
       games: labelData(scoreboardData, standingsData) ?? []
     },
     standings: standingsData
@@ -211,6 +213,26 @@ const getDisplayName = (
   const confRank = parseInt(rank.confRank, 10);
 
   return nbaDisplayName(team, confRank, winStreak, loseStreak);
+};
+
+const getPlayoffRound = (scoreboardData: StatsNbaScoreboardI) => {
+  let playoffTxt = '';
+  const roundNums = scoreboardData.games?.map(d => d.playoffs?.roundNum);
+
+  if (
+    roundNums &&
+    roundNums[0] &&
+    roundNums.every(rdNum => rdNum === roundNums[0])
+  ) {
+    let roundNum = roundNums[0];
+
+    if (roundNum === '1') playoffTxt = ' // Round 1';
+    else if (roundNum === '2') playoffTxt = ' // Conf Semis';
+    else if (roundNum === '3') playoffTxt = ' // Conf Finals';
+    else if (roundNum === '4') playoffTxt = ' // Finals';
+  }
+
+  return playoffTxt;
 };
 
 // const getSeasonYear = async () => {
