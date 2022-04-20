@@ -1,4 +1,4 @@
-import { StatsNbaScoreboardI } from './StatsNbaScoreboardI';
+import { Playoffs, StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import { teamCodeInfo } from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
 import { formatDate } from '../helpers';
@@ -162,8 +162,10 @@ const labelData: LabelDataI = (data, standings) => {
       homeTeamRank: teamRanks[homeTeam]?.confRank
     });
 
-    const awayTeamDisplay = () => getDisplayName(awayTeam, teamRanks[awayTeam]);
-    const homeTeamDisplay = () => getDisplayName(homeTeam, teamRanks[homeTeam]);
+    const awayTeamDisplay = () =>
+      getDisplayName('away', awayTeam, teamRanks[awayTeam], d.playoffs);
+    const homeTeamDisplay = () =>
+      getDisplayName('home', homeTeam, teamRanks[homeTeam], d.playoffs);
 
     return {
       id: d.gameId,
@@ -184,7 +186,24 @@ const labelData: LabelDataI = (data, standings) => {
   return labeledData;
 };
 
-const getDisplayName = (team: string, rank?: INBATeamRank): ReactNode => {
+const getDisplayName = (
+  awayOrHome: 'away' | 'home',
+  team: string,
+  rank?: INBATeamRank,
+  playoffs?: Playoffs
+): ReactNode => {
+  if (!!playoffs) {
+    if (playoffs?.hTeam.seriesWin === '0' && playoffs.vTeam.seriesWin === '0') {
+      return team;
+    }
+
+    return `${team} (${
+      awayOrHome === 'home'
+        ? playoffs.hTeam.seriesWin
+        : playoffs.vTeam.seriesWin
+    })`;
+  }
+
   if (!rank) return team;
 
   const winStreak = rank.isWinStreak ? parseInt(rank.streak, 10) : 0;
