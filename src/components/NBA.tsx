@@ -13,7 +13,7 @@ import { Button } from 'reactstrap';
 import { Standings } from './NBAStandings';
 import { INbaStandings } from './INbaStandings';
 import { NBAFavTeams } from './NBAFavTeams';
-import { isSameDate } from '../SportsDataAccessors/helpers';
+import { dateInPT, isSameDate } from '../SportsDataAccessors/helpers';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -31,7 +31,7 @@ const initFromCache = (init: Schedule): Schedule => {
 
 type ChangeDateP = 'up' | 'down' | 'today';
 
-const today = () => new Date();
+const today = () => dateInPT();
 
 const NBASchedule = () => {
   const [throwFcError] = useThrowForErrorBoundary();

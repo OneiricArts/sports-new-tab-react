@@ -1,13 +1,13 @@
 import { Playoffs, StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import { teamCodeInfo } from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
-import { dateFormatters, formatDate, isSameDate } from '../helpers';
+import { dateFormatters, dateInPT, formatDate, isSameDate } from '../helpers';
 import { INBATeamRank, INbaStandings } from '../../components/INbaStandings';
 import { getNbaExpandedContent } from '../../components/NBAExpandedContent';
 import { ReactNode } from 'react';
 import { nbaDisplayName } from '../../components/NBADisplayName';
 
-const today = () => new Date();
+const today = () => dateInPT();
 
 const getNBAData = async (
   date = today()
