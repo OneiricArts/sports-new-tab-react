@@ -9,16 +9,9 @@ const twoDigits = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
 type DateFormatter = (p: { yyyy: string; mm: string; dd: string }) => string;
 
-export const dateFormatters = {
-  'yyyy-mm-dd': ({
-    yyyy,
-    mm,
-    dd
-  }: {
-    yyyy: string;
-    mm: string;
-    dd: string;
-  }): string => `${yyyy}-${mm}-${dd}`
+export const dateFormatters: Record<string, DateFormatter> = {
+  'yyyy-mm-dd': ({ yyyy, mm, dd }) => `${yyyy}-${mm}-${dd}`,
+  yyyymmdd: ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
 };
 
 export function formatDate(date: Date, func: DateFormatter) {
@@ -28,6 +21,11 @@ export function formatDate(date: Date, func: DateFormatter) {
 
   return func({ yyyy, mm: twoDigits(mm), dd: twoDigits(dd) });
 }
+
+export const isSameDate = (a: Date, b: Date) => {
+  const formatter = dateFormatters['yyyymmdd'];
+  return formatDate(a, formatter) === formatDate(b, formatter);
+};
 
 /**
  * Convert gameStatus to a string for the UI
