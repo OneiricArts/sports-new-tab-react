@@ -1,22 +1,26 @@
 import { Playoffs, StatsNbaScoreboardI } from './StatsNbaScoreboardI';
 import { teamCodeInfo } from './teamInfo';
 import { Game, GameStatus, Schedule } from '../types';
-import { formatDate } from '../helpers';
+import { dateFormatters, formatDate, isSameDate } from '../helpers';
 import { INBATeamRank, INbaStandings } from '../../components/INbaStandings';
 import { getNbaExpandedContent } from '../../components/NBAExpandedContent';
 import { ReactNode } from 'react';
 import { nbaDisplayName } from '../../components/NBADisplayName';
 
-const getNBAData = async (): Promise<{
+const today = () => new Date();
+
+const getNBAData = async (
+  date = today()
+): Promise<{
   schedule: Schedule;
   standings?: INbaStandings;
 }> => {
-  const today = formatDate(
-    new Date(),
-    ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
-  );
+  const formatter = dateFormatters['yyyymmdd'];
 
-  const url = `https://data.nba.net/prod/v1/${today}/scoreboard.json`;
+  const isNotToday = !isSameDate(date, today());
+
+  const urlDate = formatDate(date, formatter);
+  const url = `https://data.nba.net/prod/v1/${urlDate}/scoreboard.json`;
 
   const standingsUrl =
     'https://data.nba.net/10s/prod/v1/current/standings_conference.json';
@@ -34,10 +38,10 @@ const getNBAData = async (): Promise<{
 
   return {
     schedule: {
-      displayDate: `${today.substr(4, 2)}.${today.substr(6)}${getPlayoffRound(
-        scoreboardData
-      )}`,
-      games: labelData(scoreboardData, standingsData) ?? []
+      displayDate: `${urlDate.substr(4, 2)}.${urlDate.substr(
+        6
+      )}${getPlayoffRound(scoreboardData)}`,
+      games: labelData(scoreboardData, isNotToday, standingsData) ?? []
     },
     standings: standingsData
   };
@@ -45,13 +49,14 @@ const getNBAData = async (): Promise<{
 
 type LabelDataI = (
   data: StatsNbaScoreboardI,
+  isNotToday: boolean,
   standings?: INbaStandings
 ) => Game[] | undefined;
 
 const getPeriod = (period: number) =>
   period > 4 ? `OT${period - 4}` : `${period}Q`;
 
-const labelData: LabelDataI = (data, standings) => {
+const labelData: LabelDataI = (data, isNotToday, standings) => {
   const teamRanks: Record<string, INBATeamRank | undefined> = {};
   if (standings) {
     [
@@ -165,9 +170,21 @@ const labelData: LabelDataI = (data, standings) => {
     });
 
     const awayTeamDisplay = () =>
-      getDisplayName('away', awayTeam, teamRanks[awayTeam], d.playoffs);
+      getDisplayName(
+        isNotToday,
+        'away',
+        awayTeam,
+        teamRanks[awayTeam],
+        d.playoffs
+      );
     const homeTeamDisplay = () =>
-      getDisplayName('home', homeTeam, teamRanks[homeTeam], d.playoffs);
+      getDisplayName(
+        isNotToday,
+        'home',
+        homeTeam,
+        teamRanks[homeTeam],
+        d.playoffs
+      );
 
     return {
       id: d.gameId,
@@ -189,6 +206,7 @@ const labelData: LabelDataI = (data, standings) => {
 };
 
 const getDisplayName = (
+  isNotToday: boolean,
   awayOrHome: 'away' | 'home',
   team: string,
   rank?: INBATeamRank,
@@ -206,6 +224,7 @@ const getDisplayName = (
     })`;
   }
 
+  if (isNotToday) return team;
   if (!rank) return team;
 
   const winStreak = rank.isWinStreak ? parseInt(rank.streak, 10) : 0;
