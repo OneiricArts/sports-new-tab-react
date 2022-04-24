@@ -226,7 +226,10 @@ const getPlayoffRound = (scoreboardData: StatsNbaScoreboardI) => {
   ) {
     let roundNum = roundNums[0];
 
-    if (roundNum === '1') playoffTxt = ' // Round 1';
+    if (scoreboardData.games?.[0]?.seasonStageId === 5) {
+      // TODO confirm if this is always true
+      playoffTxt = ` // Play-in Round ${roundNum}`;
+    } else if (roundNum === '1') playoffTxt = ' // Round 1';
     else if (roundNum === '2') playoffTxt = ' // Conf Semis';
     else if (roundNum === '3') playoffTxt = ' // Conf Finals';
     else if (roundNum === '4') playoffTxt = ' // Finals';
