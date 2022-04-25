@@ -22,9 +22,10 @@ export function formatDate(date: Date, func: DateFormatter) {
   return func({ yyyy, mm: twoDigits(mm), dd: twoDigits(dd) });
 }
 
-export const isSameDate = (a: Date, b: Date) => {
-  const formatter = dateFormatters['yyyymmdd'];
-  return formatDate(a, formatter) === formatDate(b, formatter);
+export const isSameDate = (a: Date, b: Date, exact = false): boolean => {
+  if (exact) return a.getTime() === b.getTime();
+
+  return a.toDateString() === b.toDateString();
 };
 
 /**
