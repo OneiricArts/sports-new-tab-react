@@ -22,9 +22,10 @@ export function formatDate(date: Date, func: DateFormatter) {
   return func({ yyyy, mm: twoDigits(mm), dd: twoDigits(dd) });
 }
 
-export const isSameDate = (a: Date, b: Date) => {
-  const formatter = dateFormatters['yyyymmdd'];
-  return formatDate(a, formatter) === formatDate(b, formatter);
+export const isSameDate = (a: Date, b: Date, exact = false): boolean => {
+  if (exact) return a.getTime() === b.getTime();
+
+  return a.toDateString() === b.toDateString();
 };
 
 /**
@@ -81,4 +82,26 @@ export const isDaylightSavingsTimeOn = (date = new Date()) => {
   const dalightSavingsTime = date.getTimezoneOffset() < stdTimezoneOffset;
 
   return dalightSavingsTime;
+};
+
+const pacificTimeUTCOffset = (date = new Date()) => {
+  // PST -8 = UTC // PDT -7 = UTC
+  const PDT_UTC_OFFSET = -7;
+  const PST_UTC_OFFSET = -8;
+
+  return isDaylightSavingsTimeOn(date) ? PDT_UTC_OFFSET : PST_UTC_OFFSET;
+};
+
+/**
+ * https://stackoverflow.com/a/9070729
+ *
+ * @param {Date} clientDate
+ * @returns {Date} dateInPT
+ */
+export const dateInPT = (clientDate = new Date()): Date => {
+  const utc = clientDate.getTime() + clientDate.getTimezoneOffset() * 60000;
+  const pacificTime = new Date(
+    utc + 3600000 * pacificTimeUTCOffset(clientDate)
+  );
+  return pacificTime;
 };
