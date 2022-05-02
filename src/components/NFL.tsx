@@ -8,7 +8,9 @@ import { Card } from '../simpleui';
 import getNFLData from '../SportsDataAccessors/nfl/getNflData';
 import { NFLSchedule } from '../SportsDataAccessors/types';
 import { ErrorBoundary } from './ErrorBoundary';
+import { Expandable } from './Expandable';
 import GameTable, { ExpandedContentWrapper } from './GameTable';
+import { SubredditCard, SubredditTitle } from './Subreddit';
 import { widgetOnError } from './widgetCatchError';
 
 function carryOverHiddenGames(
@@ -138,6 +140,8 @@ function NFLScheduleCard() {
       ) : (
         <GameTable games={schedule.games} removeGame={removeGame} sport="nfl" />
       )}
+
+      <NewsCard />
     </Card>
   );
 }
@@ -150,6 +154,21 @@ const NFL = () => (
     <NFLScheduleCard />
   </ErrorBoundary>
 );
+
+const NewsCard = () => {
+  return (
+    <div>
+      <Expandable
+        rememberKey="r/nfl-news"
+        title={(expanded, toggle) => (
+          <SubredditTitle subreddit="nfl" expanded={expanded} toggle={toggle} />
+        )}
+      >
+        <SubredditCard subreddit="nfl" />
+      </Expandable>
+    </div>
+  );
+};
 
 export const getExpandedContent = (
   broadcaster?: string,
