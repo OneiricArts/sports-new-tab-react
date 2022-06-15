@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Button,
@@ -82,7 +82,7 @@ const OpenModalButton: FC<{ openModal: () => void }> = ({ openModal }) => (
   </Button>
 );
 
-const UnsplashPortal: FC = ({ children }) =>
+const UnsplashPortal: FC<{ children?: ReactNode }> = ({ children }) =>
   createPortal(
     children,
     document.getElementById('background-js-filters') as Element
