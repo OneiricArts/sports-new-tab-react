@@ -1,7 +1,10 @@
 import React, { ReactNode } from 'react';
 import { Card, CardBody, CardHeader } from 'reactstrap';
 
-const MyCard: React.FC<{ title: ReactNode }> = ({ title, children }) => {
+const MyCard: React.FC<{ title: ReactNode; children?: ReactNode }> = ({
+  title,
+  children
+}) => {
   return (
     <Card>
       <CardHeader>{title}</CardHeader>

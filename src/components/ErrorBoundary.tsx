@@ -3,6 +3,7 @@ import React, { ErrorInfo, ReactNode } from 'react';
 type Props = {
   message?: ReactNode;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  children?: ReactNode;
 };
 
 export class ErrorBoundary extends React.Component<Props> {

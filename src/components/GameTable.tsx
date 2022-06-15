@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { FC } from 'react';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { Button, Collapse, Table } from 'reactstrap';
 import { isBeta } from '../flags';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
@@ -37,15 +36,17 @@ const GameRow = ({
   const awayTeamHasPosession =
     'homeTeamHasPosession' in game ? game.awayTeamHasPosession : undefined;
 
-  const [showExpandedContent, setShowExpandedContent] = React.useState(false);
+  const [showExpandedContent, setShowExpandedContent] = useState(false);
 
   const betaFavTeam =
     isBeta &&
-    ([
-      ['49ers', 'nfl'],
-      ['buccaneers', 'nfl'],
-      ['giants', 'mlb']
-    ] as const).some(
+    (
+      [
+        ['49ers', 'nfl'],
+        ['buccaneers', 'nfl'],
+        ['giants', 'mlb']
+      ] as const
+    ).some(
       ([v, x]) =>
         sport === x &&
         [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
@@ -57,8 +58,8 @@ const GameRow = ({
       [game.homeTeam, game.awayTeam].includes(favTeam ?? '')) ||
     betaFavTeam;
 
-  const firstLoad = React.useRef(true);
-  React.useEffect(() => {
+  const firstLoad = useRef(true);
+  useEffect(() => {
     if (firstLoad.current) {
       firstLoad.current = false;
       return;
@@ -78,7 +79,7 @@ const GameRow = ({
     awayTeamHasPosession
   ]);
 
-  const [highlight, setHighlight] = React.useState(false);
+  const [highlight, setHighlight] = useState(false);
 
   return (
     <>
@@ -147,7 +148,7 @@ const ExpandedContent = ({
   expandedContent,
   isOpen
 }: {
-  expandedContent: () => React.ReactNode;
+  expandedContent: () => ReactNode;
   isOpen: boolean;
 }) => {
   return (
@@ -159,7 +160,9 @@ const ExpandedContent = ({
   );
 };
 
-export const ExpandedContentWrapper: FC = ({ children }) => (
+export const ExpandedContentWrapper: FC<{ children?: ReactNode }> = ({
+  children
+}) => (
   <div className="text-muted small font-weight-light px-2 py-2 w-100">
     {children}
   </div>

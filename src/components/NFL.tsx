@@ -76,7 +76,7 @@ function NFLScheduleCard() {
         // setIsLoading(false);
       });
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
-    } catch (e) {
+    } catch (e: any) {
       // setIsLoading(false);
       throwFcError(e);
     }
@@ -170,16 +170,14 @@ const NewsCard = () => {
   );
 };
 
-export const getExpandedContent = (
-  broadcaster?: string,
-  status?: string
-) => () => {
-  return (
-    <ExpandedContentWrapper>
-      {broadcaster && <div>{`📺 ${broadcaster}`}</div>}
-      {status && <div>{status}</div>}
-    </ExpandedContentWrapper>
-  );
-};
+export const getExpandedContent =
+  (broadcaster?: string, status?: string) => () => {
+    return (
+      <ExpandedContentWrapper>
+        {broadcaster && <div>{`📺 ${broadcaster}`}</div>}
+        {status && <div>{status}</div>}
+      </ExpandedContentWrapper>
+    );
+  };
 
 export default NFL;

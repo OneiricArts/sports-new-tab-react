@@ -5,15 +5,16 @@
 
 import React, { FC, ReactNode, useState } from 'react';
 
-interface Expandable {
+interface ExpandableI {
   rememberKey?: string;
   title?: (expanded: boolean, toggle: () => void) => ReactNode;
+  children?: ReactNode;
 }
 
 const getSavedState = (key?: string) =>
   key === undefined ? false : localStorage.getItem(key) === 'true';
 
-export const Expandable: FC<Expandable> = ({
+export const Expandable: FC<ExpandableI> = ({
   rememberKey,
   title,
   children
