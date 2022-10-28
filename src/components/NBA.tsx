@@ -1,19 +1,19 @@
-import React, { FC, useEffect, useReducer, useState } from 'react';
-import { Card } from '../simpleui';
-import getNBAData from '../SportsDataAccessors/nba/getNBAData';
-import createScheduleReducer from './createScheduleReducer';
-import GameTable from './GameTable';
-import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
-import ErrorCard from '../ErrorCard';
-import { ErrorBoundary } from './ErrorBoundary';
-import { widgetOnError } from './widgetCatchError';
-import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
-import { Game, Schedule } from '../SportsDataAccessors/types';
+import { FC, useEffect, useReducer, useState } from 'react';
 import { Button } from 'reactstrap';
-import { Standings } from './NBAStandings';
+import ErrorCard from '../ErrorCard';
+import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
+import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
+import { Card } from '../simpleui';
+import { dateInPT, isSameDate } from '../SportsDataAccessors/helpers';
+import getNBAData from '../SportsDataAccessors/nba/getNBAData';
+import { Game, Schedule } from '../SportsDataAccessors/types';
+import createScheduleReducer from './createScheduleReducer';
+import { ErrorBoundary } from './ErrorBoundary';
+import GameTable from './GameTable';
 import { INbaStandings } from './INbaStandings';
 import { NBAFavTeams } from './NBAFavTeams';
-import { dateInPT, isSameDate } from '../SportsDataAccessors/helpers';
+import { Standings } from './NBAStandings';
+import { widgetOnError } from './widgetCatchError';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -139,7 +139,7 @@ const NBASchedule = () => {
   );
 };
 
-const ChangeDate: FC<{
+export const ChangeDate: FC<{
   changeDate: (opt: ChangeDateP) => void;
   isToday: boolean;
 }> = ({ changeDate, isToday }) => (
