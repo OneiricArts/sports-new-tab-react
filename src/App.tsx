@@ -16,7 +16,7 @@ import NoInternet from './components/NoInternet';
 import { ResponsiveComponent } from './components/ResponsiveComponent';
 import { MobileView } from './MobileView';
 import { setFlagsFromUrl } from './flags';
-import NBAEspn from './components/NBAEspn';
+import { NBAEspn } from './components/NBAEspn';
 
 function App() {
   useEffect(() => setFlagsFromUrl(), []);
