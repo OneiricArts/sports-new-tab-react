@@ -9,9 +9,13 @@ const twoDigits = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
 type DateFormatter = (p: { yyyy: string; mm: string; dd: string }) => string;
 
-export const dateFormatters: Record<string, DateFormatter> = {
+export const dateFormatters: Record<
+  'yyyy-mm-dd' | 'yyyymmdd' | 'md.dd',
+  DateFormatter
+> = {
   'yyyy-mm-dd': ({ yyyy, mm, dd }) => `${yyyy}-${mm}-${dd}`,
-  yyyymmdd: ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`
+  yyyymmdd: ({ yyyy, mm, dd }) => `${yyyy}${mm}${dd}`,
+  'md.dd': ({ mm, dd }) => `${mm}.${dd}`
 };
 
 export function formatDate(date: Date, func: DateFormatter) {

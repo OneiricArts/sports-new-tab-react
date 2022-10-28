@@ -1,15 +1,23 @@
 import { ReactNode } from 'react';
 import { nbaDisplayName } from '../../components/NBADisplayName';
 import { getNbaExpandedContent } from '../../components/NBAExpandedContent';
+import { dateFormatters, isSameDate, formatDate, dateInPT } from '../helpers';
 import { Game, GameStatus, Schedule } from '../types';
 import { EspnNbaScoreboard, EventsEntity } from './EspnNbaScoreboard';
 import { EspnNbaStandings, rankings, stats, TeamRecords } from './espnRankings';
 
-const getEspnNbaData = async (): Promise<{
+const today = () => dateInPT();
+
+const getEspnNbaData = async (
+  date = today()
+): Promise<{
   schedule: Schedule;
   standings?: EspnNbaStandings;
 }> => {
-  const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard`;
+  const isNotToday = !isSameDate(date, today());
+  const urlDate = formatDate(date, dateFormatters['yyyymmdd']);
+
+  const url = `https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=${urlDate}`;
 
   const response = await fetch(url);
   const data: EspnNbaScoreboard = await response.json();
@@ -17,24 +25,36 @@ const getEspnNbaData = async (): Promise<{
   const rankingInfo = await rankings();
 
   return {
-    schedule: labelData(data, rankingInfo.teamRecords),
+    schedule: {
+      games: labelData(data, rankingInfo.teamRecords, isNotToday),
+      displayDate: formatDate(date, dateFormatters['md.dd'])
+    },
     standings: rankingInfo.standings
   };
 };
 
-const labelData = (data: EspnNbaScoreboard, teamRecords: TeamRecords) => {
-  const games = data.events?.map(g => labelGame(g, teamRecords)) ?? [];
+const labelData = (
+  data: EspnNbaScoreboard,
+  teamRecords: TeamRecords,
+  isNotToday: boolean
+) => {
+  const games =
+    data.events?.map(g => labelGame(g, teamRecords, isNotToday)) ?? [];
 
-  let displayDate = data.day.date;
-  try {
-    const dayArr = data.day.date.split('-');
-    displayDate = `${dayArr[1]}.${dayArr[2]}`;
-  } catch {}
+  // let displayDate = data.day.date;
+  // try {
+  //   const dayArr = data.day.date.split('-');
+  //   displayDate = `${dayArr[1]}.${dayArr[2]}`;
+  // } catch {}
 
-  return { games, displayDate };
+  return games;
 };
 
-const labelGame = (game: EventsEntity, teamRecords: TeamRecords): Game => {
+const labelGame = (
+  game: EventsEntity,
+  teamRecords: TeamRecords,
+  isNotToday: boolean
+): Game => {
   // TODO if these arent found?
   const homeCompetitor = game?.competitions?.[0]?.competitors?.find(
     e => e.homeAway === 'home'
@@ -113,8 +133,8 @@ const labelGame = (game: EventsEntity, teamRecords: TeamRecords): Game => {
     homeTeamRank: homeStats.confRank?.toString()
   });
 
-  const awayTeamDisplay = () => getDisplayName(awayTeam, awayStats);
-  const homeTeamDisplay = () => getDisplayName(homeTeam, homeStats);
+  const awayTeamDisplay = () => getDisplayName(isNotToday, awayTeam, awayStats);
+  const homeTeamDisplay = () => getDisplayName(isNotToday, homeTeam, homeStats);
 
   return {
     id: game.id,
@@ -136,9 +156,11 @@ const labelGame = (game: EventsEntity, teamRecords: TeamRecords): Game => {
 export default getEspnNbaData;
 
 const getDisplayName = (
+  isNotToday: boolean,
   team: string,
   rank?: { isWinStreak: boolean; streak: number; confRank: number }
 ): ReactNode => {
+  if (isNotToday) return team;
   if (!rank) return team;
 
   const winStreak = rank.isWinStreak ? rank.streak : 0;

@@ -4,12 +4,14 @@ import ErrorCard from '../ErrorCard';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
 import { Card } from '../simpleui';
+import { dateInPT, isSameDate } from '../SportsDataAccessors/helpers';
 import { EspnNbaStandings } from '../SportsDataAccessors/nba/espnRankings';
 import getEspnNbaData from '../SportsDataAccessors/nba/getEspnNbaData';
 import { Game, Schedule } from '../SportsDataAccessors/types';
 import createScheduleReducer from './createScheduleReducer';
 import { ErrorBoundary } from './ErrorBoundary';
 import GameTable from './GameTable';
+import { ChangeDate } from './NBA';
 import { NBAFavTeams } from './NBAFavTeams';
 import { StandingsEspn } from './NBAStandingsEspn';
 import { widgetOnError } from './widgetCatchError';
@@ -28,21 +30,39 @@ const initFromCache = (init: Schedule): Schedule => {
   }
 };
 
+type ChangeDateP = 'up' | 'down' | 'today';
+
+const today = () => dateInPT();
+
 const NBASchedule = () => {
   const [throwFcError] = useThrowForErrorBoundary();
 
   const [visibleCount] = useVisibilityHandlers();
 
   const [standings, setStandings] = useState<EspnNbaStandings | undefined>();
+  const [date, setDate] = useState(today());
+
+  const changeDate = (opt: ChangeDateP) => {
+    if (opt === 'today') {
+      setDate(today());
+      return;
+    }
+
+    const change = opt === 'down' ? -1 : 1;
+
+    const newDate = new Date(date);
+    newDate.setDate(date.getDate() + change);
+    setDate(newDate);
+  };
 
   useEffect(() => {
-    getEspnNbaData()
+    getEspnNbaData(date)
       .then(data => {
         nbaScheduleDispatch({ type: 'SET_NEW', newState: data.schedule });
         setStandings(data.standings);
       })
       .catch(e => throwFcError(e));
-  }, [throwFcError, visibleCount]);
+  }, [throwFcError, visibleCount, date]);
 
   const [nbaSchedule, nbaScheduleDispatch] = useReducer(
     createScheduleReducer<Schedule>('NBA_DATA_v1'),
@@ -68,15 +88,20 @@ const NBASchedule = () => {
       )}
       <Card
         title={
-          <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <div style={{ flexGrow: '1' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div>
               <span className="font-weight-bold">NBA</span>
               <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
                 {nbaSchedule.displayDate}
               </span>
             </div>
 
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', marginTop: '5px' }}>
+              <ChangeDate
+                changeDate={changeDate}
+                isToday={isSameDate(today(), date)}
+              />
+
               <Button
                 style={{ marginLeft: 'auto' }}
                 outline
