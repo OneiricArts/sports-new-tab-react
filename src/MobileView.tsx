@@ -3,7 +3,7 @@ import { Button, Navbar } from 'reactstrap';
 import { ExtensionInfo } from './components/ExtensionInfo';
 import Links from './components/Links/Links';
 import MLB from './components/MLB';
-import NBA from './components/NBA';
+import { NBAEspn as NBA } from './components/NBAEspn';
 import NFL from './components/NFL';
 import NHL from './components/NHL';
 import Soccer from './components/Soccer';

@@ -124,4 +124,4 @@ const NBAEspn = () => (
   </ErrorBoundary>
 );
 
-export default NBAEspn;
+export { NBAEspn };
