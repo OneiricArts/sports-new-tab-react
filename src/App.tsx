@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 import './App.css';
 import { UnsplashPicker } from './components/Unsplash/UnsplashPicker';
-import NBA from './components/NBA';
 import Links from './components/Links/Links';
 import { ControlBar } from './components/ControlBar';
 import {
@@ -17,6 +16,7 @@ import NoInternet from './components/NoInternet';
 import { ResponsiveComponent } from './components/ResponsiveComponent';
 import { MobileView } from './MobileView';
 import { setFlagsFromUrl } from './flags';
+import NBAEspn from './components/NBAEspn';
 
 function App() {
   useEffect(() => setFlagsFromUrl(), []);
@@ -59,7 +59,7 @@ function App() {
           sm={
             <div className="pb-4 card-columns">
               {widgetsVisible.NFL && <NFL />}
-              {widgetsVisible.NBA && <NBA />}
+              {widgetsVisible.NBA && <NBAEspn />}
               {widgetsVisible.NHL && <NHL />}
               {widgetsVisible.MLB && <MLB />}
               {widgetsVisible.Soccer && <Soccer />}

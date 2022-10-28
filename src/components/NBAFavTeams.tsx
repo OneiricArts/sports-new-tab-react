@@ -1,11 +1,11 @@
 import React from 'react';
 import { Modal, ModalBody, ModalHeader } from 'reactstrap';
-import { teamCodeInfo } from '../SportsDataAccessors/nba/teamInfo';
 import { removeItem, setItem } from '../common/LocalStorage';
 import { useListenToItem } from '../common/LocalStorageHooks';
+import { teamCodeInfoEspn } from '../SportsDataAccessors/nba/espnTeamInfo';
 
 const getTeamNames = () =>
-  Object.values(teamCodeInfo)
+  Object.values(teamCodeInfoEspn)
     .map(v => v.nickname)
     .sort();
 
