@@ -55,6 +55,15 @@ export const displayGameStatus = (status: GameStatus): string => {
 
       return `${day} ${time}`;
     }
+
+    if (status.format === 'SHORT_TIME') {
+      const time = date
+        .toLocaleTimeString('en-us', { hour: '2-digit', minute: '2-digit' })
+        .split(' ')[0];
+
+      // e.g. 12:00, 03:00
+      return `${time}`;
+    }
   } else {
     // something went seriously wrong -- e.g. localStorage has different type
     return 'ERROR';

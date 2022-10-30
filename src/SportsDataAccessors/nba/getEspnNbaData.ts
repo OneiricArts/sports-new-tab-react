@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { nbaDisplayName } from '../../components/NBADisplayName';
 import { getNbaExpandedContent } from '../../components/NBAExpandedContent';
 import { dateFormatters, isSameDate, formatDate, dateInPT } from '../helpers';
+import { sortGames } from '../nfl/getNflData';
 import { Game, GameStatus, Schedule } from '../types';
 import { EspnNbaScoreboard, EventsEntity } from './EspnNbaScoreboard';
 import { EspnNbaStandings, rankings, stats, TeamRecords } from './espnRankings';
@@ -47,7 +48,7 @@ const labelData = (
   //   displayDate = `${dayArr[1]}.${dayArr[2]}`;
   // } catch {}
 
-  return games;
+  return sortGames(games);
 };
 
 const labelGame = (
@@ -72,6 +73,7 @@ const labelGame = (
 
   let status: GameStatus = {
     type: 'TIME_STRING',
+    format: 'SHORT_TIME',
     value: game.date
   };
 
