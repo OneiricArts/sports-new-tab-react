@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Button, Card, CardBody, CardHeader } from 'reactstrap';
 import { AddSiteBar } from './AddSiteBar';
+import { askFor } from './iFrameHelper';
 import { initalSites } from './initalSites';
 import { LinkList } from './LinkList';
 
@@ -93,17 +94,6 @@ const Links = () => {
         console.log(data);
         dispatch({ type: 'addTopSites', topSites: data.slice(0, 5) });
       });
-
-      // TODO remove after a couple versions
-      try {
-        window.chrome?.storage.local.get('Links_data', data => {
-          if (!data?.Links_data?.myLinks) return;
-
-          dispatch({ type: 'addMySites', mysites: data.Links_data.myLinks });
-
-          window.chrome?.storage.local.remove('Links_data');
-        });
-      } catch {}
     };
 
     prefillData();
@@ -112,6 +102,19 @@ const Links = () => {
   const removeMySiteByIndex = (index: number) => {
     dispatch({ type: 'removeMySiteByIndex', index });
   };
+
+  useEffect(() => {
+    const unregister = askFor<chrome.topSites.MostVisitedURL[]>(
+      'chrome.topSites',
+      data =>
+        dispatch({
+          type: 'addTopSites',
+          topSites: data.slice(0, 5)
+        })
+    );
+
+    return () => unregister?.();
+  }, []);
 
   const addSite = (site: LinkI) => {
     dispatch({
@@ -145,7 +148,7 @@ const Links = () => {
         <LinkList list={localState.mySites} onRemove={removeMySiteByIndex} />
       </CardBody>
 
-      {window.chrome?.topSites && (
+      {localState.topSites.length > 0 && (
         <CardHeader className="border-top">Chrome Top Sites</CardHeader>
       )}
 
