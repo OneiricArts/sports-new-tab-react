@@ -29,7 +29,7 @@ export interface Schedule {
 
 export type GameStatus =
   | { type: 'UTC_TIME'; value: number }
-  | { type: 'TIME_STRING'; value: string; format?: 'DAY_TIME' }
+  | { type: 'TIME_STRING'; value: string; format?: 'DAY_TIME' | 'SHORT_TIME' }
   | { type: 'DATE_STRING'; value: string }
   | { type: 'GAMESTATUS_STRING'; value: string };
 

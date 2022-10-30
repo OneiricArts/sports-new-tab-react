@@ -73,6 +73,7 @@ const labelGame = (
 
   let status: GameStatus = {
     type: 'TIME_STRING',
+    format: 'SHORT_TIME',
     value: game.date
   };
 
