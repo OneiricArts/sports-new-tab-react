@@ -1,5 +1,5 @@
 import { nflTeamsInfo } from './teamInfo';
-import { GameStatus, NFLGame, NFLSchedule } from '../types';
+import { Game, GameStatus, NFLGame, NFLSchedule } from '../types';
 import { LiveUpdateApiI, LiveUpdateGameObjI } from './LiveUpdateApiTypes';
 import getEspnNflData from './getEspnNflData';
 
@@ -19,7 +19,7 @@ const getNFLData = async (): Promise<NFLSchedule> => {
   return schedule;
 };
 
-const sortGames = (games: NFLGame[]) => {
+export const sortGames = <T extends Game>(games: T[]) => {
   return games.sort((g1, g2) => {
     /**
      * Status value options:
