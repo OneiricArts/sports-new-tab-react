@@ -8,9 +8,11 @@ export type EspnNbaStandings = {
   west: EspnNbaStats[];
 };
 
-export type EspnNbaStats = ReturnType<typeof stats>;
+export type EspnNbaStats = NonNullable<ReturnType<typeof stats>>;
 
 export const stats = (t: keyof TeamRecords, teamRecords: TeamRecords) => {
+  if (!teamRecords[t]) return undefined;
+
   const overallRecord = teamRecords[t].team.record.items?.find(
     i => i.description === 'Overall Record'
   );
@@ -47,9 +49,11 @@ export const rankings = async () => {
     teamRecords[t.team.abbreviation] = t;
   });
 
-  const standings = teamStats
-    .map(t => stats(t.team.abbreviation, teamRecords as TeamRecords))
-    .sort((a, b) => a.confRank - b.confRank);
+  const standings = (
+    teamStats
+      .map(t => stats(t.team.abbreviation, teamRecords as TeamRecords))
+      .filter(s => s !== undefined) as EspnNbaStats[]
+  ).sort((a, b) => a.confRank - b.confRank);
 
   const east = standings.filter(s => s.conference === 'EAST');
   const west = standings.filter(s => s.conference === 'WEST');
