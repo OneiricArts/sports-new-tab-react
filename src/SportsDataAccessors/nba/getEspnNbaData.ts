@@ -131,8 +131,8 @@ const labelGame = (
     homeTeam,
     awayTeamRecord: awayStats?.record,
     homeTeamRecord: homeStats?.record,
-    awayTeamRank: awayStats.confRank?.toString(),
-    homeTeamRank: homeStats.confRank?.toString()
+    awayTeamRank: awayStats?.confRank?.toString(),
+    homeTeamRank: homeStats?.confRank?.toString()
   });
 
   const awayTeamDisplay = () => getDisplayName(isNotToday, awayTeam, awayStats);
