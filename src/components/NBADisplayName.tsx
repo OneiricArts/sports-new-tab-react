@@ -12,6 +12,31 @@ const child = {
   textAlign: 'center'
 } as const;
 
+export const nbaPlayoffsDisplayName = (name: string, wins: number) => {
+  const gray = `#888888`;
+  return (
+    <>
+      {name}
+      <span
+        style={{
+          marginLeft: '10px',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: `1px solid ${gray}`,
+          borderRadius: '50%',
+          width: '17px',
+          height: '17px',
+          fontSize: '10px',
+          color: gray
+        }}
+      >
+        {wins}
+      </span>
+    </>
+  );
+};
+
 export const nbaDisplayName = (
   name: string,
   rank: number,

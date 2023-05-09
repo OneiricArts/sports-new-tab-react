@@ -76,6 +76,7 @@ export interface CompetitionsEntity {
   venue: Venue;
   competitors?: CompetitorsEntity[] | null;
   notes?: null[] | null;
+  series?: Series;
   status: Status;
   broadcasts?: (BroadcastsEntity | null)[] | null;
   format: Format;
@@ -83,6 +84,23 @@ export interface CompetitionsEntity {
   startDate: string;
   geoBroadcasts?: (GeoBroadcastsEntity | null)[] | null;
   odds?: OddsEntity[] | null;
+}
+
+export interface Series {
+  type: string;
+  title: string;
+  summary: string;
+  completed: boolean;
+  totalCompetitions: number;
+  competitors?: CompetitorsEntity1[] | null;
+}
+
+export interface CompetitorsEntity1 {
+  id: string;
+  uid: string;
+  wins: number;
+  ties: number;
+  href: string;
 }
 export interface Type1 {
   id: string;
