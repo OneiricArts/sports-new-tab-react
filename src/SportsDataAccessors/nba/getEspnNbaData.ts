@@ -1,5 +1,8 @@
 import { ReactNode } from 'react';
-import { nbaDisplayName } from '../../components/NBADisplayName';
+import {
+  nbaDisplayName,
+  nbaPlayoffsDisplayName
+} from '../../components/NBADisplayName';
 import { getNbaExpandedContent } from '../../components/NBAExpandedContent';
 import { dateFormatters, isSameDate, formatDate, dateInPT } from '../helpers';
 import { sortGames } from '../nfl/getNflData';
@@ -135,8 +138,22 @@ const labelGame = (
     homeTeamRank: homeStats?.confRank?.toString()
   });
 
-  const awayTeamDisplay = () => getDisplayName(isNotToday, awayTeam, awayStats);
-  const homeTeamDisplay = () => getDisplayName(isNotToday, homeTeam, homeStats);
+  let awayTeamDisplay: () => ReactNode;
+  let homeTeamDisplay: () => ReactNode;
+
+  const series = game.competitions?.[0]?.series;
+  if (series) {
+    const homeTeamSeriesWins = series?.competitors?.[0].wins;
+    const awayTeamSeriesWins = series?.competitors?.[1].wins;
+
+    awayTeamDisplay = () =>
+      nbaPlayoffsDisplayName(awayTeam, awayTeamSeriesWins!);
+    homeTeamDisplay = () =>
+      nbaPlayoffsDisplayName(homeTeam, homeTeamSeriesWins!);
+  } else {
+    awayTeamDisplay = () => getDisplayName(isNotToday, awayTeam, awayStats);
+    homeTeamDisplay = () => getDisplayName(isNotToday, homeTeam, homeStats);
+  }
 
   return {
     id: game.id,
