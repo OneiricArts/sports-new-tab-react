@@ -3,16 +3,29 @@ import { Game, GameStatus, NFLGame, NFLSchedule } from '../types';
 import { LiveUpdateApiI, LiveUpdateGameObjI } from './LiveUpdateApiTypes';
 import getEspnNflData from './getEspnNflData';
 
-const getNFLData = async (): Promise<NFLSchedule> => {
+const fetchNflData = async () => {
   const url = `https://static.nfl.com/liveupdate/scores/scores.json`;
 
-  const response = await fetch(url, { mode: 'cors' });
-  const data: LiveUpdateApiI = await response.json();
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    const data: LiveUpdateApiI = await response.json();
 
-  let schedule = labelData(data);
+    return data;
+  } catch {
+    return undefined;
+  }
+};
 
+const getNFLData = async (): Promise<NFLSchedule> => {
+  let schedule: NFLSchedule = { displayDate: '', games: [] };
+
+  const nflSchedule = await fetchNflData();
   const espnSchedule = await getEspnNflData();
-  if (espnSchedule) schedule = mergeEspnData(schedule, espnSchedule);
+  if (nflSchedule) schedule = labelData(nflSchedule);
+  else if (espnSchedule) schedule = espnSchedule;
+
+  if (nflSchedule && espnSchedule)
+    schedule = mergeEspnData(schedule, espnSchedule);
 
   schedule.games = sortGames(schedule.games);
 
