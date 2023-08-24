@@ -104,16 +104,32 @@ const Links = () => {
   };
 
   useEffect(() => {
-    const unregister = askFor<chrome.topSites.MostVisitedURL[]>(
-      'chrome.topSites',
-      data =>
+    const unregisterCbs = [
+      askFor<chrome.topSites.MostVisitedURL[]>('chrome.topSites', data =>
         dispatch({
           type: 'addTopSites',
           topSites: data.slice(0, 5)
         })
-    );
+      )
+    ];
 
-    return () => unregister?.();
+    // TODO temp remove
+    if (!localStorage.getItem('LinksDataI_v1')) {
+      console.log('> REQUESTING chrome.mySitesTransfer');
+
+      askFor<LinksDataI['mySites'] | undefined>(
+        'chrome.mySitesTransfer',
+        data => {
+          if (data)
+            dispatch({
+              type: 'addMySites',
+              mysites: data
+            });
+        }
+      );
+    }
+
+    return () => unregisterCbs.forEach(cb => cb?.());
   }, []);
 
   const addSite = (site: LinkI) => {
