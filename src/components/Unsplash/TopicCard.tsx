@@ -61,7 +61,7 @@ export const TopicCard: FC<TopicCardProps> = ({ updater, topic, active }) => {
         <hr />
 
         <div style={{ display: 'flex', width: '100%' }}>
-          <a href={topic.links.html}>
+          <a href={topic.links.html} target="_parent">
             View all ({topic.total_photos}) pictures in topic.
           </a>
 

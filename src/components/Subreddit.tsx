@@ -78,6 +78,7 @@ export const SubredditCard: FC<{ subreddit: string; length?: number }> = ({
           <a
             key={id}
             href={`https://reddit.com${permalink}`}
+            target="_parent"
             style={{ fontSize: '12px' }}
             className="list-group-item list-group-item-action d-flex p-2"
           >
@@ -125,6 +126,7 @@ export const SubredditTitle: FC<{
       href={`https://www.reddit.com/r/${subreddit}`}
       className="btn btn-outline-secondary btn-sm ml-2"
       role="button"
+      target="_parent"
     >
       r/{subreddit}
     </a>

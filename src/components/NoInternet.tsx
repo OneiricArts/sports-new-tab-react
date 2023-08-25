@@ -5,7 +5,7 @@ const Message = () => (
   <Alert color="danger">
     <h4>No internet connection detected :(</h4>
     This page will auto-refresh when a connection is detected.{' '}
-    <a href="https://forms.gle/iSkqzc53vC5zD7PX8">
+    <a href="https://forms.gle/iSkqzc53vC5zD7PX8" target="_parent">
       If this is incorrect, please report.
     </a>
   </Alert>

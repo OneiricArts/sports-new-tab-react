@@ -13,7 +13,7 @@ export const Message = () => (
     }}
   >
     Please try out `Background Options` in the bottom right corner{' '}
-    <a href="https://forms.gle/iSkqzc53vC5zD7PX8">
+    <a href="https://forms.gle/iSkqzc53vC5zD7PX8" target="_parent">
       and provide feedback or thoughts.
     </a>
   </div>
