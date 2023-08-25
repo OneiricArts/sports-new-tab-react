@@ -27,7 +27,9 @@ export const ExtensionInfo = () => {
           <Separator />
         </>
       )}
-      <a href="https://forms.gle/iSkqzc53vC5zD7PX8">Feedback</a>
+      <a href="https://forms.gle/iSkqzc53vC5zD7PX8" target="_parent">
+        Feedback
+      </a>
     </>
   );
 };

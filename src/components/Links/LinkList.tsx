@@ -14,6 +14,7 @@ export const LinkList = ({ list, onRemove }: LinkListProps) => {
         <a
           key={`${i} ${url} ${title}`}
           href={url}
+          target="_parent"
           className="list-group-item list-group-item-action d-flex"
         >
           {title}
