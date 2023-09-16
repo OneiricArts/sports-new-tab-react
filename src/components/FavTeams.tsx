@@ -3,10 +3,12 @@ import { Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { removeItem, setItem } from '../common/LocalStorage';
 import { useListenToItem } from '../common/LocalStorageHooks';
 import { teamCodeInfoEspn } from '../SportsDataAccessors/nba/espnTeamInfo';
+import { nflTeamsInfo } from '../SportsDataAccessors/nfl/teamInfo';
 
 export const useFavTeam = (sport: 'nfl' | 'mlb' | 'nba' | undefined) => {
   let key: string | undefined = undefined;
   if (sport === 'nba') key = NBA_FAV_TEAM_KEY;
+  if (sport === 'nfl') key = NFL_FAV_TEAM_KEY;
 
   return useListenToItem(key);
 };
@@ -23,6 +25,22 @@ export const NBAFavTeams = ({ onClose }: { onClose: () => void }) => {
       onClose={onClose}
       teams={getTeamNames()}
       TEAM_KEY={NBA_FAV_TEAM_KEY}
+    />
+  );
+};
+
+const NFL_FAV_TEAM_KEY = 'CNT_NFL_FAV_TEAM';
+export const NFLFavTeams = ({ onClose }: { onClose: () => void }) => {
+  const getTeamNames = () =>
+    Object.values(nflTeamsInfo)
+      .map(v => v.name)
+      .sort();
+
+  return (
+    <FavTeam
+      onClose={onClose}
+      teams={getTeamNames()}
+      TEAM_KEY={NFL_FAV_TEAM_KEY}
     />
   );
 };

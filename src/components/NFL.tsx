@@ -12,6 +12,7 @@ import { Expandable } from './Expandable';
 import GameTable, { ExpandedContentWrapper } from './GameTable';
 import { SubredditCard, SubredditTitle } from './Subreddit';
 import { widgetOnError } from './widgetCatchError';
+import { NFLFavTeams } from './FavTeams';
 
 function carryOverHiddenGames(
   schedule: NFLSchedule,
@@ -105,44 +106,75 @@ function NFLScheduleCard() {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
   };
 
+  const [showFavs, setShowFavs] = useState(false);
+
   // console.log('rendering...');
   return (
-    <Card
-      title={
-        <span>
-          <span className="font-weight-bold">NFL</span>
-          <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
-            {schedule.displayDate}
+    <>
+      {showFavs && <NFLFavTeams onClose={() => setShowFavs(false)} />}
+
+      <Card
+        title={
+          <span>
+            <span className="font-weight-bold">NFL</span>
+            <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
+              {schedule.displayDate}
+            </span>
+
+            <div
+              style={{ display: 'inline-flex', gap: '5px' }}
+              className="float-right"
+            >
+              <Button
+                outline
+                size="sm"
+                color="success"
+                onClick={() => {
+                  setShowFavs(true);
+                }}
+              >
+                Fav Team
+              </Button>
+
+              <Button
+                outline
+                size="sm"
+                onClick={resetSchedule}
+                disabled={isLoading}
+                style={{ width: '50px' }}
+              >
+                {isLoading ? (
+                  <Spinner size="sm" color="primary" type="grow" />
+                ) : (
+                  'Reset'
+                )}
+              </Button>
+            </div>
           </span>
-          <Button
-            outline
-            size="sm"
-            className="float-right"
-            onClick={resetSchedule}
-            disabled={isLoading}
-            style={{ width: '50px' }}
-          >
-            {isLoading ? (
-              <Spinner size="sm" color="primary" type="grow" />
-            ) : (
-              'Reset'
-            )}
-          </Button>
-        </span>
-      }
-    >
-      {isLoading && (
-        <Progress animated style={{ height: '5px' }} color="info" value={100} />
-      )}
+        }
+      >
+        {isLoading && (
+          <Progress
+            animated
+            style={{ height: '5px' }}
+            color="info"
+            value={100}
+          />
+        )}
 
-      {schedule.games.length === 0 ? (
-        <div className="p-3">No games today.</div>
-      ) : (
-        <GameTable games={schedule.games} removeGame={removeGame} sport="nfl" />
-      )}
+        {schedule.games.length === 0 ? (
+          <div className="p-3">No games today.</div>
+        ) : (
+          <GameTable
+            games={schedule.games}
+            removeGame={removeGame}
+            sport="nfl"
+          />
+        )}
 
-      <NewsCard />
-    </Card>
+        <NewsCard />
+      </Card>
+    </>
   );
 }
 
