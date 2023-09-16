@@ -4,24 +4,46 @@ import { removeItem, setItem } from '../common/LocalStorage';
 import { useListenToItem } from '../common/LocalStorageHooks';
 import { teamCodeInfoEspn } from '../SportsDataAccessors/nba/espnTeamInfo';
 
-const getTeamNames = () =>
-  Object.values(teamCodeInfoEspn)
-    .map(v => v.nickname)
-    .sort();
+export const useFavTeam = (sport: 'nfl' | 'mlb' | 'nba' | undefined) => {
+  let key: string | undefined = undefined;
+  if (sport === 'nba') key = NBA_FAV_TEAM_KEY;
 
-type TeamName = ReturnType<typeof getTeamNames>[number];
-
-const FAV_TEAM_KEY = 'CNT_NBA_FAV_TEAM';
-
-const setFavTeam = (team: TeamName | ''): void => {
-  if (team === '') removeItem(FAV_TEAM_KEY);
-  else setItem(FAV_TEAM_KEY, team);
+  return useListenToItem(key);
 };
 
-export const useNbaFavTeam = () => useListenToItem(FAV_TEAM_KEY);
-
+const NBA_FAV_TEAM_KEY = 'CNT_NBA_FAV_TEAM';
 export const NBAFavTeams = ({ onClose }: { onClose: () => void }) => {
-  const favTeam = useListenToItem(FAV_TEAM_KEY);
+  const getTeamNames = () =>
+    Object.values(teamCodeInfoEspn)
+      .map(v => v.nickname)
+      .sort();
+
+  return (
+    <FavTeam
+      onClose={onClose}
+      teams={getTeamNames()}
+      TEAM_KEY={NBA_FAV_TEAM_KEY}
+    />
+  );
+};
+
+type FavTeamProps<T extends string> = {
+  onClose: () => void;
+  teams: T[];
+  TEAM_KEY: string;
+};
+
+export const FavTeam = <T extends string>({
+  onClose,
+  teams,
+  TEAM_KEY
+}: FavTeamProps<T>) => {
+  const favTeam = useListenToItem(TEAM_KEY);
+
+  const setFavTeam = (team: T | ''): void => {
+    if (team === '') removeItem(TEAM_KEY);
+    else setItem(TEAM_KEY, team);
+  };
 
   return (
     <Modal isOpen={true} toggle={onClose} size="md">
@@ -42,12 +64,12 @@ export const NBAFavTeams = ({ onClose }: { onClose: () => void }) => {
           <select
             name="pets"
             id="fav-team-select"
-            onChange={e => setFavTeam(e.target.value as TeamName)}
+            onChange={e => setFavTeam(e.target.value as T)}
             value={favTeam ?? ''}
           >
             <option value="">-- None --</option>
 
-            {getTeamNames().map(t => (
+            {teams.map(t => (
               <option value={t} key={t}>
                 {t}
               </option>

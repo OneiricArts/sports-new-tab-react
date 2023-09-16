@@ -1,10 +1,9 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 import { Button, Collapse, Table } from 'reactstrap';
-import { isBeta } from '../flags';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
 import { Game, NFLGame } from '../SportsDataAccessors/types';
 import { cx } from './classNames';
-import { useNbaFavTeam } from './NBAFavTeams';
+import { useFavTeam } from './FavTeams';
 
 type GameI = Game | NFLGame;
 
@@ -38,25 +37,8 @@ const GameRow = ({
 
   const [showExpandedContent, setShowExpandedContent] = useState(false);
 
-  const betaFavTeam =
-    isBeta &&
-    (
-      [
-        ['49ers', 'nfl'],
-        ['buccaneers', 'nfl'],
-        ['giants', 'mlb']
-      ] as const
-    ).some(
-      ([v, x]) =>
-        sport === x &&
-        [game.homeTeam, game.awayTeam].map(g => g.toLowerCase()).includes(v)
-    );
-
-  const favTeam = useNbaFavTeam();
-  const isFavTeam =
-    (sport === 'nba' &&
-      [game.homeTeam, game.awayTeam].includes(favTeam ?? '')) ||
-    betaFavTeam;
+  const favTeam = useFavTeam(sport);
+  const isFavTeam = [game.homeTeam, game.awayTeam].includes(favTeam ?? '');
 
   const firstLoad = useRef(true);
   useEffect(() => {

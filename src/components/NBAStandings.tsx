@@ -14,7 +14,7 @@ import {
 } from 'reactstrap';
 import { cx } from './classNames';
 import { INbaStandings } from './INbaStandings';
-import { useNbaFavTeam } from './NBAFavTeams';
+import { useFavTeam } from './FavTeams';
 import { ResponsiveComponent } from './ResponsiveComponent';
 
 export type ITeamRecord = {
@@ -107,7 +107,7 @@ export const Standings = ({
 };
 
 const RankTable = ({ teams }: { teams: Array<ITeamRecord> }) => {
-  const favTeam = useNbaFavTeam();
+  const favTeam = useFavTeam('nba');
 
   return (
     <Table size="sm" striped>
