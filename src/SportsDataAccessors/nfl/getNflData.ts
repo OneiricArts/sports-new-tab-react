@@ -4,6 +4,8 @@ import { LiveUpdateApiI, LiveUpdateGameObjI } from './LiveUpdateApiTypes';
 import getEspnNflData from './getEspnNflData';
 
 const fetchNflData = async () => {
+  return undefined;
+  // eslint-disable-next-line no-unreachable
   const url = `https://static.nfl.com/liveupdate/scores/scores.json`;
 
   try {

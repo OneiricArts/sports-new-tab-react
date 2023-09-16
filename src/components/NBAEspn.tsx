@@ -12,7 +12,7 @@ import createScheduleReducer from './createScheduleReducer';
 import { ErrorBoundary } from './ErrorBoundary';
 import GameTable from './GameTable';
 import { ChangeDate } from './NBA';
-import { NBAFavTeams } from './NBAFavTeams';
+import { NBAFavTeams } from './FavTeams';
 import { StandingsEspn } from './NBAStandingsEspn';
 import { widgetOnError } from './widgetCatchError';
 
