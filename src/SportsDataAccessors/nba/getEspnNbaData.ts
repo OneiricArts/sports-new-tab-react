@@ -152,9 +152,12 @@ const labelGame = (
       nbaPlayoffsDisplayName(awayTeam, awayTeamSeriesWins!);
     homeTeamDisplay = () =>
       nbaPlayoffsDisplayName(homeTeam, homeTeamSeriesWins!);
-  } else {
+  } else if ((awayStats?.wins ?? 0) + (awayStats?.losses ?? 0) > 10) {
     awayTeamDisplay = () => getDisplayName(isNotToday, awayTeam, awayStats);
     homeTeamDisplay = () => getDisplayName(isNotToday, homeTeam, homeStats);
+  } else {
+    awayTeamDisplay = () => awayTeam;
+    homeTeamDisplay = () => homeTeam;
   }
 
   return {
