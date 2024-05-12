@@ -2,6 +2,7 @@
 // TODO remove^
 
 import * as React from 'react';
+import { BasketballIcon } from '../icons/BasketballIcon';
 
 const child = {
   display: 'inline',
@@ -13,26 +14,20 @@ const child = {
 } as const;
 
 export const nbaPlayoffsDisplayName = (name: string, wins: number) => {
-  const gray = `#888888`;
   return (
     <>
-      {name}
-      <span
-        style={{
-          marginLeft: '10px',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: `1px solid ${gray}`,
-          borderRadius: '50%',
-          width: '17px',
-          height: '17px',
-          fontSize: '10px',
-          color: gray
-        }}
-      >
-        {wins}
-      </span>
+      <div>{name}</div>
+      <div style={{ minHeight: '15px', display: 'flex' }}>
+        {/* TODO only show if values */}
+        {Array.from(Array(wins).keys()).map(() => (
+          <BasketballIcon
+            style={{
+              height: '15px',
+              color: '#a38e43'
+            }}
+          />
+        ))}
+      </div>
     </>
   );
 };

@@ -142,6 +142,8 @@ const labelGame = (
   let homeTeamDisplay: () => ReactNode;
 
   const series = game.competitions?.[0]?.series;
+
+  // this causes a jump becasue its not saved to local storage so the first render is bad
   if (series) {
     const homeTeamSeriesWins = series?.competitors?.[0].wins;
     const awayTeamSeriesWins = series?.competitors?.[1].wins;
@@ -168,7 +170,8 @@ const labelGame = (
     awayTeamDisplay,
     homeTeamDisplay,
     expandedContent,
-    isOnNationalTv
+    isOnNationalTv,
+    broadcaster
   };
 };
 
