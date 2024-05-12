@@ -13,6 +13,7 @@ export interface Game {
   homeTeamScore?: number | string;
 
   isOnNationalTv?: boolean;
+  broadcaster?: string;
 
   hidden?: boolean;
 
