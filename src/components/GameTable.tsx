@@ -5,6 +5,7 @@ import { Game, NFLGame } from '../SportsDataAccessors/types';
 import { cx } from './classNames';
 import { useFavTeam } from './FavTeams';
 import { BroadcastIcon } from '../icons/BroadcastIcon';
+import { Loader } from './Loader';
 
 type GameI = Game | NFLGame;
 const gray = `#888888`;
@@ -176,7 +177,9 @@ const TableHeader = ({
   <thead>
     <tr>
       <th /* status */>
-        {isLoading && <Spinner size="sm" color="primary" type="grow" />}
+        <Loader isLoading={isLoading} minimum={1200}>
+          <Spinner size="sm" color="primary" type="grow" />
+        </Loader>
       </th>
       <th>away</th>
       <th>@home</th>
