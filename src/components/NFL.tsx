@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Button, Progress, Spinner } from 'reactstrap';
+import { Button } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
@@ -47,8 +47,7 @@ function NFLScheduleCard() {
 
   const [throwFcError] = useThrowForErrorBoundary();
 
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  const isLoading = false;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const upDateSchedule = useCallback(async () => {
     let cachedSchedule: NFLSchedule | undefined;
@@ -63,7 +62,7 @@ function NFLScheduleCard() {
 
     ReactDOM.unstable_batchedUpdates(() => {
       if (cachedSchedule) setSchedule(cachedSchedule);
-      // setIsLoading(true);
+      setIsLoading(true);
     });
 
     try {
@@ -74,11 +73,12 @@ function NFLScheduleCard() {
       // console.log(schedule);
       ReactDOM.unstable_batchedUpdates(() => {
         setSchedule(schedule);
-        // setIsLoading(false);
+        setIsLoading(false);
       });
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(schedule));
     } catch (e: any) {
-      // setIsLoading(false);
+      // TODO show error icon
+      setIsLoading(false);
       throwFcError(e);
     }
   }, [throwFcError]);
@@ -135,39 +135,18 @@ function NFLScheduleCard() {
               >
                 Fav Team
               </Button>
-
-              <Button
-                outline
-                size="sm"
-                onClick={resetSchedule}
-                disabled={isLoading}
-                style={{ width: '50px' }}
-              >
-                {isLoading ? (
-                  <Spinner size="sm" color="primary" type="grow" />
-                ) : (
-                  'Reset'
-                )}
-              </Button>
             </div>
           </span>
         }
       >
-        {isLoading && (
-          <Progress
-            animated
-            style={{ height: '5px' }}
-            color="info"
-            value={100}
-          />
-        )}
-
         {schedule.games.length === 0 ? (
           <div className="p-3">No games today.</div>
         ) : (
           <GameTable
             games={schedule.games}
             removeGame={removeGame}
+            isLoading={isLoading}
+            resetSchedule={resetSchedule}
             sport="nfl"
           />
         )}

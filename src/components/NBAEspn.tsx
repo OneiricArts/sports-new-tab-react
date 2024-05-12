@@ -40,6 +40,7 @@ const NBASchedule = () => {
   const [visibleCount] = useVisibilityHandlers();
 
   const [standings, setStandings] = useState<EspnNbaStandings | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [date, setDate] = useState(today());
 
   const changeDate = (opt: ChangeDateP) => {
@@ -56,12 +57,15 @@ const NBASchedule = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
+
     getEspnNbaData(date)
       .then(data => {
         nbaScheduleDispatch({ type: 'SET_NEW', newState: data.schedule });
         setStandings(data.standings);
       })
-      .catch(e => throwFcError(e));
+      .catch(e => throwFcError(e))
+      .finally(() => setIsLoading(false));
   }, [throwFcError, visibleCount, date]);
 
   const [nbaSchedule, nbaScheduleDispatch] = useReducer(
@@ -131,7 +135,11 @@ const NBASchedule = () => {
         }
       >
         {(nbaSchedule.games?.length ?? 0) > 0 ? (
-          <GameTable games={nbaSchedule.games as Game[]} sport="nba" />
+          <GameTable
+            games={nbaSchedule.games as Game[]}
+            sport="nba"
+            isLoading={isLoading}
+          />
         ) : (
           <div className="p-3">No games today.</div>
         )}

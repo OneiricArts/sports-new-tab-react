@@ -1,5 +1,5 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { Button, Collapse, Table } from 'reactstrap';
+import { Button, Collapse, Spinner, Table } from 'reactstrap';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
 import { Game, NFLGame } from '../SportsDataAccessors/types';
 import { cx } from './classNames';
@@ -166,15 +166,38 @@ export const ExpandedContentWrapper: FC<{ children?: ReactNode }> = ({
   </div>
 );
 
-const TableHeader = ({ showX }: { showX: boolean }) => (
+const TableHeader = ({
+  resetSchedule,
+  isLoading
+}: {
+  resetSchedule?: () => void;
+  isLoading: boolean;
+}) => (
   <thead>
     <tr>
-      <th /* status */ />
+      <th /* status */>
+        {isLoading && <Spinner size="sm" color="primary" type="grow" />}
+      </th>
       <th>away</th>
       <th>@home</th>
       <th className="text-right">a</th>
       <th className="text-right">h</th>
-      {showX && <th className="text-right" /* X */ />}
+      {resetSchedule && (
+        <th className="text-right">
+          <Button
+            outline={true}
+            color="secondary"
+            size="sm"
+            onClick={() => resetSchedule()}
+          >
+            {isLoading ? (
+              <Spinner size="sm" color="primary" type="grow" />
+            ) : (
+              <span>&#x21ba;</span>
+            )}
+          </Button>
+        </th>
+      )}
     </tr>
   </thead>
 );
@@ -182,15 +205,23 @@ const TableHeader = ({ showX }: { showX: boolean }) => (
 const GameTable = ({
   games,
   removeGame,
+  resetSchedule,
+  isLoading = false,
   sport
 }: {
   games: GameI[];
   removeGame?: (id: number | string) => void;
+  isLoading?: boolean;
+  resetSchedule?: () => void;
   sport?: 'nfl' | 'mlb' | 'nba';
 }) => {
   return (
+    // {isLoading && (
+    //   <Progress animated style={{ height: '5px' }} color="info" value={100} />
+    // )}
+
     <Table responsive size="sm">
-      <TableHeader showX={!!removeGame} />
+      <TableHeader resetSchedule={resetSchedule} isLoading={isLoading} />
       <tbody>
         {games
           .filter(game => !game.hidden)

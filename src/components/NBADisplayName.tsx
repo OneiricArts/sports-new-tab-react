@@ -19,8 +19,9 @@ export const nbaPlayoffsDisplayName = (name: string, wins: number) => {
       <div>{name}</div>
       <div style={{ minHeight: '15px', display: 'flex' }}>
         {/* TODO only show if values */}
-        {Array.from(Array(wins).keys()).map(() => (
+        {Array.from(Array(wins).keys()).map(i => (
           <BasketballIcon
+            key={i}
             style={{
               height: '15px',
               color: '#a38e43'
