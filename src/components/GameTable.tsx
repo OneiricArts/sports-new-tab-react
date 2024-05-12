@@ -4,8 +4,10 @@ import { displayGameStatus } from '../SportsDataAccessors/helpers';
 import { Game, NFLGame } from '../SportsDataAccessors/types';
 import { cx } from './classNames';
 import { useFavTeam } from './FavTeams';
+import { BroadcastIcon } from '../icons/BroadcastIcon';
 
 type GameI = Game | NFLGame;
+const gray = `#888888`;
 
 const FootballEmoji = () => (
   <span
@@ -20,13 +22,11 @@ const FootballEmoji = () => (
 const GameRow = ({
   game,
   removeGame,
-  sport,
-  showNatTvCol
+  sport
 }: {
   game: GameI;
   removeGame?: (id: number | string) => void;
   sport?: 'nfl' | 'mlb' | 'nba';
-  showNatTvCol: boolean;
 }) => {
   const handleClick = () => removeGame?.(game.id);
 
@@ -77,11 +77,27 @@ const GameRow = ({
           }
         }}
       >
-        <td className="align-middle">{displayGameStatus(game.status)}</td>
+        <td className="align-middle">
+          <div>{displayGameStatus(game.status)}</div>
 
-        {showNatTvCol && (
-          <td className="px-0">{game.isOnNationalTv && '📺'}</td>
-        )}
+          {game.isOnNationalTv && (
+            <span
+              className="px-0"
+              style={{
+                fontSize: '12px',
+                display: 'flex',
+                color: gray,
+                maxHeight: '15px',
+                alignItems: 'center',
+                gap: '3px'
+              }}
+            >
+              <BroadcastIcon style={{ height: '15px', color: gray }} />{' '}
+              {game.broadcaster}
+            </span>
+          )}
+        </td>
+
         <td
           className={`align-middle ${
             game.awayTeamWinning ? 'winning_team' : ''
@@ -150,17 +166,10 @@ export const ExpandedContentWrapper: FC<{ children?: ReactNode }> = ({
   </div>
 );
 
-const TableHeader = ({
-  showX,
-  showNatTvCol
-}: {
-  showX: boolean;
-  showNatTvCol: boolean;
-}) => (
+const TableHeader = ({ showX }: { showX: boolean }) => (
   <thead>
     <tr>
       <th /* status */ />
-      {showNatTvCol && <th />}
       <th>away</th>
       <th>@home</th>
       <th className="text-right">a</th>
@@ -179,11 +188,9 @@ const GameTable = ({
   removeGame?: (id: number | string) => void;
   sport?: 'nfl' | 'mlb' | 'nba';
 }) => {
-  const showNatTvCol = games.some(g => !!g.isOnNationalTv);
-
   return (
     <Table responsive size="sm">
-      <TableHeader showX={!!removeGame} showNatTvCol={showNatTvCol} />
+      <TableHeader showX={!!removeGame} />
       <tbody>
         {games
           .filter(game => !game.hidden)
@@ -193,7 +200,6 @@ const GameTable = ({
               game={game}
               removeGame={removeGame}
               sport={sport}
-              showNatTvCol={showNatTvCol}
             />
           ))}
       </tbody>
