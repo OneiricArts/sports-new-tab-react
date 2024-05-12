@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react';
-import { Button } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
@@ -15,6 +15,7 @@ import { ChangeDate } from './NBA';
 import { NBAFavTeams } from './FavTeams';
 import { StandingsEspn } from './NBAStandingsEspn';
 import { widgetOnError } from './widgetCatchError';
+import { Loader } from './Loader';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -119,7 +120,7 @@ const NBASchedule = () => {
               </Button>
 
               <Button
-                style={{ marginLeft: '5px' }}
+                style={{ marginLeft: '5px', width: '74px' }}
                 outline
                 size="sm"
                 color="primary"
@@ -128,7 +129,14 @@ const NBASchedule = () => {
                 }}
                 disabled={!standings}
               >
-                Standings
+                <Loader
+                  isLoading={isLoading}
+                  wait={200}
+                  minimum={1200}
+                  spinner={<Spinner size="sm" color="primary" type="grow" />}
+                >
+                  Standings
+                </Loader>
               </Button>
             </div>
           </div>

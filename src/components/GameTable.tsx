@@ -177,9 +177,11 @@ const TableHeader = ({
   <thead>
     <tr>
       <th /* status */>
-        <Loader isLoading={isLoading} minimum={1200}>
-          <Spinner size="sm" color="primary" type="grow" />
-        </Loader>
+        <Loader
+          isLoading={isLoading}
+          minimum={1200}
+          spinner={<Spinner size="sm" color="primary" type="grow" />}
+        />
       </th>
       <th>away</th>
       <th>@home</th>
