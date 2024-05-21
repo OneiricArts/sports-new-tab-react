@@ -1,13 +1,11 @@
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { Button, Collapse, Spinner } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import { displayGameStatus } from '../SportsDataAccessors/helpers';
 import { Game, NFLGame } from '../SportsDataAccessors/types';
-import { cx } from './classNames';
 import { useFavTeam } from './FavTeams';
 import { BroadcastIcon } from '../icons/BroadcastIcon';
 import { Loader } from './Loader';
 import { Row, Table } from './UI/Table';
-import tableStyles from './UI/Table.module.scss';
 
 type GameI = Game | NFLGame;
 const gray = `#888888`;
@@ -38,7 +36,7 @@ const GameRow = ({
   const awayTeamHasPosession =
     'homeTeamHasPosession' in game ? game.awayTeamHasPosession : undefined;
 
-  const [showExpandedContent, setShowExpandedContent] = useState(false);
+  // const [showExpandedContent, setShowExpandedContent] = useState(false);
 
   const favTeam = useFavTeam(sport);
   const isFavTeam = [game.homeTeam, game.awayTeam].includes(favTeam ?? '');
@@ -80,11 +78,11 @@ const GameRow = ({
     <Row
       columnSpan={removeGame ? 6 : 5}
       style={rowStyle}
-      onClick={() => {
-        if (game.expandedContent) {
-          setShowExpandedContent(e => !e);
-        }
-      }}
+      // onClick={() => {
+      //   if (game.expandedContent) {
+      //     setShowExpandedContent(e => !e);
+      //   }
+      // }}
     >
       <div className="align-middle">
         <div>{displayGameStatus(game.status)}</div>
@@ -151,21 +149,21 @@ const GameRow = ({
   );
 };
 
-const ExpandedContent = ({
-  expandedContent,
-  isOpen
-}: {
-  expandedContent: () => ReactNode;
-  isOpen: boolean;
-}) => {
-  return (
-    <tr>
-      <td colSpan={6} style={{ padding: 0 }}>
-        <Collapse isOpen={isOpen}>{expandedContent()}</Collapse>
-      </td>
-    </tr>
-  );
-};
+// const ExpandedContent = ({
+//   expandedContent,
+//   isOpen
+// }: {
+//   expandedContent: () => ReactNode;
+//   isOpen: boolean;
+// }) => {
+//   return (
+//     <tr>
+//       <td colSpan={6} style={{ padding: 0 }}>
+//         <Collapse isOpen={isOpen}>{expandedContent()}</Collapse>
+//       </td>
+//     </tr>
+//   );
+// };
 
 export const ExpandedContentWrapper: FC<{ children?: ReactNode }> = ({
   children
