@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, ListGroup } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { LinkI } from './Links';
+import { Row, Table } from '../UI/Table';
 
 type LinkListProps = {
   list: LinkI[];
@@ -9,15 +10,16 @@ type LinkListProps = {
 
 export const LinkList = ({ list, onRemove }: LinkListProps) => {
   return (
-    <ListGroup flush>
+    <Table columnConfig="auto 35px">
       {list.map(({ url, title }, i) => (
-        <a
+        <Row
           key={`${i} ${url} ${title}`}
-          href={url}
-          target="_parent"
-          className="list-group-item list-group-item-action d-flex"
+          columnSpan={2}
+          style={{ padding: '8px' }}
         >
-          {title}
+          <a href={url} target="_parent" style={{ display: 'flex', flex: 1 }}>
+            {title}
+          </a>
 
           {onRemove && (
             <Button
@@ -32,8 +34,8 @@ export const LinkList = ({ list, onRemove }: LinkListProps) => {
               &#9587;
             </Button>
           )}
-        </a>
+        </Row>
       ))}
-    </ListGroup>
+    </Table>
   );
 };

@@ -53,6 +53,7 @@ a {
   padding-bottom: 20px;
 }
 
+/* TODO */
 @media (max-width: 575px) {
   .has_posession {
     text-decoration: underline #9e9d99;

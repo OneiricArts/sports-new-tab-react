@@ -8,11 +8,14 @@ import NFL from './components/NFL';
 import NHL from './components/NHL';
 import Soccer from './components/Soccer';
 import { WidgetNames } from './WidgetVisibility';
+import { EnabledWidgets } from './App';
 
 const LOCAL_STORAGE_KEY = 'WIDGETS_CONTROL_MOBILE_V1';
 
 export const MobileView = () => {
-  const widgets = ['NFL', 'NBA', 'NHL', 'MLB', 'Soccer', 'Links'] as const;
+  const widgets = (
+    ['NFL', 'NBA', 'NHL', 'MLB', 'Soccer', 'Links'] as const
+  ).filter(w => EnabledWidgets.has(w));
 
   const [active, _setActive] = useState<WidgetNames>(() => {
     const cachedName = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -67,7 +70,16 @@ export const MobileView = () => {
         ))}
       </Navbar>
 
-      <div style={{ flex: 1 }} className="mb-3">
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'start',
+          alignItems: 'center'
+        }}
+        className="mb-3"
+      >
         <WidgetToRender />
       </div>
 

@@ -186,8 +186,8 @@ export const nflTeamsInfo = {
     division: 'South'
   },
   WAS: {
-    name: 'Football Team',
-    fullName: 'Washington Football Team',
+    name: 'Commanders',
+    fullName: 'Washington Commanders',
     conference: 'NFC',
     division: 'East'
   }

@@ -1,0 +1,40 @@
+.table {
+  display: grid;
+  // grid-template-columns: 2fr 2fr 2fr 1fr 1fr;
+
+  // background-color: black;
+  background-color: #403b3b;
+  border-radius: 10px;
+  padding: 10px;
+
+  // row-gap: 5px;
+  .row + .row {
+    border-top: 1px solid gray;
+  }
+}
+
+.row {
+  // display: contents --- cannot target for border-top
+
+  display: grid;
+  grid-template-columns: subgrid;
+  // grid-column: span 2;
+
+  padding: 5px;
+}
+
+@media (hover: hover) {
+  .rowHover {
+    &:hover {
+      background-color: rgb(47, 28, 32) !important;
+      //   background-color: rgb(47, 28, 32);
+      //   background-color: rgb(128, 118, 118);
+      // filter: brightness(10%);
+      color: white;
+    }
+  }
+}
+
+.rowCursor {
+  cursor: pointer;
+}

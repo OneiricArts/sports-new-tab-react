@@ -1,9 +1,11 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, Card, CardBody, CardHeader } from 'reactstrap';
 import { AddSiteBar } from './AddSiteBar';
 import { askFor } from './iFrameHelper';
 import { initalSites } from './initalSites';
 import { LinkList } from './LinkList';
+import { NewCard, NewCardBody, NewCardHeader } from '../UI/Card';
+import { TitlePill } from '../UI/TitlePill';
+import { Button } from '../UI/Button';
 
 export interface LinkI {
   url: string;
@@ -144,34 +146,33 @@ const Links = () => {
   const [showAddSiteBar, setShowAddSiteBar] = useState(false);
 
   return (
-    <Card>
-      <CardHeader className="d-flex">
-        My Sites
-        <Button
-          color="primary"
-          outline
-          size="sm"
-          onClick={() => setShowAddSiteBar(e => !e)}
-          className="ml-auto"
-        >
+    <NewCard>
+      <NewCardHeader style={{ display: 'flex' }}>
+        <TitlePill title="My Links" />
+
+        <Button onClick={() => setShowAddSiteBar(e => !e)} className="ml-auto">
           {showAddSiteBar ? 'Done' : 'Add Link'}
         </Button>
-      </CardHeader>
+      </NewCardHeader>
 
       {showAddSiteBar && <AddSiteBar addSite={addSite} />}
 
-      <CardBody>
+      <NewCardBody>
         <LinkList list={localState.mySites} onRemove={removeMySiteByIndex} />
-      </CardBody>
+      </NewCardBody>
 
+      {/* {{localState.topSites.length > 0 && <Divider />} */}
       {localState.topSites.length > 0 && (
-        <CardHeader className="border-top">Chrome Top Sites</CardHeader>
+        <>
+          <NewCardHeader>
+            <TitlePill title="Chrome Top Sites" />
+          </NewCardHeader>
+          <NewCardBody>
+            <LinkList list={localState.topSites} />
+          </NewCardBody>
+        </>
       )}
-
-      <CardBody>
-        <LinkList list={localState.topSites} />
-      </CardBody>
-    </Card>
+    </NewCard>
   );
 };
 
