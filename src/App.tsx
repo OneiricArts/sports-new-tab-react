@@ -66,7 +66,8 @@ function App() {
           display: 'flex',
           flexDirection: 'column',
           flexGrow: 1,
-          padding: '20px 15px 0'
+          padding: '20px 15px 0',
+          height: '100%'
         }}
       >
         {/* <Message /> */}
