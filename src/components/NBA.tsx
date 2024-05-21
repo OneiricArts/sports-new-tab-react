@@ -1,5 +1,4 @@
 import { FC, useEffect, useReducer, useState } from 'react';
-import { Button } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
@@ -14,6 +13,7 @@ import { INbaStandings } from './INbaStandings';
 import { NBAFavTeams } from './FavTeams';
 import { Standings } from './NBAStandings';
 import { widgetOnError } from './widgetCatchError';
+import { Button } from './UI/Button';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -103,9 +103,6 @@ const NBASchedule = () => {
 
               <Button
                 style={{ marginLeft: 'auto' }}
-                outline
-                size="sm"
-                color="success"
                 onClick={() => {
                   setShowFavs(true);
                 }}
@@ -115,9 +112,6 @@ const NBASchedule = () => {
 
               <Button
                 style={{ marginLeft: '5px' }}
-                outline
-                size="sm"
-                color="primary"
                 onClick={() => {
                   setShowStandings(true);
                 }}
@@ -144,23 +138,13 @@ export const ChangeDate: FC<{
   isToday: boolean;
 }> = ({ changeDate, isToday }) => (
   <>
-    <Button
-      outline
-      size="sm"
-      className="mx-1"
-      onClick={() => changeDate('down')}
-    >
+    <Button className="mx-1" onClick={() => changeDate('down')}>
       {'<'}
     </Button>
-    <Button
-      outline
-      size="sm"
-      onClick={() => changeDate('today')}
-      disabled={isToday}
-    >
+    <Button onClick={() => changeDate('today')} disabled={isToday}>
       Today
     </Button>
-    <Button outline size="sm" className="mx-1" onClick={() => changeDate('up')}>
+    <Button className="mx-1" onClick={() => changeDate('up')}>
       {'>'}
     </Button>
   </>

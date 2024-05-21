@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Button, ListGroup } from 'reactstrap';
 import { Emoji } from './Emoji';
 import { LoadingBar } from './Loading';
 import { SubredditJson } from './SubredditJsonTypes';
+import { Row, Table } from './UI/Table';
+import { Button, ButtonStyle } from './UI/Button';
 
 type SubredditPosts = {
   id: string;
@@ -73,28 +74,30 @@ export const SubredditCard: FC<{ subreddit: string; length?: number }> = ({
         </div>
       )}
 
-      <ListGroup flush>
+      <Table columnConfig="auto">
         {data?.map(({ id, link_flair_text, title, permalink }) => (
-          <a
-            key={id}
-            href={`https://reddit.com${permalink}`}
-            target="_parent"
-            style={{ fontSize: '12px' }}
-            className="list-group-item list-group-item-action d-flex p-2"
-          >
-            <span>
-              {link_flair_text && (
-                <span style={{ color: '#2e9dff' }}>
-                  [{link_flair_text}] &nbsp;
-                </span>
-              )}
+          <Row columnSpan={1} style={{ padding: 0 }} key={id}>
+            <a
+              key={id}
+              href={`https://reddit.com${permalink}`}
+              target="_parent"
+              style={{ fontSize: '12px' }}
+              className="p-2"
+            >
               <span>
-                {title.length > 90 ? `${title.substring(0, 90)}...` : title}
+                {link_flair_text && (
+                  <span style={{ color: '#2e9dff' }}>
+                    [{link_flair_text}] &nbsp;
+                  </span>
+                )}
+                <span>
+                  {title.length > 90 ? `${title.substring(0, 90)}...` : title}
+                </span>
               </span>
-            </span>
-          </a>
+            </a>
+          </Row>
         ))}
-      </ListGroup>
+      </Table>
     </div>
   );
 };
@@ -112,17 +115,12 @@ export const SubredditTitle: FC<{
       justifyContent: 'center'
     }}
   >
-    <Button
-      style={{ height: '20px', padding: '0 5px 0 5px' }}
-      outline
-      size="sm"
-      onClick={toggle}
-    >
+    <Button style={{ height: '20px', padding: '0 5px 0 5px' }} onClick={toggle}>
       {!expanded ? `Show r/${subreddit} feed` : 'Hide feed'}
     </Button>
 
     <a
-      style={{ height: '20px', padding: '0 5px 0 5px' }}
+      style={{ ...ButtonStyle, height: '20px', padding: '0 5px 0 5px' }}
       href={`https://www.reddit.com/r/${subreddit}`}
       className="btn btn-outline-secondary btn-sm ml-2"
       role="button"

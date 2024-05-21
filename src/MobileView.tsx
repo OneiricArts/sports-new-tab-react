@@ -70,7 +70,16 @@ export const MobileView = () => {
         ))}
       </Navbar>
 
-      <div style={{ flex: 1 }} className="mb-3">
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'start',
+          alignItems: 'center'
+        }}
+        className="mb-3"
+      >
         <WidgetToRender />
       </div>
 

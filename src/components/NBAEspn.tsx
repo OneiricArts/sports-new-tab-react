@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from 'react';
-import { Button, Spinner } from 'reactstrap';
+import { Spinner } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
@@ -16,6 +16,8 @@ import { NBAFavTeams } from './FavTeams';
 import { StandingsEspn } from './NBAStandingsEspn';
 import { widgetOnError } from './widgetCatchError';
 import { Loader } from './Loader';
+import { Pill, TitlePill } from './UI/TitlePill';
+import { Button } from './UI/Button';
 
 const initFromCache = (init: Schedule): Schedule => {
   try {
@@ -95,10 +97,11 @@ const NBASchedule = () => {
         title={
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div>
-              <span className="font-weight-bold">NBA</span>
-              <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
+              <TitlePill title="NBA" />
+
+              <Pill style={{ marginLeft: '5px' }}>
                 {nbaSchedule.displayDate}
-              </span>
+              </Pill>
             </div>
 
             <div style={{ display: 'flex', marginTop: '5px' }}>
@@ -109,9 +112,6 @@ const NBASchedule = () => {
 
               <Button
                 style={{ marginLeft: 'auto' }}
-                outline
-                size="sm"
-                color="success"
                 onClick={() => {
                   setShowFavs(true);
                 }}
@@ -120,10 +120,10 @@ const NBASchedule = () => {
               </Button>
 
               <Button
-                style={{ marginLeft: '5px', width: '74px' }}
-                outline
-                size="sm"
-                color="primary"
+                style={{
+                  marginLeft: '5px',
+                  width: '78.64px'
+                }}
                 onClick={() => {
                   setShowStandings(true);
                 }}
@@ -131,7 +131,7 @@ const NBASchedule = () => {
               >
                 <Loader
                   isLoading={isLoading}
-                  wait={200}
+                  wait={350}
                   minimum={1200}
                   spinner={<Spinner size="sm" color="primary" type="grow" />}
                 >

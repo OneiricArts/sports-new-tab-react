@@ -49,19 +49,40 @@ function App() {
     .filter(({ name }) => EnabledWidgets.has(name));
 
   return (
-    <div className="App d-flex flex-column align-self-stretch h-100">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        height: '100%'
+      }}
+    >
       <ResponsiveComponent
         sm={<ControlBar toggles={toggles} toggle={toggleWidget} />}
       />
 
-      <div className="container-fluid d-flex flex-column pb-0 h-100">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          padding: '20px 15px 0',
+          height: '100%'
+        }}
+      >
         {/* <Message /> */}
         <NoInternet />
 
         <ResponsiveComponent
           xs={<MobileView />}
           sm={
-            <div className="pb-4 card-columns">
+            <div
+              style={{
+                columns: '440px', // have to keep in sync with Card width
+                columnGap: '10px',
+                margin: '10px'
+              }}
+            >
               {widgetsVisible.NFL && <NFL />}
               {widgetsVisible.NBA && <NBAEspn />}
               {/* {widgetsVisible.NHL && <NHL />}
