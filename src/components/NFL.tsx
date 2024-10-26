@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Button } from 'reactstrap';
 import ErrorCard from '../ErrorCard';
 import { useThrowForErrorBoundary } from '../hooks/useErrorBoundary';
 import useVisibilityHandlers from '../hooks/useVisibilityHandlers';
@@ -13,6 +12,8 @@ import GameTable, { ExpandedContentWrapper } from './GameTable';
 import { SubredditCard, SubredditTitle } from './Subreddit';
 import { widgetOnError } from './widgetCatchError';
 import { NFLFavTeams } from './FavTeams';
+import { Pill, TitlePill } from './UI/TitlePill';
+import { Button } from './UI/Button';
 
 function carryOverHiddenGames(
   schedule: NFLSchedule,
@@ -116,19 +117,14 @@ function NFLScheduleCard() {
       <Card
         title={
           <span>
-            <span className="font-weight-bold">NFL</span>
-            <span className="pl-2 font-weight-light font-italic text-lowercase text-muted">
-              {schedule.displayDate}
-            </span>
+            <TitlePill title="NFL" />
+            <Pill style={{ marginLeft: '5px' }}>{schedule.displayDate}</Pill>
 
             <div
               style={{ display: 'inline-flex', gap: '5px' }}
               className="float-right"
             >
               <Button
-                outline
-                size="sm"
-                color="success"
                 onClick={() => {
                   setShowFavs(true);
                 }}

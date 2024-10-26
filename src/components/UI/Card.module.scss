@@ -1,0 +1,42 @@
+.card {
+  // column width in App.tsx
+  width: 440px;
+  // min-width: 380px;
+
+  backdrop-filter: brightness(80%) blur(90px);
+  -webkit-backdrop-filter: brightness(80%) blur(90px);
+  color: white;
+  border-radius: 10px;
+  break-inside: avoid;
+  margin-bottom: 10px;
+
+  /* Uncomment if needed */
+  /* display: flex; */
+  /* flex-direction: column; */
+
+  /* testing */
+  /* height: 700px; */
+
+  /* experimenting with backdrop color */
+  /* opacity: 50%; */
+  /* background-color: black; */
+
+  padding: 10px;
+}
+
+.header {
+  padding: 10px 0;
+}
+
+@media (max-width: 575px) {
+  .card {
+    width: 100vw !important;
+    padding: 20px 0;
+
+    height: 100%;
+  }
+
+  .header {
+    padding: 10px 10px !important;
+  }
+}

@@ -118,9 +118,26 @@ const labelGame = (
     awayTeamWinning = parseInt(awayTeamScore) > parseInt(homeTeamScore);
   }
 
+  // game.competitions?.[0]?.broadcasts?.forEach(b => {
+  //   console.log(b?.market, ' :: ', b?.names?.join(' | '));
+  // });
+  // console.log('>>>>>>>> ');
+
   let broadcaster: string | undefined;
   if (game.competitions?.[0]?.broadcasts?.[0]?.names?.length) {
     broadcaster = game.competitions?.[0]?.broadcasts?.[0]?.names?.join(', ');
+
+    const findBroadcaster = (market: string) =>
+      game.competitions?.[0]?.broadcasts?.find(b => b?.market === market)
+        ?.names?.[0];
+
+    broadcaster = findBroadcaster('national');
+    // findBroadcaster('home') ??
+    // findBroadcaster('away');
+
+    // if (broadcaster?.toLocaleLowerCase().includes('league pass')) {
+    //   broadcaster = 'Leage Pass';
+    // }
   }
 
   let isOnNationalTv = Boolean(broadcaster);

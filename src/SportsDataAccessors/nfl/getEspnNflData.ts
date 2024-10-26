@@ -53,11 +53,11 @@ const labelGame = (game: EventsEntity): NFLGame => {
   let homeTeam = homeCompetitor?.team.name || '';
   let awayTeam = awayCompetitor?.team.name || '';
 
-  if (homeCompetitor?.team.location.toLocaleLowerCase() === 'washington')
-    homeTeam = 'Football Team';
+  // if (homeCompetitor?.team.location.toLocaleLowerCase() === 'washington')
+  //   homeTeam = 'Football Team';
 
-  if (awayCompetitor?.team.location.toLocaleLowerCase() === 'washington')
-    awayTeam = 'Football Team';
+  // if (awayCompetitor?.team.location.toLocaleLowerCase() === 'washington')
+  //   awayTeam = 'Football Team';
 
   let status: GameStatus = {
     type: 'TIME_STRING',
