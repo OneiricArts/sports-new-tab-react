@@ -121,6 +121,10 @@ const labelGame = (
   let broadcaster: string | undefined;
   if (game.competitions?.[0]?.broadcasts?.[0]?.names?.length) {
     broadcaster = game.competitions?.[0]?.broadcasts?.[0]?.names?.join(', ');
+
+    if (broadcaster.toLocaleLowerCase().includes('league pass')) {
+      broadcaster = 'Leage Pass';
+    }
   }
 
   let isOnNationalTv = Boolean(broadcaster);

@@ -100,7 +100,16 @@ const GameRow = ({
             }}
           >
             <BroadcastIcon style={{ height: '15px', color: gray }} />{' '}
-            {game.broadcaster}
+            <span
+              style={{
+                maxWidth: '65px',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {game.broadcaster}
+            </span>
           </span>
         )}
       </div>
